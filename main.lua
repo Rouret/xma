@@ -1,4 +1,4 @@
-local player = require("player")
+local Player = require("player.init")
 local StationaryEnemy = require("enemies.stationary_enemy")
 local ChasingEnemy = require("enemies.chasing_enemy")
 local enemies = {}
@@ -12,12 +12,12 @@ end
 function love.load()
     love.window.setMode(0, 0, {fullscreen=true})
 
-    player.load()
+    Player.load()
     table.insert(enemies, StationaryEnemy.new(400, 300))
 end
 
 function love.update(dt)
-    player.update(dt)
+    Player.update(dt)
 
     -- Mettre à jour tous les ennemis
     for i = #enemies, 1, -1 do
@@ -33,7 +33,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    player.draw()
+    Player.draw()
 
     -- Dessiner tous les ennemis
     for _, enemy in ipairs(enemies) do
