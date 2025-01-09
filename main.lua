@@ -1,5 +1,4 @@
 local player = require("player")
-local Projectile = require("projectile")
 
 local projectiles = {}
 
