@@ -1,25 +1,26 @@
 local State = {}
-local Gun = require("weapons.gun.gun")
-local Sword = require("weapons.sword")
+local love = require("love")
+
 function State.load()
-    State.x = 10
-    State.y = 10
+    State.x = 200
+    State.y = 200
     State.speed = 300
     State.health = 100
     State.maxHealth = 100
-    State.status = "idle" -- Exemple : "idle", "moving", "attacking", "invincible"
+    State.status = "idle" -- Example: "idle", "moving", "attacking", "invincible"
     State.WEAPON_SWITCH_COOLDOWN = 1
     State.currentWeaponIndex = 1
     State.weaponSwitchTime = 0
-    State.weapons = {
-        Gun.new(),
-        Sword.new(),
-    }
+    State.weapons = {}
 end
 
 function State.switchWeapon()
-    State.currentWeaponIndex = (State.currentWeaponIndex % #State.weapons) + 1
-    print("Switched to weapon: " .. State.weapons[State.currentWeaponIndex].name)
+    if #State.weapons > 0 then
+        State.currentWeaponIndex = (State.currentWeaponIndex % #State.weapons) + 1
+        print("Switched to weapon: " .. State.weapons[State.currentWeaponIndex].name)
+    else
+        print("No weapons to switch to.")
+    end
 end
 
 function State.takeDamage(amount)
@@ -34,6 +35,15 @@ end
 
 function State.isAlive()
     return State.health > 0
+end
+
+function State.isWeaponEquipped(weaponName)
+    return State.weapons[State.currentWeaponIndex] and State.weapons[State.currentWeaponIndex].name == weaponName
+end
+
+function State.getAngleToMouse()
+    local mouseX, mouseY = love.mouse.getPosition()
+    return math.atan2(mouseY - State.y, mouseX - State.x) + math.rad(-90)
 end
 
 return State

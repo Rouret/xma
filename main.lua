@@ -1,6 +1,6 @@
 local Player = require("player.init")
 local StationaryEnemy = require("enemies.stationary_enemy")
-local ChasingEnemy = require("enemies.chasing_enemy")
+local GlobalState = require("game.state")
 local enemies = {}
 
 function love.conf(t)
@@ -19,6 +19,8 @@ end
 function love.update(dt)
     Player.update(dt)
 
+    GlobalState:update(dt)
+
     -- Mettre à jour tous les ennemis
     for i = #enemies, 1, -1 do
         local enemy = enemies[i]
@@ -34,6 +36,8 @@ end
 
 function love.draw()
     Player.draw()
+
+    GlobalState:draw()
 
     -- Dessiner tous les ennemis
     for _, enemy in ipairs(enemies) do

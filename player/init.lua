@@ -4,9 +4,15 @@ local Movement = require("player.movement")
 local Animation = require("player.animation")
 local Interaction = require("player.interaction")
 local Draw = require("player.draw")
+local Gun = require("weapons.gun.gun")
+local Sword = require("weapons.sword")
 
 function Player.load()
     State.load()
+    State.weapons = {
+        Gun.new(),
+        Sword.new()
+    }
 end
 
 function Player.update(dt)
