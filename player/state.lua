@@ -1,5 +1,6 @@
 local State = {}
-
+local Gun = require("weapons.gun.gun")
+local Sword = require("weapons.sword")
 function State.load()
     State.x = 10
     State.y = 10
@@ -7,6 +8,18 @@ function State.load()
     State.health = 100
     State.maxHealth = 100
     State.status = "idle" -- Exemple : "idle", "moving", "attacking", "invincible"
+    State.WEAPON_SWITCH_COOLDOWN = 1
+    State.currentWeaponIndex = 1
+    State.weaponSwitchTime = 0
+    State.weapons = {
+        Gun.new(),
+        Sword.new(),
+    }
+end
+
+function State.switchWeapon()
+    State.currentWeaponIndex = (State.currentWeaponIndex % #State.weapons) + 1
+    print("Switched to weapon: " .. State.weapons[State.currentWeaponIndex].name)
 end
 
 function State.takeDamage(amount)
