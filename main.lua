@@ -1,6 +1,7 @@
 local player = require("player")
-
-local projectiles = {}
+local StationaryEnemy = require("enemies.stationary_enemy")
+local ChasingEnemy = require("enemies.chasing_enemy")
+local enemies = {}
 
 function love.conf(t)
     t.window.title = "Xma"
@@ -9,25 +10,34 @@ function love.conf(t)
 end
 
 function love.load()
-    player.load()
     love.window.setMode(0, 0, {fullscreen=true})
+
+    player.load()
+    table.insert(enemies, StationaryEnemy.new(400, 300))
 end
 
 function love.update(dt)
     player.update(dt)
-    
-    for i = #projectiles, 1, -1 do
-        local proj = projectiles[i]
-        proj:update(dt)
-        if not proj:isAlive() then
-            table.remove(projectiles, i)
+
+    -- Mettre à jour tous les ennemis
+    for i = #enemies, 1, -1 do
+        local enemy = enemies[i]
+        enemy:update(dt, player)
+
+        -- Supprimer les ennemis morts
+        if not enemy:isAlive() then
+            table.remove(enemies, i)
         end
     end
+
 end
 
 function love.draw()
     player.draw()
-    for _, proj in ipairs(projectiles) do
-        proj:draw()
+
+    -- Dessiner tous les ennemis
+    for _, enemy in ipairs(enemies) do
+        enemy:draw()
     end
+   
 end
