@@ -12,17 +12,15 @@ function player.load()
     player.idleTime = 0
     player.idleAmplitude = 5
     player.idleSpeed = 2
+    player.WEAPON_SWITCH_COOLDOWN = 1
+    player.weaponSwitchTime = 0
 
     -- Charger les armes
     player.weapons = {
         Gun.new(),
         Sword.new(),
     }
-    player.currentWeaponIndex = 1 -- Index de l'arme active
-end
-
-function player.setProjectileCallback(callback)
-    addProjectileCallback = callback
+    player.currentWeaponIndex = 1
 end
 
 function player.switchWeapon()
@@ -63,7 +61,10 @@ function player.update(dt)
 
     -- Changement d'arme avec "E"
     if love.keyboard.isDown("e") then
-        player.switchWeapon()
+        if love.timer.getTime() - player.weaponSwitchTime > player.WEAPON_SWITCH_COOLDOWN then
+            player.switchWeapon()
+            player.weaponSwitchTime = love.timer.getTime()
+        end
     end
 end
 
@@ -78,7 +79,7 @@ function player.draw()
 
     -- Afficher les informations de l'arme active et ses cooldowns
     local weapon = player.weapons[player.currentWeaponIndex]
-    love.graphics.print("Weapon: " .. weapon.name, 10, 10)
+    love.graphics.print("Weapon: " .. weapon.name .. " (E to switch)", 10, 10)
     for i, skill in ipairs(weapon.skills) do
         local remaining = math.max(0, skill.cooldown - (love.timer.getTime() - skill.lastUsed))
         love.graphics.print(skill.name .. ": " .. string.format("%.1f", remaining) .. "s", 10, 30 + i * 20)
