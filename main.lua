@@ -12,7 +12,6 @@ end
 function love.load()
     player.load()
     love.window.setMode(0, 0, {fullscreen=true})
-    player.setProjectileCallback(addProjectile)
 end
 
 function love.update(dt)
@@ -32,8 +31,4 @@ function love.draw()
     for _, proj in ipairs(projectiles) do
         proj:draw()
     end
-end
-
-function addProjectile(x, y, direction)
-    table.insert(projectiles, Projectile.new(x, y, direction))
 end
