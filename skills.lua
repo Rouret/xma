@@ -2,12 +2,13 @@ local Skills = {}
 Skills.__index = Skills
 
 -- Créer une compétence
-function Skills.new(name, cooldown, effect)
+function Skills.new(params)
     local self = setmetatable({}, Skills)
-    self.name = name
-    self.cooldown = cooldown -- Temps de recharge en secondes
-    self.lastUsed = -cooldown -- Assure que la compétence est utilisable au début
-    self.effect = effect -- Fonction déclenchant l'effet de la compétence
+    self.name = params.name
+    self.cooldown = params.cooldown -- Temps de recharge en secondes
+    self.lastUsed = -params.cooldown -- Assure que la compétence est utilisable au début
+    self.effect = params.effect -- Fonction déclenchant l'effet de la compétence
+    self.damage = params.damage -- Dégâts infligés par la compétence
     return self
 end
 

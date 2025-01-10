@@ -7,16 +7,30 @@ function Sword.new()
     local self = setmetatable({}, Sword)
     self.name = "Sword"
     self.skills = {
-        Skills.new("Slash", 0.3, function()
-
-        end),
-        Skills.new("Block", 2, function()
-     
-        end),
-        Skills.new("Dash Strike", 1, function(player)
-           
-        
-        end),
+        Skills.new({
+            name = "Slash",
+            cooldown = 0.5,
+            damage = 10,
+            effect = function()
+             
+            end
+        }),
+        Skills.new({
+            name = "Slash 2",
+            cooldown = 0.5,
+            damage = 10,
+            effect = function()
+             
+            end
+        }),
+        Skills.new({
+            name = "Slash 3",
+            cooldown = 0.5,
+            damage = 10,
+            effect = function()
+             
+            end
+        }),
     }
     return self
 end

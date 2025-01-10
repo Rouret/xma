@@ -19,7 +19,7 @@ function love.load()
     love.window.setMode(0, 0, {fullscreen=true})
 
     Player.load(world)
-    table.insert(enemies, StationaryEnemy.new(400, 300))
+    table.insert(enemies, StationaryEnemy.new(400, 300, world))
 end
 
 function love.update(dt)

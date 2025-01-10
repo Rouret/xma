@@ -1,12 +1,17 @@
 local StationaryEnemy = {}
 StationaryEnemy.__index = StationaryEnemy
 
-function StationaryEnemy.new(x, y)
+function StationaryEnemy.new(x, y, world)
     local self = setmetatable({}, StationaryEnemy)
     self.x = x
     self.y = y
-    self.image = love.graphics.newImage("sprites/stationary_enemy.png") -- Ajoutez une image pour l'ennemi
     self.health = 100
+    self.radius = 50
+    -- Créer un Body pour l'ennemi
+    self.body = love.physics.newBody(world, self.x, self.y, "static") -- Corps statique
+    self.shape = love.physics.newCircleShape(self.radius)
+    self.fixture = love.physics.newFixture(self.body, self.shape)
+    self.fixture:setUserData(self) -- Identifier ce corps comme cet ennemi
     return self
 end
 
@@ -15,7 +20,9 @@ function StationaryEnemy:update(dt, player)
 end
 
 function StationaryEnemy:draw()
-    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.image:getWidth() / 4, self.image:getHeight() / 4)
+    love.graphics.setColor(1, 0, 0) -- Set color to red
+    love.graphics.circle("fill", self.x, self.y, self.radius)
+    love.graphics.setColor(1, 1, 1) -- Reset color to white
 end
 
 function StationaryEnemy:isAlive()

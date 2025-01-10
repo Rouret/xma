@@ -3,15 +3,16 @@ local GlobalState = require("game.state")
 local Bullet = {}
 Bullet.__index = Bullet
 
-function Bullet.new(x, y, direction)
+function Bullet.new(params)
     local self = setmetatable({}, Bullet)
     
     self.TTL = 1
     self.speed = 1500
     self.currentTTL = 0
-    self.direction = direction
-    self.x = x
-    self.y = y
+    self.damage = params.damage
+    self.direction = params.direction
+    self.x = params.x
+    self.y = params.y
     self.image = love.graphics.newImage("sprites/bullet.png")
 
 

@@ -11,24 +11,53 @@ function Gun.new()
     local self = setmetatable({}, Gun)
     self.name = "Gun"
     self.skills = {
-        Skills.new("Shoot", 0.5, function()
-            GlobalState:addEntity(Bullet.new(State.x, State.y, State.getAngleToMouse()))
-        end),
-        Skills.new("Multi shoot", 2, function()
-            -- Shoot 3 bullets with 50ms delay between each
-            for i = 0, 2 do
-                GlobalState:addEntity(Bullet.new(State.x, State.y, State.getAngleToMouse() + (i - 1) * 0.1))
+        Skills.new({
+            name = "Shoot",
+            cooldown = 0.5,
+            damage = 10,
+            effect = function()
+                GlobalState:addEntity(Bullet.new({
+                    damage = 10,
+                    x = State.x,
+                    y = State.y,
+                    direction = State.getAngleToMouse()
+                }))
             end
-        end),
-        Skills.new("Sniper shoot", 1, function()
-            State.status = "immobilized"
-
-            -- Ajouter un délai de 500ms avant de tirer
-            Timer:after(0.5, function()
-                GlobalState:addEntity(Bullet.new(State.x, State.y, State.getAngleToMouse()))
-                State.status = "idle" -- Libérer l'état immobilisé
-            end)
-        end),
+        }),
+        Skills.new({
+            name = "Multi shoot",
+            cooldown = 2,
+            damage = 0,
+            effect = function()
+                -- Shoot 3 bullets with 50ms delay between each
+                for i = 0, 2 do
+                    GlobalState:addEntity(Bullet.new({
+                            damage = 10,
+                            x = State.x,
+                            y = State.y,
+                            direction = State.getAngleToMouse() + (i - 1) * 0.1
+                        }))
+                end
+            end
+        }),
+        Skills.new({
+            name = "Sniper shoot",
+            cooldown = 1,
+            damage = 30,
+            effect = function()
+                State.status = "immobilized"
+                -- Ajouter un délai de 500ms avant de tirer
+                Timer:after(0.5, function()
+                    GlobalState:addEntity(Bullet.new({
+                        damage = 30,
+                        x = State.x,
+                        y = State.y,
+                        direction = State.getAngleToMouse()
+                    }))
+                    State.status = "idle" -- Libérer l'état immobilisé
+                end)
+            end
+        }),
     }
     self.image = love.graphics.newImage("sprites/gun.png")
     return self
