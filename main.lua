@@ -4,6 +4,7 @@ local GlobalState = require("game.state")
 local Timer = require("timer")
 
 local enemies = {}
+local world
 
 function love.conf(t)
     t.window.title = "Xma"
@@ -12,13 +13,18 @@ function love.conf(t)
 end
 
 function love.load()
+    -- Créer le monde physique
+    world = love.physics.newWorld(0, 0, true) -- Pas de gravité
+
     love.window.setMode(0, 0, {fullscreen=true})
 
-    Player.load()
+    Player.load(world)
     table.insert(enemies, StationaryEnemy.new(400, 300))
 end
 
 function love.update(dt)
+    world:update(dt) -- Mettre à jour la physique
+
     Timer:update(dt)
     Player.update(dt)
 

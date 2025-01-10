@@ -3,7 +3,7 @@ local Draw = {}
 
 function Draw.draw()
     -- Dessiner le joueur
-    love.graphics.circle("fill", State.x, State.y, 10)
+    love.graphics.circle("fill", State.x, State.y, State.radius)
 
     -- Draw weapon
     local weapon = State.weapons[State.currentWeaponIndex]
