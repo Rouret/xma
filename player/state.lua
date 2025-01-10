@@ -17,20 +17,16 @@ end
 function State.switchWeapon()
     if #State.weapons > 0 then
         State.currentWeaponIndex = (State.currentWeaponIndex % #State.weapons) + 1
-        print("Switched to weapon: " .. State.weapons[State.currentWeaponIndex].name)
-    else
-        print("No weapons to switch to.")
     end
 end
 
 function State.takeDamage(amount)
     State.health = math.max(0, State.health - amount)
-    print("Player took " .. amount .. " damage. Health: " .. State.health)
+
 end
 
 function State.heal(amount)
     State.health = math.min(State.maxHealth, State.health + amount)
-    print("Player healed " .. amount .. ". Health: " .. State.health)
 end
 
 function State.isAlive()

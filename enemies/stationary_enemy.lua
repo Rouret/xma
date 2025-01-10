@@ -24,7 +24,6 @@ end
 
 function StationaryEnemy:takeDamage(damage)
     self.health = self.health - damage
-    print("Stationary enemy took " .. damage .. " damage. Health: " .. self.health)
 end
 
 return StationaryEnemy

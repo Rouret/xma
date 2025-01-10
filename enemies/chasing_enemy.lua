@@ -33,7 +33,6 @@ end
 
 function ChasingEnemy:takeDamage(damage)
     self.health = self.health - damage
-    print("Chasing enemy took " .. damage .. " damage. Health: " .. self.health)
 end
 
 return ChasingEnemy

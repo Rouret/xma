@@ -13,7 +13,7 @@ function Bullet.new(x, y, direction)
     self.x = x
     self.y = y
     self.image = love.graphics.newImage("sprites/bullet.png")
-    print(self.direction)
+
 
     return self
 end
