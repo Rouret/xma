@@ -7,7 +7,7 @@ function State.load()
     State.speed = 300
     State.health = 100
     State.maxHealth = 100
-    State.status = "idle" -- Example: "idle", "moving", "attacking", "invincible"
+    State.status = "idle" -- Example: "idle", "moving", "attacking", "invincible", "immobilized"
     State.WEAPON_SWITCH_COOLDOWN = 1
     State.currentWeaponIndex = 1
     State.weaponSwitchTime = 0

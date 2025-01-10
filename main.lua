@@ -1,6 +1,8 @@
 local Player = require("player.init")
 local StationaryEnemy = require("enemies.stationary_enemy")
 local GlobalState = require("game.state")
+local Timer = require("timer")
+
 local enemies = {}
 
 function love.conf(t)
@@ -17,6 +19,7 @@ function love.load()
 end
 
 function love.update(dt)
+    Timer:update(dt)
     Player.update(dt)
 
     GlobalState:update(dt)

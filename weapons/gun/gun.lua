@@ -2,6 +2,7 @@ local Skills = require("skills")
 local GlobalState = require("game.state")
 local Bullet = require("weapons.gun.bullet")
 local State = require("player.state")
+local Timer = require("timer")
 
 local Gun = {}
 Gun.__index = Gun
@@ -11,14 +12,22 @@ function Gun.new()
     self.name = "Gun"
     self.skills = {
         Skills.new("Shoot", 0.5, function()
-            print("Gun: Shoot")
             GlobalState:addEntity(Bullet.new(State.x, State.y, State.getAngleToMouse()))
         end),
-        Skills.new("Reload", 2, function()
-            print("Gun: Reload")
+        Skills.new("Multi shoot", 2, function()
+            -- Shoot 3 bullets with 50ms delay between each
+            for i = 0, 2 do
+                GlobalState:addEntity(Bullet.new(State.x, State.y, State.getAngleToMouse() + (i - 1) * 0.1))
+            end
         end),
-        Skills.new("Aim Boost", 1, function()
-            print("Gun: Aim Boost")
+        Skills.new("Sniper shoot", 1, function()
+            State.status = "immobilized"
+
+            -- Ajouter un délai de 500ms avant de tirer
+            Timer:after(0.5, function()
+                GlobalState:addEntity(Bullet.new(State.x, State.y, State.getAngleToMouse()))
+                State.status = "idle" -- Libérer l'état immobilisé
+            end)
         end),
     }
     self.image = love.graphics.newImage("sprites/gun.png")

@@ -17,6 +17,9 @@ function Movement.update(dt)
 end
 
 function Movement.move(dx, dy, dt)
+    if State.status == "immobilized" then
+        return
+    end
     State.x = State.x + dx * State.speed * dt
     State.y = State.y + dy * State.speed * dt
 end
