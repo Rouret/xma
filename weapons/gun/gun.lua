@@ -1,8 +1,8 @@
 local Skills = require("skills")
-local State = require("player.state")
 local GlobalState = require("game.state")
 local Bullet = require("weapons.gun.bullet")
 local State = require("player.state")
+
 local Gun = {}
 Gun.__index = Gun
 
@@ -29,7 +29,7 @@ end
 function Gun:draw()
     -- Check if weapon is in hand or back
     if State.isWeaponEquipped(self.name) then
-        self:drawInHand(State.x, State.y, State.getAngleToMouse())
+        self:drawInHand(State.x, State.y, State.getAngleForGun())
     else
         self:drawInBack()
     end

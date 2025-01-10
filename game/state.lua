@@ -23,7 +23,7 @@ end
 function GlobalState:update(dt)
     for _, entity in ipairs(self.entities) do
         if entity.update then
-            entity.update(dt)
+            entity:update(dt)
         end
     end
 end
@@ -32,7 +32,7 @@ end
 function GlobalState:draw()
     for _, entity in ipairs(self.entities) do
         if entity.draw then
-            entity.draw()
+            entity:draw()
         end
     end
 end

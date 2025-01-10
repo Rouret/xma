@@ -5,23 +5,25 @@ Bullet.__index = Bullet
 
 function Bullet.new(x, y, direction)
     local self = setmetatable({}, Bullet)
+    
     self.TTL = 1
-    self.speed = 500
+    self.speed = 1500
     self.currentTTL = 0
     self.direction = direction
     self.x = x
     self.y = y
-
     self.image = love.graphics.newImage("sprites/bullet.png")
+    print(self.direction)
+
     return self
 end
 
 -- Draw the gun
 function Bullet:draw()
-    love.graphics.draw(self.image, self.x, self.y, self.rotation, 1, 1, 0, 0)
+    love.graphics.draw(self.image, self.x, self.y, self.direction + math.pi/2, 4, 4, 0, 0)
 end
 
-function Bullet.update(dt)
+function Bullet:update(dt)
     self.currentTTL = self.currentTTL + dt
     if self.currentTTL >= self.TTL then
         -- Remove the bullet

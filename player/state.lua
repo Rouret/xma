@@ -43,7 +43,11 @@ end
 
 function State.getAngleToMouse()
     local mouseX, mouseY = love.mouse.getPosition()
-    return math.atan2(mouseY - State.y, mouseX - State.x) + math.rad(-90)
+    return math.atan2(mouseY - State.y, mouseX - State.x)
+end
+
+function State.getAngleForGun()
+    return State.getAngleToMouse() - math.pi / 2
 end
 
 return State
