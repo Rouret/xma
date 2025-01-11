@@ -1,7 +1,14 @@
 # Changelog
 
-## v0.0.1
+## v0.0.2 - 12/01/25
 
+### Added or Changed
+- Add UI
+- Add XP
+- Add start of choice
+
+
+## v0.0.1 - 12/01/25
 
 ### Added or Changed
 - Added gun weapon
