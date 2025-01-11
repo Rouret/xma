@@ -14,10 +14,10 @@ function World.beginContact(fixtureA, fixtureB, contact)
     local userDataA = fixtureA:getUserData()
     local userDataB = fixtureB:getUserData()
 
-    -- print de debug
-    print("Collision entre " .. tostring(userDataA.name) .. " et " .. tostring(userDataB.name))
+    if(userDataA == nil or userDataB == nil) then
+        return
+    end
 
-    -- Vérifiez si l'une des entités est une balle
     if userDataA and userDataA.onCollision then
         userDataA:onCollision(userDataB)
     end

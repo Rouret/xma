@@ -27,8 +27,6 @@ function love.update(dt)
     Timer:update(dt)
     Player.update(dt)
 
-
-
     -- Mettre à jour tous les ennemis
     for i = #enemies, 1, -1 do
         local enemy = enemies[i]

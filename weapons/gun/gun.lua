@@ -29,7 +29,7 @@ function Gun.new()
             cooldown = 2,
             damage = 0,
             effect = function()
-                -- Shoot 3 bullets with 50ms delay between each
+                print("Multi shoot")
                 for i = 0, 2 do
                     GlobalState:addEntity(Bullet.new({
                             damage = 10,

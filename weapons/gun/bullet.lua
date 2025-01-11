@@ -49,4 +49,25 @@ function Bullet:update(dt)
     self.x, self.y = self.body:getPosition()
 end
 
+function Bullet:takeDamage(damage)
+    -- Les balles ne peuvent pas prendre de dégâts
+    self:destroy()
+end
+
+function Bullet:onCollision(entity)
+    -- TODO fix fire position
+    if entity.name == "player" or entity.name == "bullet" then
+        return
+    end
+
+    entity:takeDamage(self.damage)
+    self:destroy()
+end
+
+
+function Bullet:destroy()
+    GlobalState:removeEntity(self)
+    self.body:destroy()
+end
+
 return Bullet
