@@ -75,8 +75,6 @@ function State.gainExperience(amount)
     if State.experience >= State.level * 100 then
         State.level = State.level + 1
         State.experience = 0
-        State.maxHealth = State.maxHealth + 10
-        State.health = State.maxHealth
 
         Game.isGamePaused = true
         Choice.generateChoice()
