@@ -1,7 +1,6 @@
 local GlobalState = require("game.state")
 local World = require("game.world")
 local State = require("player.state")
-local Utils = require("utils")
 
 local Bullet = {}
 Bullet.__index = Bullet
@@ -19,7 +18,7 @@ function Bullet.new(params)
     self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic") -- Corps statique
     self.shape = love.physics.newRectangleShape(8, 8) -- Forme rectangulaire
     self.fixture = love.physics.newFixture(self.body, self.shape)
-    self.image = love.graphics.newImage("sprites/bullet.png")
+    self.image = love.graphics.newImage("sprites/weapons/gun/bullet.png")
 
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
@@ -29,7 +28,7 @@ end
 
 -- Draw the gun
 function Bullet:draw()
-    love.graphics.draw(self.image, self.x, self.y, self.direction + math.pi/2, 4, 4, 0, 0)
+    love.graphics.draw(self.image, self.x, self.y, self.direction + math.pi/2, 2, 2, 0, 0)
 end
 
 function Bullet:update(dt)

@@ -69,7 +69,7 @@ function Gun.new()
                         x = State.x,
                         y = State.y,
                         TTL = 2,
-                        speed = 3500,
+                        speed = 3250,
                         direction = State.getAngleToMouse()
                     }))
                     State.status = "idle" -- Libérer l'état immobilisé
@@ -77,7 +77,7 @@ function Gun.new()
             end
         }),
     }
-    self.image = love.graphics.newImage("sprites/gun.png")
+    self.image = love.graphics.newImage("sprites/weapons/gun/gun.png")
     return self
 end
 
