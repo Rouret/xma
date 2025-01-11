@@ -20,7 +20,8 @@ function Gun.new()
                     damage = 10,
                     x = State.x,
                     y = State.y,
-                    direction = State.getAngleToMouse()
+                    speed = 1500,
+                    TTL = 0.75,
                 }))
             end
         }),

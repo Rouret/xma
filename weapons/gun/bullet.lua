@@ -15,10 +15,11 @@ function Bullet.new(params)
     self.direction = params.direction or State.getAngleToMouse()
     self.x = params.x
     self.y = params.y
-    self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic") -- Corps statique
-    self.shape = love.physics.newRectangleShape(8, 8) -- Forme rectangulaire
-    self.fixture = love.physics.newFixture(self.body, self.shape)
     self.image = love.graphics.newImage("sprites/weapons/gun/bullet.png")
+    local imageWidth, imageHeight = self.image:getDimensions()
+    self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic") -- Corps dynamique
+    self.shape = love.physics.newRectangleShape(imageWidth, imageHeight) -- Forme rectangulaire de la taille de l'image
+    self.fixture = love.physics.newFixture(self.body, self.shape)
 
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
@@ -39,6 +40,7 @@ function Bullet:update(dt)
         -- Supprimer la balle
         GlobalState:removeEntity(self)
         self.body:destroy()
+        print("Bullet TTL")
         return
     end
 
@@ -52,8 +54,7 @@ function Bullet:update(dt)
 end
 
 function Bullet:takeDamage(damage)
-    -- Les balles ne peuvent pas prendre de dégâts
-    self:destroy()
+
 end
 
 function Bullet:onCollision(entity)
@@ -67,14 +68,18 @@ function Bullet:onCollision(entity)
         return
     end
 
+    print("Bullet collided with " .. entity.name)
+
     entity:takeDamage(self.damage)
     self:destroy()
 end
 
 
 function Bullet:destroy()
-    GlobalState:removeEntity(self)
+    print("Bullet destroyed")
     self.body:destroy()
+    GlobalState:removeEntity(self)
+   
 end
 
 return Bullet

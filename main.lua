@@ -38,7 +38,6 @@ function love.draw()
     World:draw()
     Player.draw()
 
-  
     -- Dessiner tous les ennemis
     for _, enemy in ipairs(enemies) do
         enemy:draw()

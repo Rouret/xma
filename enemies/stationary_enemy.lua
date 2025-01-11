@@ -9,10 +9,11 @@ function StationaryEnemy.new(x, y, world)
     self.health = 100
     self.maxHealth = 100
     self.radius = 50
-    self.body = love.physics.newBody(world, self.x, self.y, "static")
+    self.body = love.physics.newBody(world, self.x, self.y, "dynamic")
     self.shape = love.physics.newCircleShape(self.radius)
     self.fixture = love.physics.newFixture(self.body, self.shape)
     self.fixture:setUserData(self) 
+
     return self
 end
 
@@ -35,7 +36,6 @@ function StationaryEnemy:draw()
     love.graphics.setColor(0, 1, 0) -- Set color to green
     love.graphics.rectangle("fill", healthBarX, healthBarY, healthBarWidth * (self.health / self.maxHealth), healthBarHeight)
     love.graphics.setColor(1, 1, 1) -- Reset color to white
-
 end
 
 function StationaryEnemy:isAlive()
