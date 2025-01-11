@@ -1,5 +1,6 @@
 local State = {}
 local love = require("love")
+local Game = require("game.game")
 
 function State.load()
     State.name = "player"
@@ -72,6 +73,8 @@ function State.gainExperience(amount)
         State.experience = 0
         State.maxHealth = State.maxHealth + 10
         State.health = State.maxHealth
+
+        Game.isGamePaused = true
     end
 end
 

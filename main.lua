@@ -5,6 +5,7 @@ local GlobalState = require("game.state")
 local UI = require("game.ui")
 local Timer = require("timer")
 local World = require("game.world")
+local Game = require("game.game")
 local enemies = {}
 
 local nbMonster = 3
@@ -23,6 +24,10 @@ function love.load()
 end
 
 function love.update(dt)
+    if Game.isGamePaused then
+        print("Game is paused")
+        return
+    end
     World.update(dt)
 
     Timer:update(dt)
