@@ -86,7 +86,7 @@ end
 function Gun:draw()
     -- Check if weapon is in hand or back
     if State.isWeaponEquipped(self.name) then
-        self:drawInHand(State.x, State.y, State.getAngleForGun())
+        self:drawInHand(State.x, State.y)
     else
         self:drawInBack()
     end
@@ -94,7 +94,8 @@ function Gun:draw()
 end
 
 -- Draw gun in hand 
-function Gun:drawInHand(x,y,rotation)
+function Gun:drawInHand(x,y)
+    local rotation = State.getAngleToMouse() - math.pi / 2; 
     love.graphics.draw(self.image, x, y, rotation, 1, 1, 0, 0)
 end
 
@@ -102,5 +103,7 @@ end
 function Gun:drawInBack()
   
 end
+
+
 
 return Gun

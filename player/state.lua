@@ -47,8 +47,5 @@ function State.getAngleToMouse()
     return math.atan2(mouseY - State.y, mouseX - State.x)
 end
 
-function State.getAngleForGun()
-    return State.getAngleToMouse() - math.pi / 2
-end
 
 return State
