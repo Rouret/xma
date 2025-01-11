@@ -18,7 +18,7 @@ function Gun.new()
             image = "sprites/weapons/gun/skill1.jpg",
             effect = function()
                 GlobalState:addEntity(Bullet.new({
-                    damage = 10,
+                    damage = 50,
                     x = State.x,
                     y = State.y,
                     speed = 1500,

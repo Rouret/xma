@@ -71,6 +71,7 @@ end
 
 function ChasingEnemy:destroy()
     print("ChasingEnemy destroyed")
+    State.gainExperience(40)
     self.fixture:destroy()
     GlobalState:removeEntity(self)
 end

@@ -17,6 +17,10 @@ function State.load()
     State.maxHealth = 100
     State.radius = 10
 
+    -- Experience
+    State.experience = 0
+    State.level = 1
+
     -- Weapon
     State.WEAPON_SWITCH_COOLDOWN = 1
     State.currentWeaponIndex = 1
@@ -59,6 +63,16 @@ end
 function State.getAngleToMouse()
     local mouseX, mouseY = love.mouse.getPosition()
     return math.atan2(mouseY - State.y, mouseX - State.x)
+end
+
+function State.gainExperience(amount)
+    State.experience = State.experience + amount
+    if State.experience >= State.level * 100 then
+        State.level = State.level + 1
+        State.experience = 0
+        State.maxHealth = State.maxHealth + 10
+        State.health = State.maxHealth
+    end
 end
 
 

@@ -17,6 +17,10 @@ function UI.load()
     UI.healthBar.width =UI.skills.size
     UI.healthBar.height = 20
 
+    UI.expBar = {}
+    UI.expBar.width = UI.skills.size
+    UI.expBar.height = 20
+
     UI.switch = {}
     UI.switch.itemSize = 32
     UI.switch.gap = 12
@@ -41,6 +45,7 @@ end
 function UI:draw()
     UI.drawSkills()
     UI.drawPlayerHealth()
+    UI.drawPlayerExp()
     UI.drawSwitchWeapon()
 end
 
@@ -66,6 +71,33 @@ function UI.drawSwitchWeapon()
 
     love.graphics.draw(UI.emptyImage,  x, y + (UI.switch.gap + UI.switch.itemSize)*2)
    
+end
+
+function UI.drawPlayerExp()
+    local player = State.player
+    local exp = State.experience
+    local maxExp = 100 * State.level
+    local expPercentage = exp / maxExp
+    local expBarX = (UI.screenWidth - UI.expBar.width) / 2
+    local expBarY = UI.screenHeight -  UI.skills.skillSize  - 80
+    local expBarFillWidth = UI.expBar.width * expPercentage
+    love.graphics.setColor(1, 1, 0)
+    love.graphics.rectangle("fill", expBarX, expBarY, expBarFillWidth, UI.expBar.height)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.rectangle("line", expBarX, expBarY, UI.expBar.width, UI.expBar.height)
+    
+    local expText = string.format("%d/%d", exp, maxExp)
+    love.graphics.setFont(UI.font.small)
+    local textWidth = UI.font.small:getWidth(expText)
+    local textHeight = UI.font.small:getHeight(expText)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(expText, expBarX + (UI.expBar.width - textWidth) / 2, expBarY + (UI.expBar.height - textHeight) / 2)
+    
+    local levelText = string.format("Level %d", State.level)
+    local levelTextWidth = UI.font.small:getWidth(levelText)
+    love.graphics.print(levelText, expBarX - levelTextWidth - 10, expBarY + (UI.expBar.height - textHeight) / 2)
+    
+    love.graphics.setColor(1, 1, 1)
 end
 
 function UI.drawPlayerHealth()
