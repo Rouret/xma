@@ -1,16 +1,23 @@
 local Player = require("player.init")
 local StationaryEnemy = require("enemies.stationary_enemy")
+local ChasingEnemy = require("enemies.chasing_enemy")
 local GlobalState = require("game.state")
 local UI = require("game.ui")
 local Timer = require("timer")
 local World = require("game.world")
 local enemies = {}
 
+local nbMonster = 3
+
 function love.load()
     World.load()
     
     Player.load(World.world)
-    table.insert(enemies, StationaryEnemy.new(400, 300, World.world))
+    
+    for i = 1, nbMonster do
+        local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
+        table.insert(enemies, enemy)
+    end
 end
 
 function love.update(dt)
@@ -27,6 +34,14 @@ function love.update(dt)
         -- Supprimer les ennemis morts
         if not enemy:isAlive() then
             table.remove(enemies, i)
+        end
+    end
+
+    --if table.remove(enemies, is less than nbMonster then add a new enemy)
+    if #enemies < nbMonster then
+        for i = #enemies + 1, nbMonster do
+            local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
+            table.insert(enemies, enemy)
         end
     end
 
