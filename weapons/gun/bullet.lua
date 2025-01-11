@@ -22,6 +22,7 @@ function Bullet.new(params)
 
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
+    self.body:setBullet(true)
 
     return self
 end
