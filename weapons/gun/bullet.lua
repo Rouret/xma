@@ -68,15 +68,12 @@ function Bullet:onCollision(entity)
         return
     end
 
-    print("Bullet collided with " .. entity.name)
-
     entity:takeDamage(self.damage)
     self:destroy()
 end
 
 
 function Bullet:destroy()
-    print("Bullet destroyed")
     self.body:destroy()
     GlobalState:removeEntity(self)
    

@@ -70,8 +70,7 @@ function ChasingEnemy:takeDamage(damage)
 end
 
 function ChasingEnemy:destroy()
-    print("ChasingEnemy destroyed")
-    State.gainExperience(40)
+    State.gainExperience(100)
     self.fixture:destroy()
     GlobalState:removeEntity(self)
 end

@@ -6,12 +6,15 @@ local UI = require("game.ui")
 local Timer = require("timer")
 local World = require("game.world")
 local Game = require("game.game")
+local Choice = require("game.choice")
 local enemies = {}
 
 local nbMonster = 3
 
 function love.load()
     World.load()
+
+    Choice.load()
     
     Player.load(World.world)
 
@@ -25,7 +28,7 @@ end
 
 function love.update(dt)
     if Game.isGamePaused then
-        print("Game is paused")
+        Choice.update(dt)
         return
     end
     World.update(dt)
@@ -53,6 +56,8 @@ function love.update(dt)
     end
 
     GlobalState:update(dt, World.World)
+
+
 end
 
 function love.draw()
@@ -68,4 +73,13 @@ function love.draw()
     GlobalState:draw()
 
     UI:draw()
+
+    if Choice.hasGeneratedChoices then
+        Choice.draw()
+    end
+end
+
+
+function love.mousepressed(x, y, button)
+    Choice.mousepressed(x, y, button)
 end
