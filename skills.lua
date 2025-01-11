@@ -9,19 +9,31 @@ function Skills.new(params)
     self.lastUsed = -params.cooldown -- Assure que la compétence est utilisable au début
     self.effect = params.effect -- Fonction déclenchant l'effet de la compétence
     self.damage = params.damage -- Dégâts infligés par la compétence
+
+    -- Initialisation du cooldown restant
+    self.remainingCooldownInSeconds = 0
     return self
 end
 
+-- Met à jour le temps de recharge restant
+function Skills:updateCooldown(currentTime)
+    if self:isReady() then
+        return
+    end
+    self.remainingCooldownInSeconds = math.max(0, self.cooldown - (currentTime - self.lastUsed))
+end
+
 -- Vérifie si la compétence est prête
-function Skills:isReady(currentTime)
-    return currentTime - self.lastUsed >= self.cooldown
+function Skills:isReady()
+    return self.remainingCooldownInSeconds <= 0
 end
 
 -- Utilise la compétence si elle est prête
 function Skills:use(currentTime, ...)
-
-    if self:isReady(currentTime) then
+    self:updateCooldown(currentTime) -- Toujours mettre à jour avant de vérifier
+    if self:isReady() then
         self.lastUsed = currentTime
+        self.remainingCooldownInSeconds = self.cooldown
         if self.effect then
             self.effect(...) -- Applique l'effet de la compétence
         end
@@ -30,5 +42,7 @@ function Skills:use(currentTime, ...)
         return false -- Compétence encore en cooldown
     end
 end
+
+
 
 return Skills

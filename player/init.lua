@@ -22,10 +22,18 @@ function Player.load(world)
 end
 
 function Player.update(dt)
+    local currentTime = love.timer.getTime()
     if State.isAlive() then
         Movement.update(dt)
         Interaction.update(dt)
         Animation.update(dt)
+
+        -- Update weapons skill
+        for _, weapon in ipairs(State.weapons) do
+            for _, skill in ipairs(weapon.skills) do
+                skill:updateCooldown(currentTime)
+            end
+        end
 
         State.x, State.y = State.body:getPosition()
     end

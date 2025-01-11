@@ -1,6 +1,7 @@
 local Player = require("player.init")
 local StationaryEnemy = require("enemies.stationary_enemy")
 local GlobalState = require("game.state")
+local UI = require("game.ui")
 local Timer = require("timer")
 local World = require("game.world")
 local enemies = {}
@@ -45,5 +46,5 @@ function love.draw()
 
     GlobalState:draw()
 
-   
+    UI:draw()
 end

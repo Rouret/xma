@@ -7,8 +7,8 @@ Bullet.__index = Bullet
 function Bullet.new(params)
     local self = setmetatable({}, Bullet)
     self.name = "bullet"
-    self.TTL = 1
-    self.speed = 1500
+    self.TTL = params.TTL or 1
+    self.speed = params.speed or 1500
     self.currentTTL = 0
     self.damage = params.damage
     self.direction = params.direction

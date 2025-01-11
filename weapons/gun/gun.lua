@@ -26,7 +26,7 @@ function Gun.new()
         }),
         Skills.new({
             name = "Multi shoot",
-            cooldown = 2,
+            cooldown = 3,
             damage = 0,
             effect = function()
                 print("Multi shoot")
@@ -34,7 +34,9 @@ function Gun.new()
                     GlobalState:addEntity(Bullet.new({
                             damage = 10,
                             x = State.x,
+                            TTL = 0.2,
                             y = State.y,
+                            speed = 2500,
                             direction = State.getAngleToMouse() + (i - 1) * 0.1
                         }))
                 end
@@ -42,7 +44,7 @@ function Gun.new()
         }),
         Skills.new({
             name = "Sniper shoot",
-            cooldown = 1,
+            cooldown = 5,
             damage = 30,
             effect = function()
                 State.status = "immobilized"
@@ -52,6 +54,8 @@ function Gun.new()
                         damage = 30,
                         x = State.x,
                         y = State.y,
+                        TTL = 2,
+                        speed = 3500,
                         direction = State.getAngleToMouse()
                     }))
                     State.status = "idle" -- Libérer l'état immobilisé
