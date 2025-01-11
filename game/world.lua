@@ -9,12 +9,14 @@ function World.load()
 
     -- Mur gauche en rouge
     World.walls.left = {}
+    World.walls.left.name = "wall"
     World.walls.left.body = love.physics.newBody(World.world, 0, love.graphics.getHeight() / 2, "static")
     World.walls.left.shape = love.physics.newRectangleShape(0, 0, 1, love.graphics.getHeight())
     World.walls.left.fixture = love.physics.newFixture(World.walls.left.body, World.walls.left.shape)
     World.walls.left.fixture:setUserData(World.walls.left)
     -- Mur droite en rouge
     World.walls.right = {}
+    World.walls.right.name = "wall"
     World.walls.right.body = love.physics.newBody(World.world, love.graphics.getWidth() + 1, love.graphics.getHeight() / 2, "static")
     World.walls.right.shape = love.physics.newRectangleShape(0, 0, 1, love.graphics.getHeight())
     World.walls.right.fixture = love.physics.newFixture(World.walls.right.body, World.walls.right.shape)
@@ -22,14 +24,15 @@ function World.load()
 
     -- Mur haut en rouge
     World.walls.top = {}
+    World.walls.top.name = "wall"
     World.walls.top.body = love.physics.newBody(World.world, love.graphics.getWidth() / 2, -1, "static")
     World.walls.top.shape = love.physics.newRectangleShape(0, 0, love.graphics.getWidth(), 1)
     World.walls.top.fixture = love.physics.newFixture(World.walls.top.body, World.walls.top.shape)
     World.walls.top.fixture:setUserData(World.walls.top)
 
-
     -- Mur bas en rouge
     World.walls.bottom = {}
+    World.walls.bottom.name = "wall"
     World.walls.bottom.body = love.physics.newBody(World.world, love.graphics.getWidth() / 2, love.graphics.getHeight(), "static")
     World.walls.bottom.shape = love.physics.newRectangleShape(0, 0, love.graphics.getWidth(), 1)
     World.walls.bottom.fixture = love.physics.newFixture(World.walls.bottom.body, World.walls.bottom.shape)

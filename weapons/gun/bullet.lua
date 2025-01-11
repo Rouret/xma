@@ -60,6 +60,11 @@ function Bullet:onCollision(entity)
         return
     end
 
+    if entity.name == "wall"  then
+        self:destroy()
+        return
+    end
+
     entity:takeDamage(self.damage)
     self:destroy()
 end

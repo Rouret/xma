@@ -29,7 +29,6 @@ function Gun.new()
             cooldown = 3,
             damage = 0,
             effect = function()
-                print("Multi shoot")
                 for i = 0, 2 do
                     GlobalState:addEntity(Bullet.new({
                             damage = 10,
