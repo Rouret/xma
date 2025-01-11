@@ -10,6 +10,7 @@ function Skills.new(params)
     self.effect = params.effect -- Fonction déclenchant l'effet de la compétence
     self.damage = params.damage -- Dégâts infligés par la compétence
     self.image = love.graphics.newImage(params.image or "sprites/weapons/empty_skill.png") -- Image de la compétence
+    self.song = love.audio.newSource(params.song or "sprites/weapons/empty_skill.wav", "static") -- Son de la compétence
 
     -- Initialisation du cooldown restant
     self.remainingCooldownInSeconds = 0
@@ -36,7 +37,9 @@ function Skills:use(currentTime, ...)
         self.lastUsed = currentTime
         self.remainingCooldownInSeconds = self.cooldown
         if self.effect then
-            self.effect(...) -- Applique l'effet de la compétence
+            self.song:stop() -- Arrête le son de la compétence si déjà en cours
+            self.effect(...) -- Applique l'effet de la compétence*
+            self.song:play() -- Joue le son de la compétence
         end
         return true -- Compétence utilisée avec succès
     else

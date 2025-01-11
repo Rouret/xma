@@ -14,6 +14,7 @@ function World.load()
     World.walls.left.shape = love.physics.newRectangleShape(0, 0, 1, love.graphics.getHeight())
     World.walls.left.fixture = love.physics.newFixture(World.walls.left.body, World.walls.left.shape)
     World.walls.left.fixture:setUserData(World.walls.left)
+    
     -- Mur droite en rouge
     World.walls.right = {}
     World.walls.right.name = "wall"

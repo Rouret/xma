@@ -16,6 +16,7 @@ function Gun.new()
             cooldown = 0.5,
             damage = 10,
             image = "sprites/weapons/gun/skill1.jpg",
+            song ="sprites/weapons/gun/skill1.wav",
             effect = function()
                 GlobalState:addEntity(Bullet.new({
                     damage = 10,
@@ -31,6 +32,7 @@ function Gun.new()
             cooldown = 3,
             damage = 0,
             image = "sprites/weapons/gun/skill2.jpg",
+            song ="sprites/weapons/gun/skill2.wav",
             effect = function()
 
                 local nbBullet = 3

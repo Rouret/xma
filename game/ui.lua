@@ -4,6 +4,17 @@ local UI = {}
 local cooldownOverlay = love.graphics.newImage("sprites/weapons/on_cd_skill.png")
 
 function UI.load()
+    local screenWidth, screenHeight = love.graphics.getDimensions()
+    UI.screenWidth = screenWidth
+    UI.screenHeight = screenHeight
+
+    UI.skills = {}
+    UI.skills.gap = 16
+    UI.skills.size = 120
+
+    UI.font = love.graphics.newFont(36) 
+
+    return UI
 end
 
 
@@ -11,26 +22,27 @@ function UI.update()
 end
 
 
-function UI.draw()
-    -- Draw rectangle 120x120px for the skills of the weapon at the center bottom of the screen
+function UI:draw()
+    UI.drawSkills()
+end
+
+
+function UI.drawSkills()
     local weapon = State.weapons[State.currentWeaponIndex]
-    local screenWidth, screenHeight = love.graphics.getDimensions()
-    local rectWidth, rectHeight = 120, 120
-    local gap = 16
-    local totalWidth = (#weapon.skills * rectWidth) + ((#weapon.skills - 1) * gap)
-    local x = (screenWidth - totalWidth) / 2
-    local y = screenHeight - rectHeight
+    local totalWidth = (#weapon.skills * UI.skills.size) + ((#weapon.skills - 1) * UI.skills.gap)
+    local x = (UI.screenWidth - totalWidth) / 2
+    local y = UI.screenHeight - UI.skills.size
     for i, skill in ipairs(weapon.skills) do
-        local calcX = x + (i - 1) * (rectWidth + gap)
+        local calcX = x + (i - 1) * (UI.skills.size + UI.skills.gap)
         love.graphics.draw(skill.image, calcX, y)
         if skill.remainingCooldownInSeconds > 0 then
             love.graphics.draw(cooldownOverlay, calcX, y)
             local cooldownText = UI.formatTime(skill.remainingCooldownInSeconds)
-            local font = love.graphics.newFont(36) 
-            love.graphics.setFont(font)
-            local textWidth = font:getWidth(cooldownText)
-            local textHeight = font:getHeight(cooldownText)
-            love.graphics.print(cooldownText, calcX + (rectWidth - textWidth) / 2, y + (rectHeight - textHeight) / 2)
+            love.graphics.setFont(UI.font)
+            local textWidth = UI.font:getWidth(cooldownText)
+            local textHeight = UI.font:getHeight(cooldownText)
+        
+            love.graphics.print(cooldownText, calcX + (UI.skills.size - textWidth) / 2, y + (UI.skills.size - textHeight) / 2)
         end
     end
 end

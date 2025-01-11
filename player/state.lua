@@ -2,18 +2,28 @@ local State = {}
 local love = require("love")
 
 function State.load()
+    State.name = "player"
+    State.status = "idle" -- Example: "idle", "immobilized"
+
+    -- Position
     State.x = 200
     State.y = 200
+
+    -- Velocity
     State.speed = 1000
+
+    -- Health
     State.health = 100
     State.maxHealth = 100
     State.radius = 10
-    State.name = "player"
-    State.status = "idle" -- Example: "idle", "moving", "attacking", "invincible", "immobilized"
+
+    -- Weapon
     State.WEAPON_SWITCH_COOLDOWN = 1
     State.currentWeaponIndex = 1
     State.weaponSwitchTime = 0
     State.weapons = {}
+
+    -- Physics
     State.body = nil
     State.shape = nil
     State.fixture = nil

@@ -13,6 +13,8 @@ function love.load()
     World.load()
     
     Player.load(World.world)
+
+    UI.load()
     
     for i = 1, nbMonster do
         local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
