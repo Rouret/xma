@@ -4,7 +4,7 @@ local love = require("love")
 function State.load()
     State.x = 200
     State.y = 200
-    State.speed = 300
+    State.speed = 1000
     State.health = 100
     State.maxHealth = 100
     State.radius = 10

@@ -5,18 +5,9 @@ local Timer = require("timer")
 local World = require("game.world")
 local enemies = {}
 
-
-function love.conf(t)
-    t.window.title = "Xma"
-    t.version = "0.1"   
-    t.window.fullscreen = true
-end
-
 function love.load()
     World.load()
-
-    love.window.setMode(0, 0, {fullscreen=true})
-
+    
     Player.load(World.world)
     table.insert(enemies, StationaryEnemy.new(400, 300, World.world))
 end
@@ -42,6 +33,8 @@ function love.update(dt)
 end
 
 function love.draw()
+    -- Draw world walls
+    World:draw()
     Player.draw()
 
   
