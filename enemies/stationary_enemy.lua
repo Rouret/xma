@@ -5,17 +5,17 @@ function StationaryEnemy.new(x, y, world)
     local self = setmetatable({}, StationaryEnemy)
     self.x = x
     self.y = y
+    self.name = "stationary_enemy"
     self.health = 100
     self.radius = 50
-    -- Créer un Body pour l'ennemi
-    self.body = love.physics.newBody(world, self.x, self.y, "static") -- Corps statique
+    self.body = love.physics.newBody(world, self.x, self.y, "static")
     self.shape = love.physics.newCircleShape(self.radius)
     self.fixture = love.physics.newFixture(self.body, self.shape)
-    self.fixture:setUserData(self) -- Identifier ce corps comme cet ennemi
+    self.fixture:setUserData(self) 
     return self
 end
 
-function StationaryEnemy:update(dt, player)
+function StationaryEnemy:update(dt, world)
     -- Aucun mouvement pour cet ennemi
 end
 

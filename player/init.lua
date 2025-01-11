@@ -18,7 +18,7 @@ function Player.load(world)
     State.body = love.physics.newBody(world, State.x, State.y, "dynamic") -- Corps dynamique
     State.shape = love.physics.newCircleShape(State.radius) -- Forme circulaire
     State.fixture = love.physics.newFixture(State.body, State.shape)
-    State.fixture:setUserData("player") -- Identifier ce corps comme le joueur
+    State.fixture:setUserData(State)
 end
 
 function Player.update(dt)

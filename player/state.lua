@@ -8,6 +8,7 @@ function State.load()
     State.health = 100
     State.maxHealth = 100
     State.radius = 10
+    State.name = "player"
     State.status = "idle" -- Example: "idle", "moving", "attacking", "invincible", "immobilized"
     State.WEAPON_SWITCH_COOLDOWN = 1
     State.currentWeaponIndex = 1

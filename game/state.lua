@@ -20,10 +20,10 @@ function GlobalState:removeEntity(entity)
 end
 
 -- Function to update all entities in the global state
-function GlobalState:update(dt)
+function GlobalState:update(dt, world)
     for _, entity in ipairs(self.entities) do
         if entity.update then
-            entity:update(dt)
+            entity:update(dt, world)
         end
     end
 end

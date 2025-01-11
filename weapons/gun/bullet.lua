@@ -1,11 +1,12 @@
 local GlobalState = require("game.state")
+local World = require("game.world")
 
 local Bullet = {}
 Bullet.__index = Bullet
 
 function Bullet.new(params)
     local self = setmetatable({}, Bullet)
-    
+    self.name = "bullet"
     self.TTL = 1
     self.speed = 1500
     self.currentTTL = 0
@@ -13,8 +14,13 @@ function Bullet.new(params)
     self.direction = params.direction
     self.x = params.x
     self.y = params.y
+    self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic") -- Corps statique
+    self.shape = love.physics.newRectangleShape(8, 8) -- Forme rectangulaire
+    self.fixture = love.physics.newFixture(self.body, self.shape)
     self.image = love.graphics.newImage("sprites/bullet.png")
 
+    self.fixture:setUserData(self)
+    self.fixture:setSensor(true)
 
     return self
 end
@@ -25,16 +31,22 @@ function Bullet:draw()
 end
 
 function Bullet:update(dt)
+    -- Incrémenter le TTL
     self.currentTTL = self.currentTTL + dt
     if self.currentTTL >= self.TTL then
-        -- Remove the bullet
+        -- Supprimer la balle
         GlobalState:removeEntity(self)
+        self.body:destroy()
+        return
     end
 
-    -- Move the bullet
-    self.x = self.x + math.cos(self.direction) * self.speed * dt
-    self.y = self.y + math.sin(self.direction) * self.speed * dt
-    
+    -- Déplacer le body physique
+    local dx = math.cos(self.direction) * self.speed * dt
+    local dy = math.sin(self.direction) * self.speed * dt
+    self.body:setPosition(self.body:getX() + dx, self.body:getY() + dy)
+
+    -- Synchroniser les coordonnées logiques avec celles du body
+    self.x, self.y = self.body:getPosition()
 end
 
 return Bullet

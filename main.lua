@@ -2,9 +2,9 @@ local Player = require("player.init")
 local StationaryEnemy = require("enemies.stationary_enemy")
 local GlobalState = require("game.state")
 local Timer = require("timer")
-
+local World = require("game.world")
 local enemies = {}
-local world
+
 
 function love.conf(t)
     t.window.title = "Xma"
@@ -13,27 +13,26 @@ function love.conf(t)
 end
 
 function love.load()
-    -- Créer le monde physique
-    world = love.physics.newWorld(0, 0, true) -- Pas de gravité
+    World.load()
 
     love.window.setMode(0, 0, {fullscreen=true})
 
-    Player.load(world)
-    table.insert(enemies, StationaryEnemy.new(400, 300, world))
+    Player.load(World.world)
+    table.insert(enemies, StationaryEnemy.new(400, 300, World.world))
 end
 
 function love.update(dt)
-    world:update(dt) -- Mettre à jour la physique
+    World.update(dt)
 
     Timer:update(dt)
     Player.update(dt)
 
-    GlobalState:update(dt)
+
 
     -- Mettre à jour tous les ennemis
     for i = #enemies, 1, -1 do
         local enemy = enemies[i]
-        enemy:update(dt, player)
+        enemy:update(dt, World.world)
 
         -- Supprimer les ennemis morts
         if not enemy:isAlive() then
@@ -41,16 +40,19 @@ function love.update(dt)
         end
     end
 
+    GlobalState:update(dt, World.World)
 end
 
 function love.draw()
     Player.draw()
 
-    GlobalState:draw()
-
+  
     -- Dessiner tous les ennemis
     for _, enemy in ipairs(enemies) do
         enemy:draw()
     end
+
+    GlobalState:draw()
+
    
 end
