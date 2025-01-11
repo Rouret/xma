@@ -1,6 +1,7 @@
 local State = require("player.state")
 local UI = {}
 
+local cooldownOverlay = love.graphics.newImage("sprites/weapons/on_cd_skill.png")
 
 function UI.load()
 end
@@ -15,24 +16,28 @@ function UI.draw()
     local weapon = State.weapons[State.currentWeaponIndex]
     local screenWidth, screenHeight = love.graphics.getDimensions()
     local rectWidth, rectHeight = 120, 120
-    local x = (screenWidth - (#weapon.skills * rectWidth)) / 2
+    local gap = 16
+    local totalWidth = (#weapon.skills * rectWidth) + ((#weapon.skills - 1) * gap)
+    local x = (screenWidth - totalWidth) / 2
     local y = screenHeight - rectHeight
     for i, skill in ipairs(weapon.skills) do
-        local rectX = x + (i - 1) * rectWidth
-        love.graphics.rectangle("line", rectX, y, rectWidth, rectHeight)
-        love.graphics.printf(skill.name, rectX, y + rectHeight / 4, rectWidth, "center")
-        
+        local calcX = x + (i - 1) * (rectWidth + gap)
+        love.graphics.draw(skill.image, calcX, y)
         if skill.remainingCooldownInSeconds > 0 then
-            love.graphics.printf("CD: " .. UI.formatTime(skill.remainingCooldownInSeconds), rectX, y + rectHeight / 2, rectWidth, "center")
+            love.graphics.draw(cooldownOverlay, calcX, y)
+            local cooldownText = UI.formatTime(skill.remainingCooldownInSeconds)
+            local font = love.graphics.newFont(36) 
+            love.graphics.setFont(font)
+            local textWidth = font:getWidth(cooldownText)
+            local textHeight = font:getHeight(cooldownText)
+            love.graphics.print(cooldownText, calcX + (rectWidth - textWidth) / 2, y + (rectHeight - textHeight) / 2)
         end
     end
-
 end
 
 function UI.formatTime(seconds)
-    local minutes = math.floor(seconds / 60)
     local remainingSeconds = seconds % 60
-    return string.format("%02d:%02d", minutes, remainingSeconds)
+    return string.format("%d", remainingSeconds)
 end
 
 return UI

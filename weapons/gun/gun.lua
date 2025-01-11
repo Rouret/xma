@@ -15,6 +15,7 @@ function Gun.new()
             name = "Shoot",
             cooldown = 0.5,
             damage = 10,
+            image = "sprites/weapons/gun/skill1.jpg",
             effect = function()
                 GlobalState:addEntity(Bullet.new({
                     damage = 10,
@@ -29,31 +30,20 @@ function Gun.new()
             name = "Multi shoot",
             cooldown = 3,
             damage = 0,
+            image = "sprites/weapons/gun/skill2.jpg",
             effect = function()
-                Timer:after(0.1, function()
-                    GlobalState:addEntity(Bullet.new({
-                        damage = 10,
-                        x = State.x,
-                        y = State.y,
-                        speed = 2500,
-                    }))
-                end)
-                Timer:after(0.2, function()
-                    GlobalState:addEntity(Bullet.new({
-                        damage = 10,
-                        x = State.x,
-                        y = State.y,
-                        speed = 2500,
-                    }))
-                end)
-                Timer:after(0.3, function()
-                    GlobalState:addEntity(Bullet.new({
-                        damage = 10,
-                        x = State.x,
-                        y = State.y,
-                        speed = 2500,
-                    }))
-                end)
+
+                local nbBullet = 3
+                for i = 1, nbBullet do
+                    Timer:after(0.1 * i, function()
+                        GlobalState:addEntity(Bullet.new({
+                            damage = 10,
+                            x = State.x,
+                            y = State.y,
+                            speed = 2500,
+                        }))
+                    end)
+                end
                 
             end
         }),
@@ -61,6 +51,7 @@ function Gun.new()
             name = "Sniper shoot",
             cooldown = 5,
             damage = 30,
+            image = "sprites/weapons/gun/skill3.jpg",
             effect = function()
                 State.status = "immobilized"
                 -- Ajouter un délai de 500ms avant de tirer

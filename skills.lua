@@ -9,6 +9,7 @@ function Skills.new(params)
     self.lastUsed = -params.cooldown -- Assure que la compétence est utilisable au début
     self.effect = params.effect -- Fonction déclenchant l'effet de la compétence
     self.damage = params.damage -- Dégâts infligés par la compétence
+    self.image = love.graphics.newImage(params.image or "sprites/weapons/empty_skill.png") -- Image de la compétence
 
     -- Initialisation du cooldown restant
     self.remainingCooldownInSeconds = 0
