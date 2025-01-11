@@ -1,5 +1,7 @@
 local GlobalState = require("game.state")
 local World = require("game.world")
+local State = require("player.state")
+local Utils = require("utils")
 
 local Bullet = {}
 Bullet.__index = Bullet
@@ -11,7 +13,7 @@ function Bullet.new(params)
     self.speed = params.speed or 1500
     self.currentTTL = 0
     self.damage = params.damage
-    self.direction = params.direction
+    self.direction = params.direction or State.getAngleToMouse()
     self.x = params.x
     self.y = params.y
     self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic") -- Corps statique

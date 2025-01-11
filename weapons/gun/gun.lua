@@ -29,16 +29,31 @@ function Gun.new()
             cooldown = 3,
             damage = 0,
             effect = function()
-                for i = 0, 2 do
+                Timer:after(0.1, function()
                     GlobalState:addEntity(Bullet.new({
-                            damage = 10,
-                            x = State.x,
-                            TTL = 0.2,
-                            y = State.y,
-                            speed = 2500,
-                            direction = State.getAngleToMouse() + (i - 1) * 0.1
-                        }))
-                end
+                        damage = 10,
+                        x = State.x,
+                        y = State.y,
+                        speed = 2500,
+                    }))
+                end)
+                Timer:after(0.2, function()
+                    GlobalState:addEntity(Bullet.new({
+                        damage = 10,
+                        x = State.x,
+                        y = State.y,
+                        speed = 2500,
+                    }))
+                end)
+                Timer:after(0.3, function()
+                    GlobalState:addEntity(Bullet.new({
+                        damage = 10,
+                        x = State.x,
+                        y = State.y,
+                        speed = 2500,
+                    }))
+                end)
+                
             end
         }),
         Skills.new({
