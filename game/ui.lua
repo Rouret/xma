@@ -10,11 +10,20 @@ function UI.load()
 
     UI.skills = {}
     UI.skills.gap = 16
-    UI.skills.size = 120
+    UI.skills.size =  120*3 + 16*2
+    UI.skills.skillSize = 120
 
     UI.healthBar = {}
-    UI.healthBar.width = 120*3 + 16*2
+    UI.healthBar.width =UI.skills.size
     UI.healthBar.height = 20
+
+    UI.switch = {}
+    UI.switch.itemSize = 32
+    UI.switch.gap = 12
+    UI.switch.imageEnabled = love.graphics.newImage("sprites/switch.png")
+    UI.switch.imageDisabled = love.graphics.newImage("sprites/switch-disable.png")
+
+    UI.emptyImage = love.graphics.newImage("sprites/empty_image.png")
 
     UI.font = {}
     UI.font.big = love.graphics.newFont(36) 
@@ -32,6 +41,31 @@ end
 function UI:draw()
     UI.drawSkills()
     UI.drawPlayerHealth()
+    UI.drawSwitchWeapon()
+end
+
+function UI.drawSwitchWeapon()
+    local weapon = State.weapons[State.currentWeaponIndex]
+    local previousWeapon = State.weapons[State.currentWeaponIndex - 1] or State.weapons[#State.weapons]
+    local nextWeapon = State.weapons[State.currentWeaponIndex + 1] or State.weapons[1]
+
+    local x = ((UI.screenWidth - UI.skills.size) / 2) - UI.switch.itemSize - UI.switch.gap
+    local y = UI.screenHeight - UI.skills.skillSize
+
+    -- Draw previous weapon
+    love.graphics.draw(UI.emptyImage, x, y)
+
+    local imageToDraw
+    if State.canSwitchWeapon() then
+        imageToDraw = UI.switch.imageEnabled
+    else
+        imageToDraw = UI.switch.imageDisabled
+    end
+
+    love.graphics.draw(imageToDraw, x, y + UI.switch.gap + UI.switch.itemSize)
+
+    love.graphics.draw(UI.emptyImage,  x, y + (UI.switch.gap + UI.switch.itemSize)*2)
+   
 end
 
 function UI.drawPlayerHealth()
@@ -40,7 +74,7 @@ function UI.drawPlayerHealth()
     local maxHealth = State.maxHealth
     local healthPercentage = health / maxHealth
     local healthBarX = (UI.screenWidth - UI.healthBar.width) / 2
-    local healthBarY = UI.screenHeight - UI.skills.size - 40
+    local healthBarY = UI.screenHeight -  UI.skills.skillSize  - 40
     local healthBarFillWidth = UI.healthBar.width * healthPercentage
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", healthBarX, healthBarY, healthBarFillWidth, UI.healthBar.height)
@@ -58,11 +92,11 @@ end
 
 function UI.drawSkills()
     local weapon = State.weapons[State.currentWeaponIndex]
-    local totalWidth = (#weapon.skills * UI.skills.size) + ((#weapon.skills - 1) * UI.skills.gap)
+    local totalWidth = (#weapon.skills *  UI.skills.skillSize ) + ((#weapon.skills - 1) * UI.skills.gap)
     local x = (UI.screenWidth - totalWidth) / 2
-    local y = UI.screenHeight - UI.skills.size
+    local y = UI.screenHeight - UI.skills.skillSize
     for i, skill in ipairs(weapon.skills) do
-        local calcX = x + (i - 1) * (UI.skills.size + UI.skills.gap)
+        local calcX = x + (i - 1) * ( UI.skills.skillSize  + UI.skills.gap)
         love.graphics.draw(skill.image, calcX, y)
         if skill.remainingCooldownInSeconds > 0 then
             love.graphics.draw(cooldownOverlay, calcX, y)
@@ -70,7 +104,7 @@ function UI.drawSkills()
             love.graphics.setFont(UI.font.big)
             local textWidth = UI.font.big:getWidth(cooldownText)
             local textHeight = UI.font.big:getHeight(cooldownText)
-            love.graphics.print(cooldownText, calcX + (UI.skills.size - textWidth) / 2, y + (UI.skills.size - textHeight) / 2)
+            love.graphics.print(cooldownText, calcX + ( UI.skills.skillSize  - textWidth) / 2, y + ( UI.skills.skillSize  - textHeight) / 2)
         end
     end
 end

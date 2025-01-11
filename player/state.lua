@@ -35,6 +35,10 @@ function State.switchWeapon()
     end
 end
 
+function State.canSwitchWeapon()
+    return love.timer.getTime() - State.weaponSwitchTime > State.WEAPON_SWITCH_COOLDOWN
+end
+
 function State.takeDamage(amount)
     State.health = math.max(0, State.health - amount)
 
