@@ -37,8 +37,8 @@ function Enemy:takeDamage(damage)
     end
 end
 
-function Enemy:die()
-    error("die method not implemented")
+function Entity:isAlive()
+    return self.health > 0
 end
 
 return Enemy

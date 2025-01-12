@@ -6,7 +6,6 @@ Entity.__index = Entity
 
 function Entity:init(params)
     params = params or {}
-    local self = setmetatable({}, Entity)
 
     -- Mandatory parameters
     if not params.shape or not params.bodyType then
