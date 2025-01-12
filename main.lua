@@ -90,7 +90,7 @@ function generateEnemiesFromPlayerLevel(nbMonster)
         local x = love.math.random(0, love.graphics.getWidth())
         local y = love.math.random(0, love.graphics.getHeight())
         local enemy =
-            ChasingEnemy:init(
+            ChasingEnemy:new(
             {
                 x = x,
                 y = y,

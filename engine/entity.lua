@@ -4,6 +4,12 @@ local World = require("game.world")
 Entity = {}
 Entity.__index = Entity
 
+function Entity:new(params)
+    local instance = setmetatable({}, self)
+    instance:init(params)
+    return instance
+end
+
 function Entity:init(params)
     params = params or {}
 

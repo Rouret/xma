@@ -11,7 +11,7 @@ function State.load()
     State.y = 1000
 
     -- Velocity
-    State.speed = 150
+    State.speed = 1000
 
     -- Health
     State.health = 100
@@ -19,7 +19,7 @@ function State.load()
     State.radius = 10
 
     -- Damage
-    State.damage = 100
+    State.damage = 1000
 
     -- Experience
     State.experience = 0
