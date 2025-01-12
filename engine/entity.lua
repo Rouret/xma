@@ -1,7 +1,8 @@
 local GlobalState = require("game.state")
 local World = require("game.world")
+local Object = require("engine.object")
 
-Entity = {}
+Entity = Object:extend()
 Entity.__index = Entity
 
 function Entity:new(params)
@@ -46,19 +47,6 @@ end
 function Entity:destroy()
     self.body:destroy()
     GlobalState:removeEntity(self)
-end
-
-function Entity:extend()
-    local cls = {}
-    for k, v in pairs(self) do
-        if k:find("__") == 1 then
-            cls[k] = v
-        end
-    end
-    cls.__index = cls
-    cls.super = self
-    setmetatable(cls, self)
-    return cls
 end
 
 return Entity

@@ -3,14 +3,13 @@ local GlobalState = require("game.state")
 local Bullet = require("weapons.gun.bullet")
 local State = require("player.state")
 local Timer = require("timer")
+local Weapon = require("engine.weapon")
 
-local Gun = {}
-Gun.__index = Gun
+local Gun = Weapon:extend()
 
-function Gun.new()
-    local self = setmetatable({}, Gun)
-    self.name = "Gun"
-    self.skills = {
+function Gun:init()
+    params = params or {}
+    params.skills = {
         Skills.new(
             {
                 name = "Shoot",
@@ -91,28 +90,10 @@ function Gun.new()
             }
         )
     }
-    self.image = love.graphics.newImage("sprites/weapons/gun/gun.png")
+    params.image = "sprites/weapons/gun/gun.png"
+
+    Weapon.init(self, params)
     return self
-end
-
--- Draw the gun
-function Gun:draw()
-    -- Check if weapon is in hand or back
-    if State.isWeaponEquipped(self.name) then
-        self:drawInHand(State.x, State.y)
-    else
-        self:drawInBack()
-    end
-end
-
--- Draw gun in hand
-function Gun:drawInHand(x, y)
-    local rotation = State.getAngleToMouse() - math.pi / 2
-    love.graphics.draw(self.image, x, y, rotation, 1, 1, 0, 0)
-end
-
--- Draw gun in the back
-function Gun:drawInBack()
 end
 
 return Gun
