@@ -21,7 +21,7 @@ function Gun.new()
                     GlobalState:addEntity(
                         Bullet.new(
                             {
-                                damage = 50,
+                                damage = 20,
                                 x = State.x,
                                 y = State.y,
                                 speed = 1500,
@@ -47,7 +47,7 @@ function Gun.new()
                                 GlobalState:addEntity(
                                     Bullet.new(
                                         {
-                                            damage = 10,
+                                            damage = 20,
                                             x = State.x,
                                             y = State.y,
                                             speed = 2500
@@ -75,7 +75,7 @@ function Gun.new()
                             GlobalState:addEntity(
                                 Bullet.new(
                                     {
-                                        damage = 30,
+                                        damage = 60,
                                         x = State.x,
                                         y = State.y,
                                         TTL = 2,

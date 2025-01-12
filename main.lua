@@ -3,6 +3,7 @@ local StationaryEnemy = require("enemies.stationary_enemy")
 local ChasingEnemy = require("enemies.chasing_enemy")
 local GlobalState = require("game.state")
 local UI = require("game.ui")
+local State = require("player.state")
 local Timer = require("timer")
 local World = require("game.world")
 local Game = require("game.game")
@@ -17,10 +18,7 @@ function love.load()
     Player.load(World.world)
     UI.load()
 
-    for i = 1, nbMonster do
-        local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
-        table.insert(enemies, enemy)
-    end
+    generateEnemiesFromPlayerLevel(nbMonster)
 end
 
 function love.update(dt)
@@ -54,10 +52,7 @@ function love.update(dt)
 
     -- Ajouter des ennemis si nécessaire
     if #enemies < nbMonster then
-        for i = #enemies + 1, nbMonster do
-            local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
-            table.insert(enemies, enemy)
-        end
+        generateEnemiesFromPlayerLevel(nbMonster)
     end
 
     GlobalState:update(dt, World.World)
@@ -83,4 +78,24 @@ end
 
 function love.mousepressed(x, y, button)
     Choice.mousepressed(x, y, button)
+end
+
+function generateEnemiesFromPlayerLevel(nbMonster)
+    for i = #enemies + 1, nbMonster do
+        local x = love.math.random(0, love.graphics.getWidth())
+        local y = love.math.random(0, love.graphics.getHeight())
+        local enemy =
+            ChasingEnemy.new(
+            {
+                x = x,
+                y = y,
+                speed = 100 + State.level * 10,
+                radius = 20,
+                health = 100 + State.level * 10,
+                maxHealth = 100 + State.level * 10
+            }
+        )
+        table.insert(enemies, enemy)
+    end
+    return enemies
 end

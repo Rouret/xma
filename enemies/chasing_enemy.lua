@@ -4,16 +4,16 @@ local State = require("player.state")
 local ChasingEnemy = {}
 ChasingEnemy.__index = ChasingEnemy
 
-function ChasingEnemy.new(x, y)
+function ChasingEnemy.new(params)
     local self = setmetatable({}, ChasingEnemy)
-    self.x = x
-    self.y = y
+    self.x = params.x or 0
+    self.y = params.y or 0
     self.name = "chasing_enemy"
-    self.health = 100
-    self.speed = 200
-    self.maxHealth = 100
-    self.radius = 50
-    self.damage = 10
+    self.health = params.health or 100
+    self.speed = params.speed or 200
+    self.maxHealth = params.maxHealth or 100
+    self.radius = params.radius or 50
+    self.damage = params.damage or 10
     self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic")
     self.shape = love.physics.newCircleShape(self.radius)
     self.fixture = love.physics.newFixture(self.body, self.shape)
