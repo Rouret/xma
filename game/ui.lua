@@ -54,11 +54,20 @@ function UI.drawPlayerStat()
     local y = UI.screenHeight - UI.skills.skillSize
 
     love.graphics.draw(Choice.config[Choice.Type.SPEED].image, x, y)
-    local speedValue = State.speed
+    local speedValue = UI.formatValue(State.speed)
     love.graphics.setFont(UI.font.small)
     local textWidth = UI.font.small:getWidth(speedValue)
     local textHeight = UI.font.small:getHeight(speedValue)
     love.graphics.print(speedValue, x + UI.switch.itemSize + UI.switch.gap, y + (UI.switch.itemSize - textHeight) / 2)
+
+    y = y + UI.switch.itemSize + UI.switch.gap
+
+    love.graphics.draw(Choice.config[Choice.Type.DAMAGE].image, x, y)
+    local damageValue = UI.formatValue(State.damage)
+    love.graphics.setFont(UI.font.small)
+    local textWidth = UI.font.small:getWidth(damageValue)
+    local textHeight = UI.font.small:getHeight(damageValue)
+    love.graphics.print(damageValue, x + UI.switch.itemSize + UI.switch.gap, y + (UI.switch.itemSize - textHeight) / 2)
 end
 
 function UI.drawSwitchWeapon()
@@ -167,6 +176,10 @@ end
 function UI.formatTime(seconds)
     local remainingSeconds = seconds % 60
     return string.format("%d", remainingSeconds)
+end
+
+function UI.formatValue(value)
+    return string.format("%d", math.floor(value))
 end
 
 return UI

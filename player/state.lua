@@ -7,11 +7,11 @@ function State.load()
     State.status = "idle" -- Example: "idle", "immobilized"
 
     -- Position
-    State.x = 200
-    State.y = 200
+    State.x = 1000
+    State.y = 1000
 
     -- Velocity
-    State.speed = 1000
+    State.speed = 150
 
     -- Health
     State.health = 100
@@ -48,7 +48,11 @@ function State.canSwitchWeapon()
 end
 
 function State.takeDamage(amount)
-    State.health = math.max(0, State.health - amount)
+    State.health = State.health - amount
+
+    if State.health <= 0 then
+        love.event.quit()
+    end
 end
 
 function State.heal(amount)
@@ -80,7 +84,7 @@ function State.gainExperience(amount)
 end
 
 function State.calcDamage(damage)
-    return damage * (State.damage - 100) / 100
+    return damage * (State.damage / 100)
 end
 
 return State

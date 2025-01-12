@@ -13,6 +13,7 @@ function ChasingEnemy.new(x, y)
     self.speed = 200
     self.maxHealth = 100
     self.radius = 50
+    self.damage = 10
     self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic")
     self.shape = love.physics.newCircleShape(self.radius)
     self.fixture = love.physics.newFixture(self.body, self.shape)
@@ -79,6 +80,14 @@ function ChasingEnemy:destroy()
     State.gainExperience(100)
     self.fixture:destroy()
     GlobalState:removeEntity(self)
+end
+
+function ChasingEnemy:onCollision(entity)
+    if entity.name ~= "player" then
+        return
+    end
+
+    State.takeDamage(self.damage)
 end
 
 return ChasingEnemy

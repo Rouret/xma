@@ -1,2 +1,1 @@
-- player take damage
-- apply damage of player
+- Enemy more stronger
