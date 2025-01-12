@@ -1,1 +1,3 @@
-- Enemy more stronger
+- Refacto
+- end of gun
+- first enemy
