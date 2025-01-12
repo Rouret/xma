@@ -1,5 +1,4 @@
 local Player = require("player.init")
-local StationaryEnemy = require("enemies.stationary_enemy")
 local ChasingEnemy = require("enemies.chasing_enemy")
 local GlobalState = require("game.state")
 local UI = require("game.ui")
@@ -91,7 +90,7 @@ function generateEnemiesFromPlayerLevel(nbMonster)
         local x = love.math.random(0, love.graphics.getWidth())
         local y = love.math.random(0, love.graphics.getHeight())
         local enemy =
-            ChasingEnemy.new(
+            ChasingEnemy.init(
             {
                 x = x,
                 y = y,

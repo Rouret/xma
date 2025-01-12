@@ -1,22 +1,16 @@
 local World = require("game.world")
 local State = require("player.state")
+local Enemy = require("engine.enemy")
 
-local ChasingEnemy = {}
+local ChasingEnemy = Enemy:extend()
 ChasingEnemy.__index = ChasingEnemy
 
-function ChasingEnemy.new(params)
-    local self = setmetatable({}, ChasingEnemy)
-    self.x = params.x or 0
-    self.y = params.y or 0
-    self.name = "chasing_enemy"
-    self.health = params.health or 100
-    self.speed = params.speed or 200
-    self.maxHealth = params.maxHealth or 100
-    self.radius = params.radius or 50
-    self.damage = params.damage or 10
-    self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic")
-    self.shape = love.physics.newCircleShape(self.radius)
-    self.fixture = love.physics.newFixture(self.body, self.shape)
+function ChasingEnemy:init(params)
+    params = params or {}
+    params.shape = love.physics.newCircleShape(params.radius or 50)
+    params.bodyType = "dynamic"
+    Enemy.init(self, params)
+
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
     self.body:setBullet(true)
@@ -65,10 +59,6 @@ function ChasingEnemy:draw()
     love.graphics.setColor(1, 1, 1) -- Reset color to white
 end
 
-function ChasingEnemy:isAlive()
-    return self.health > 0
-end
-
 function ChasingEnemy:takeDamage(damage)
     self.health = self.health - damage
     if self.health <= 0 then
@@ -88,6 +78,11 @@ function ChasingEnemy:onCollision(entity)
     end
 
     State.takeDamage(self.damage)
+end
+
+function ChasingEnemy:die()
+    State.gainExperience(self.exp)
+    self:destroy()
 end
 
 return ChasingEnemy
