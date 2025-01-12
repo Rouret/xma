@@ -1,7 +1,6 @@
 local State = {}
 local love = require("love")
 local Game = require("game.game")
-local Choice = require("game.choice")
 
 function State.load()
     State.name = "player"
@@ -77,7 +76,7 @@ function State.gainExperience(amount)
         State.experience = 0
 
         Game.isGamePaused = true
-        Choice.generateChoice()
+        Game.needToGenerateChoice = true
     end
 end
 

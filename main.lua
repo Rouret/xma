@@ -27,6 +27,11 @@ function love.load()
 end
 
 function love.update(dt)
+    if Game.needToGenerateChoice then
+        Choice.generateChoice()
+        Game.needToGenerateChoice = false
+        return
+    end
     if Game.isGamePaused then
         Choice.update(dt)
         return
