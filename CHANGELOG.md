@@ -5,7 +5,7 @@
 ### Added or Changed
 - Add UI
 - Add XP
-- Add start of choice
+- Add choice
 
 
 ## v0.0.1 - 12/01/25

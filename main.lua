@@ -80,6 +80,12 @@ function love.mousepressed(x, y, button)
     Choice.mousepressed(x, y, button)
 end
 
+function love.keypressed(key)
+    if key == "escape" then
+        Game.isGamePaused = not Game.isGamePaused
+    end
+end
+
 function generateEnemiesFromPlayerLevel(nbMonster)
     for i = #enemies + 1, nbMonster do
         local x = love.math.random(0, love.graphics.getWidth())
