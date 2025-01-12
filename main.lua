@@ -13,13 +13,10 @@ local nbMonster = 3
 
 function love.load()
     World.load()
-
     Choice.load()
-    
     Player.load(World.world)
-
     UI.load()
-    
+
     for i = 1, nbMonster do
         local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
         table.insert(enemies, enemy)
@@ -27,17 +24,20 @@ function love.load()
 end
 
 function love.update(dt)
+    -- Générer un choix si nécessaire
     if Game.needToGenerateChoice then
         Choice.generateChoice()
         Game.needToGenerateChoice = false
         return
     end
+
+    -- Mettre à jour le choix si le jeu est en pause
     if Game.isGamePaused then
         Choice.update(dt)
         return
     end
-    World.update(dt)
 
+    World.update(dt)
     Timer:update(dt)
     Player.update(dt)
 
@@ -52,7 +52,7 @@ function love.update(dt)
         end
     end
 
-    --if table.remove(enemies, is less than nbMonster then add a new enemy)
+    -- Ajouter des ennemis si nécessaire
     if #enemies < nbMonster then
         for i = #enemies + 1, nbMonster do
             local enemy = ChasingEnemy.new(love.math.random(0, 800), love.math.random(0, 600))
@@ -61,8 +61,6 @@ function love.update(dt)
     end
 
     GlobalState:update(dt, World.World)
-
-
 end
 
 function love.draw()
@@ -76,14 +74,12 @@ function love.draw()
     end
 
     GlobalState:draw()
-
     UI:draw()
 
     if Choice.hasGeneratedChoices then
         Choice.draw()
     end
 end
-
 
 function love.mousepressed(x, y, button)
     Choice.mousepressed(x, y, button)

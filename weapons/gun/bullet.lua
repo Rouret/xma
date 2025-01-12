@@ -30,7 +30,7 @@ end
 
 -- Draw the gun
 function Bullet:draw()
-    love.graphics.draw(self.image, self.x, self.y, self.direction + math.pi/2, 2, 2, 0, 0)
+    love.graphics.draw(self.image, self.x, self.y, self.direction + math.pi / 2, 2, 2, 0, 0)
 end
 
 function Bullet:update(dt)
@@ -40,7 +40,6 @@ function Bullet:update(dt)
         -- Supprimer la balle
         GlobalState:removeEntity(self)
         self.body:destroy()
-        print("Bullet TTL")
         return
     end
 
@@ -54,7 +53,6 @@ function Bullet:update(dt)
 end
 
 function Bullet:takeDamage(damage)
-
 end
 
 function Bullet:onCollision(entity)
@@ -63,20 +61,18 @@ function Bullet:onCollision(entity)
         return
     end
 
-    if entity.name == "wall"  then
+    if entity.name == "wall" then
         self:destroy()
         return
     end
 
-    entity:takeDamage(self.damage)
+    entity:takeDamage(State.calcDamage(self.damage))
     self:destroy()
 end
-
 
 function Bullet:destroy()
     self.body:destroy()
     GlobalState:removeEntity(self)
-   
 end
 
 return Bullet

@@ -1,4 +1,3 @@
-
 -- Global state table for all entities
 GlobalState = {
     entities = {}

@@ -47,6 +47,4 @@ function Skills:use(currentTime, ...)
     end
 end
 
-
-
 return Skills

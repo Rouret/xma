@@ -1,0 +1,2 @@
+- player take damage
+- apply damage of player

@@ -1,7 +1,6 @@
 local State = require("player.state")
 local Movement = {}
 
-
 function Movement.update()
     if State.status == "immobilized" then
         State.body:setLinearVelocity(0, 0) -- Immobiliser le joueur
@@ -25,13 +24,13 @@ function Movement.update()
     end
 
     -- Normaliser le vecteur pour éviter les mouvements diagonaux plus rapides
-    local length = math.sqrt(moveX^2 + moveY^2)
+    local length = math.sqrt(moveX ^ 2 + moveY ^ 2)
     if length > 0 then
         moveX, moveY = moveX / length, moveY / length
     end
 
     -- Appliquer une vitesse constante au Body
-    
+
     State.body:setLinearVelocity(moveX * State.speed, moveY * State.speed)
 end
 
@@ -42,7 +41,5 @@ function Movement.move(dx, dy, dt)
     State.x = State.x + dx * State.speed * dt
     State.y = State.y + dy * State.speed * dt
 end
-
-
 
 return Movement

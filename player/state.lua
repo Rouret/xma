@@ -49,7 +49,6 @@ end
 
 function State.takeDamage(amount)
     State.health = math.max(0, State.health - amount)
-
 end
 
 function State.heal(amount)
@@ -80,5 +79,8 @@ function State.gainExperience(amount)
     end
 end
 
+function State.calcDamage(damage)
+    return damage * (State.damage - 100) / 100
+end
 
 return State

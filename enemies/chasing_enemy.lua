@@ -16,7 +16,7 @@ function ChasingEnemy.new(x, y)
     self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic")
     self.shape = love.physics.newCircleShape(self.radius)
     self.fixture = love.physics.newFixture(self.body, self.shape)
-    self.fixture:setUserData(self) 
+    self.fixture:setUserData(self)
     self.fixture:setSensor(true)
     self.body:setBullet(true)
 
@@ -27,7 +27,7 @@ function ChasingEnemy:update(dt, world)
     -- Calculer la direction vers le joueur
     local dx = State.x - self.body:getX()
     local dy = State.y - self.body:getY()
-    local distance = math.sqrt(dx^2 + dy^2)
+    local distance = math.sqrt(dx ^ 2 + dy ^ 2)
 
     if distance > 0 then
         local velocityX = (dx / distance) * self.speed
@@ -54,7 +54,13 @@ function ChasingEnemy:draw()
     love.graphics.setColor(1, 0, 0) -- Set color to red
     love.graphics.rectangle("fill", healthBarX, healthBarY, healthBarWidth, healthBarHeight)
     love.graphics.setColor(0, 1, 0) -- Set color to green
-    love.graphics.rectangle("fill", healthBarX, healthBarY, healthBarWidth * (self.health / self.maxHealth), healthBarHeight)
+    love.graphics.rectangle(
+        "fill",
+        healthBarX,
+        healthBarY,
+        healthBarWidth * (self.health / self.maxHealth),
+        healthBarHeight
+    )
     love.graphics.setColor(1, 1, 1) -- Reset color to white
 end
 

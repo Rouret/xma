@@ -14,11 +14,12 @@ function World.load()
     World.walls.left.shape = love.physics.newRectangleShape(0, 0, 1, love.graphics.getHeight())
     World.walls.left.fixture = love.physics.newFixture(World.walls.left.body, World.walls.left.shape)
     World.walls.left.fixture:setUserData(World.walls.left)
-    
+
     -- Mur droite en rouge
     World.walls.right = {}
     World.walls.right.name = "wall"
-    World.walls.right.body = love.physics.newBody(World.world, love.graphics.getWidth() + 1, love.graphics.getHeight() / 2, "static")
+    World.walls.right.body =
+        love.physics.newBody(World.world, love.graphics.getWidth() + 1, love.graphics.getHeight() / 2, "static")
     World.walls.right.shape = love.physics.newRectangleShape(0, 0, 1, love.graphics.getHeight())
     World.walls.right.fixture = love.physics.newFixture(World.walls.right.body, World.walls.right.shape)
     World.walls.right.fixture:setUserData(World.walls.right)
@@ -34,13 +35,13 @@ function World.load()
     -- Mur bas en rouge
     World.walls.bottom = {}
     World.walls.bottom.name = "wall"
-    World.walls.bottom.body = love.physics.newBody(World.world, love.graphics.getWidth() / 2, love.graphics.getHeight(), "static")
+    World.walls.bottom.body =
+        love.physics.newBody(World.world, love.graphics.getWidth() / 2, love.graphics.getHeight(), "static")
     World.walls.bottom.shape = love.physics.newRectangleShape(0, 0, love.graphics.getWidth(), 1)
     World.walls.bottom.fixture = love.physics.newFixture(World.walls.bottom.body, World.walls.bottom.shape)
     World.walls.bottom.fixture:setUserData(World.walls.bottom)
     return World
 end
-
 
 function World.update(dt)
     World.world:update(dt) -- Mettre à jour la physique
@@ -60,7 +61,7 @@ function World.beginContact(fixtureA, fixtureB, contact)
     local userDataA = fixtureA:getUserData()
     local userDataB = fixtureB:getUserData()
 
-    if(userDataA == nil or userDataB == nil) then
+    if (userDataA == nil or userDataB == nil) then
         return
     end
 

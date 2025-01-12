@@ -3,10 +3,13 @@ Timer.timers = {}
 
 -- Ajouter un timer
 function Timer:after(delay, callback)
-    table.insert(self.timers, {
-        time = delay, -- Temps restant avant d'exécuter le callback
-        callback = callback
-    })
+    table.insert(
+        self.timers,
+        {
+            time = delay, -- Temps restant avant d'exécuter le callback
+            callback = callback
+        }
+    )
 end
 
 -- Mettre à jour tous les timers

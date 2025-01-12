@@ -7,8 +7,6 @@ local Draw = require("player.draw")
 local Gun = require("weapons.gun.gun")
 local Sword = require("weapons.sword.sword")
 
-
-
 function Player.load(world)
     State.load()
     State.weapons = {

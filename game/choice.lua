@@ -81,13 +81,16 @@ function Choice.generateChoice()
         local value = love.math.random(config.min, config.max)
 
         -- Ajouter le choix généré
-        table.insert(Choice.choices, {
-            type = choiceType,
-            value = value,
-            image = config.image,
-            name = config.name,
-            isHovered = false -- Initialiser l'état de hover
-        })
+        table.insert(
+            Choice.choices,
+            {
+                type = choiceType,
+                value = value,
+                image = config.image,
+                name = config.name,
+                isHovered = false -- Initialiser l'état de hover
+            }
+        )
     end
 
     Choice.hasGeneratedChoices = true
@@ -131,7 +134,7 @@ function Choice.draw()
         local imageX = x + (cardWidth - choice.image:getWidth()) / 2
         local imageY = y + 16
         -- Dessiner l'image du choix
-        love.graphics.draw(choice.image,imageX , imageY)
+        love.graphics.draw(choice.image, imageX, imageY)
         -- Dessiner le texte du type et de la valeur avec la police définie
         love.graphics.setColor(0, 0, 0)
         love.graphics.setFont(Choice.font)
@@ -140,7 +143,7 @@ function Choice.draw()
         local choiceNameY = imageY + 24
         love.graphics.printf(choice.name, x, choiceNameY + choiceNameHeight, cardWidth, "center")
 
-        local choiceValue = "+" .. choice.value .."%"
+        local choiceValue = "+" .. choice.value .. "%"
         local choiceValueHeight = Choice.font:getHeight(choiceValue)
         love.graphics.printf(choiceValue, x, choiceNameY + choiceValueHeight + 40, cardWidth, "center")
     end
@@ -149,7 +152,6 @@ end
 -- Détecter les clics
 function Choice.mousepressed(x, y, button)
     if button == 1 then -- Clic gauche
-      
         for i, choice in ipairs(Choice.choices) do
             local cardX = startX + (i - 1) * (cardWidth + spacing)
 
@@ -165,7 +167,7 @@ end
 function Choice.applyChoice(choice)
     local value = (choice.value / 100) + 1
     if choice.type == Choice.Type.SPEED then
-        State.speed = State.speed *value
+        State.speed = State.speed * value
     elseif choice.type == Choice.Type.DAMAGE then
         State.damage = State.damage * value
     elseif choice.type == Choice.Type.HEALTH then
