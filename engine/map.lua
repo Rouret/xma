@@ -6,12 +6,17 @@ Map.__index = Map
 local TILE_SIZE = 32
 local MAP_WIDTH = 1000
 local MAP_HEIGHT = 1000
+local BUSH_CLUSTER_SIZE_MIN = 3
+local BUSH_CLUSTER_SIZE_MAX = 24
+local BUSH_CLUSTER_COUNT = 3000
 
 -- Crée une nouvelle instance de carte
 function Map.new(world)
     local self = setmetatable({}, Map)
-    self.tiles = {} -- Stocke les tiles de la carte
-    self.world = world -- Référence au monde physique
+
+    self.layers = {} -- Stocke les layers (sol, obstacles, etc.)
+
+    self.world = world
 
     -- Chargement du tileset
     self.tileset = love.graphics.newImage("sprites/tilesets/v0.png")
@@ -29,35 +34,45 @@ function Map.new(world)
     return self
 end
 
--- Génère la carte procédurale avec clusters de buissons
-function Map:generate()
-    -- Initialisation des tiles avec des sols
+-- Génère le sol (layer 0)
+function Map:generateGround()
+    local tiles = {}
     for y = 1, MAP_HEIGHT do
-        self.tiles[y] = {}
+        tiles[y] = {}
         for x = 1, MAP_WIDTH do
             local randomGroundQuad = self.groundQuads[love.math.random(1, #self.groundQuads)]
-            self.tiles[y][x] = {quad = randomGroundQuad, collision = false}
+            tiles[y][x] = {quad = randomGroundQuad, collision = false}
         end
     end
 
-    -- Génération des buissons
-    self:generateBushClusters(1000, 5, 10) -- 100 clusters, min 5 buissons, max 10 buissons par cluster
+    return tiles
 end
 
--- Génère des clusters de buissons
+-- Génère les buissons (layer 1) avec clusters
 function Map:generateBushClusters(clusterCount, minSize, maxSize)
+    local tiles = {}
+
+    for y = 1, MAP_HEIGHT do
+        tiles[y] = {}
+        for x = 1, MAP_WIDTH do
+            tiles[y][x] = nil -- Initialisation vide
+        end
+    end
+
     for i = 1, clusterCount do
         -- Point de départ aléatoire
         local startX = love.math.random(1, MAP_WIDTH)
         local startY = love.math.random(1, MAP_HEIGHT)
         local clusterSize = love.math.random(minSize, maxSize)
 
-        self:growBushCluster(startX, startY, clusterSize)
+        self:growBushCluster(startX, startY, clusterSize, tiles)
     end
+
+    return tiles
 end
 
 -- Fait croître un cluster de buissons
-function Map:growBushCluster(startX, startY, size)
+function Map:growBushCluster(startX, startY, size, tiles)
     local directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}} -- Haut, droite, bas, gauche
     local bushCount = 0
     local queue = {{x = startX, y = startY}}
@@ -67,20 +82,16 @@ function Map:growBushCluster(startX, startY, size)
         local x, y = current.x, current.y
 
         -- Vérifie si la position est valide
-        if self:isValidTile(x, y) and not self.tiles[y][x].collision then
+        if self:isValidTile(x, y) and not tiles[y][x] then
             -- Place un buisson
-            self.tiles[y][x] = {quad = self.bushQuad, collision = true}
+            tiles[y][x] = {quad = self.bushQuad, collision = true}
             bushCount = bushCount + 1
 
             -- Ajoute un body pour la collision
             local body = love.physics.newBody(self.world, (x - 0.5) * TILE_SIZE, (y - 0.5) * TILE_SIZE, "static")
             local shape = love.physics.newRectangleShape(TILE_SIZE, TILE_SIZE)
             local fixture = love.physics.newFixture(body, shape)
-            fixture:setUserData(
-                {
-                    name = "wall"
-                }
-            )
+            fixture:setUserData({name = "wall"})
 
             -- Ajoute les voisins à la queue (croissance)
             for _, dir in ipairs(directions) do
@@ -93,13 +104,27 @@ function Map:growBushCluster(startX, startY, size)
     end
 end
 
+-- Génère la carte
+function Map:generate()
+    -- Layer 0 : Sol
+    self.layers[0] = self:generateGround()
+
+    -- Layer 1 : Buissons
+    self.layers[1] = self:generateBushClusters(BUSH_CLUSTER_COUNT, BUSH_CLUSTER_SIZE_MIN, BUSH_CLUSTER_SIZE_MAX)
+end
+
 -- Vérifie si une position est valide pour un tile
 function Map:isValidTile(x, y)
     return x >= 1 and x <= MAP_WIDTH and y >= 1 and y <= MAP_HEIGHT
 end
 
--- Dessine la carte (vue basée sur une caméra)
-function Map:draw()
+-- Dessine un layer
+function Map:drawLayer(layer)
+    local tiles = self.layers[layer]
+    if not tiles then
+        return
+    end -- Vérifie que le layer existe
+
     local screenWidth, screenHeight = love.graphics.getDimensions()
     local scale = Camera.i.scale
 
@@ -112,8 +137,8 @@ function Map:draw()
     -- Dessin des tiles visibles
     for y = startY, endY do
         for x = startX, endX do
-            if self.tiles[y] and self.tiles[y][x] then
-                local tile = self.tiles[y][x]
+            if tiles[y] and tiles[y][x] then
+                local tile = tiles[y][x]
                 love.graphics.draw(
                     self.tileset,
                     tile.quad,
@@ -122,6 +147,13 @@ function Map:draw()
                 )
             end
         end
+    end
+end
+
+-- Dessine la carte entière
+function Map:draw()
+    for layer = 0, #self.layers do
+        self:drawLayer(layer)
     end
 end
 
