@@ -8,7 +8,7 @@ local World = require("game.world")
 local Game = require("game.game")
 local Choice = require("game.choice")
 local Camera = require("engine.camera")
-local Map = require("engine.map")
+local Map = require("engine.map.map")
 local enemies = {}
 local nbMonster = 3
 local map
