@@ -33,6 +33,7 @@ function love.update(dt)
 
     -- Mettre à jour le choix si le jeu est en pause
     if Game.isGamePaused then
+        World.update(dt)
         Choice.update(dt)
         return
     end
