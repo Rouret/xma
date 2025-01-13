@@ -3,10 +3,11 @@ local BiomeGenerator = require("engine.map.biomeGenerator")
 local Camera = require("engine.camera")
 local BiomeRegistry = require("engine/map/BiomeRegistry")
 
-local biomeFiles = {"Forest", "Desert"}
+local biomeFiles = {"Forest"}
 for _, biomeFile in ipairs(biomeFiles) do
     local biome = require("engine/map/biomes/" .. biomeFile)
     BiomeRegistry.register(biome.name, biome)
+    biome.loadAssets()
 end
 
 local Map = {}
@@ -63,7 +64,6 @@ function Map:generate()
     self.layers[0] = self:generateTerrain()
 end
 
--- Génère le terrain à partir des biomes
 function Map:generateTerrain()
     local tiles = {}
 
@@ -71,38 +71,16 @@ function Map:generateTerrain()
         tiles[y] = {}
         for x = 1, MAP_WIDTH do
             local biome = self.biomes[y][x]
-            local groundQuad = self.tilesetQuads[biome.groundQuad]
-
-            tiles[y][x] = {quad = groundQuad, collision = biome.name == "Mountain"}
+            if biome then
+                local biomeModule = BiomeRegistry.getBiome(biome.name)
+                if biomeModule then
+                    tiles[y][x] = biomeModule.generateTerrain(x, y)
+                end
+            end
         end
     end
 
     return tiles
-end
-
--- Dessine la carte
-function Map:draw()
-    local camX, camY, camWidth, camHeight = Camera.i:getVisibleArea()
-
-    local startX = math.max(1, math.floor(camX / TILE_SIZE))
-    local endX = math.min(MAP_WIDTH, math.ceil((camX + camWidth) / TILE_SIZE))
-    local startY = math.max(1, math.floor(camY / TILE_SIZE))
-    local endY = math.min(MAP_HEIGHT, math.ceil((camY + camHeight) / TILE_SIZE))
-
-    for layer = 0, #self.layers do
-        local tiles = self.layers[layer]
-        if not tiles then
-            return
-        end
-
-        for y = startY, endY do
-            for x = startX, endX do
-                local tile = tiles[y][x]
-                love.graphics.draw(self.tileset, tile.quad, (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
-            end
-        end
-    end
-    self:drawElements(startX, endX, startY, endY)
 end
 
 function Map:generateElements()
@@ -120,6 +98,30 @@ function Map:generateElements()
             end
         end
     end
+end
+
+function Map:draw()
+    local camX, camY, camWidth, camHeight = Camera.i:getVisibleArea()
+
+    local startX = math.max(1, math.floor(camX / TILE_SIZE))
+    local endX = math.min(MAP_WIDTH, math.ceil((camX + camWidth) / TILE_SIZE))
+    local startY = math.max(1, math.floor(camY / TILE_SIZE))
+    local endY = math.min(MAP_HEIGHT, math.ceil((camY + camHeight) / TILE_SIZE))
+
+    for y = startY, endY do
+        for x = startX, endX do
+            local biome = self.biomes[y][x]
+            if biome then
+                local biomeModule = BiomeRegistry.getBiome(biome.name)
+                if biomeModule then
+                    local tile = self.layers[0][y][x]
+                    love.graphics.draw(biomeModule.tileset, tile.quad, (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+                end
+            end
+        end
+    end
+
+    self:drawElements(startX, endX, startY, endY)
 end
 
 function Map:drawElements(startX, endX, startY, endY)
