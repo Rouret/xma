@@ -8,16 +8,17 @@ local World = require("game.world")
 local Game = require("game.game")
 local Choice = require("game.choice")
 local Camera = require("engine.camera")
-
+local Map = require("engine.map")
 local enemies = {}
 local nbMonster = 3
-
+local map
 function love.load()
     World.load()
     Camera.init(State.x, State.y, 1)
     Choice.load()
     Player.load(World.world)
     UI.load()
+    map = Map.new(World.world)
 
     generateEnemiesFromPlayerLevel(nbMonster)
 end
@@ -64,6 +65,7 @@ end
 function love.draw()
     Camera.i:apply()
 
+    map:draw(camera)
     World:draw()
     Player.draw()
     drawEnemies()
