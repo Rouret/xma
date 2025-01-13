@@ -3,6 +3,7 @@ local BiomeGenerator = require("engine.map.biomeGenerator")
 local Camera = require("engine.camera")
 local BiomeRegistry = require("engine/map/BiomeRegistry")
 
+-- Charger les biomes et leurs assets
 local biomeFiles = {"Forest"}
 for _, biomeFile in ipairs(biomeFiles) do
     local biome = require("engine/map/biomes/" .. biomeFile)
@@ -22,33 +23,12 @@ function Map.new(world)
     local self = setmetatable({}, Map)
 
     self.world = world
-    self.tileset = love.graphics.newImage("sprites/tilesets/v0.png")
-    self.tileset:setFilter("nearest", "nearest")
-    self.tilesetQuads = self:createTileQuads()
     self.layers = {}
 
     self:generate()
     self:generateElements()
 
     return self
-end
-
--- Découpe le tileset en quads
-function Map:createTileQuads()
-    local quads = {}
-    local tilesetWidth = self.tileset:getWidth()
-    local tilesetHeight = self.tileset:getHeight()
-
-    for y = 0, tilesetHeight / TILE_SIZE - 1 do
-        for x = 0, tilesetWidth / TILE_SIZE - 1 do
-            table.insert(
-                quads,
-                love.graphics.newQuad(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, self.tileset:getDimensions())
-            )
-        end
-    end
-
-    return quads
 end
 
 -- Génère la carte
@@ -60,7 +40,7 @@ function Map:generate()
     -- Assigner les biomes
     self.biomes = BiomeGenerator.assignBiomes(MAP_WIDTH, MAP_HEIGHT, altitudeMap, humidityMap) or {}
 
-    -- Générer le layer principal
+    -- Générer le terrain
     self.layers[0] = self:generateTerrain()
 end
 
@@ -93,7 +73,10 @@ function Map:generateElements()
                 local biomeModule = BiomeRegistry.getBiome(biome.name)
                 if biomeModule and love.math.random() < biomeModule.spawnProbability then
                     local element = biomeModule.generateElement(x, y)
-                    table.insert(self.elements, element)
+                    if element then
+                        element.biomeName = biome.name -- Associer l'élément à son biome
+                        table.insert(self.elements, element)
+                    end
                 end
             end
         end
@@ -108,6 +91,7 @@ function Map:draw()
     local startY = math.max(1, math.floor(camY / TILE_SIZE))
     local endY = math.min(MAP_HEIGHT, math.ceil((camY + camHeight) / TILE_SIZE))
 
+    -- Dessiner les terrains
     for y = startY, endY do
         for x = startX, endX do
             local biome = self.biomes[y][x]
@@ -115,37 +99,30 @@ function Map:draw()
                 local biomeModule = BiomeRegistry.getBiome(biome.name)
                 if biomeModule then
                     local tile = self.layers[0][y][x]
-                    love.graphics.draw(biomeModule.tileset, tile.quad, (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+                    love.graphics.draw(biomeModule.terrain, tile.quad, (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
                 end
             end
         end
     end
 
+    -- Dessiner les éléments
     self:drawElements(startX, endX, startY, endY)
 end
 
 function Map:drawElements(startX, endX, startY, endY)
     for _, element in ipairs(self.elements) do
+        -- Vérifiez si l'élément est visible dans la zone de la caméra
         if
             element.x >= startX * TILE_SIZE and element.x <= endX * TILE_SIZE and element.y >= startY * TILE_SIZE and
                 element.y <= endY * TILE_SIZE
          then
-            if element.type == "Tree" then
-                love.graphics.setColor(0, 1, 0) -- Vert
-                love.graphics.rectangle("fill", element.x, element.y, TILE_SIZE / 2, TILE_SIZE / 2)
-            elseif element.type == "Cactus" then
-                love.graphics.setColor(0, 1, 0.5) -- Vert clair
-                love.graphics.rectangle("fill", element.x, element.y, TILE_SIZE / 3, TILE_SIZE)
-            elseif element.type == "Rock" then
-                love.graphics.setColor(0.5, 0.5, 0.5) -- Gris
-                love.graphics.rectangle("fill", element.x, element.y, TILE_SIZE / 2, TILE_SIZE / 2)
-            elseif element.type == "Bush" then
-                love.graphics.setColor(0.1, 0.8, 0.1) -- Vert foncé
-                love.graphics.circle("fill", element.x, element.y, TILE_SIZE / 3)
+            -- Récupérer le module de biome pour dessiner l'élément
+            local biomeModule = BiomeRegistry.getBiome(element.biomeName)
+            if biomeModule and biomeModule.drawElement then
+                biomeModule.drawElement(element)
             end
         end
     end
-    love.graphics.setColor(1, 1, 1) -- Réinitialisation
 end
 
 return Map
