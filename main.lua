@@ -80,10 +80,16 @@ function love.draw()
     if Choice.hasGeneratedChoices then
         Choice.draw()
     end
+    love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
 end
 
 function love.mousepressed(x, y, button)
     Choice.mousepressed(x, y, button)
+end
+
+--de zoom when scrolling
+function love.wheelmoved(x, y)
+    Camera.i.scale = Camera.i.scale + y * 0.1
 end
 
 function love.keypressed(key)

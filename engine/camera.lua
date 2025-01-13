@@ -58,4 +58,13 @@ function camera:reset()
     love.graphics.pop()
 end
 
+function camera:getVisibleArea()
+    local x = self.x - love.graphics.getWidth() / (2 * self.scale)
+    local y = self.y - love.graphics.getHeight() / (2 * self.scale)
+    local width = love.graphics.getWidth() / self.scale
+    local height = love.graphics.getHeight() / self.scale
+
+    return x, y, width, height
+end
+
 return camera
