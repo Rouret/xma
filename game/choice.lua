@@ -146,6 +146,8 @@ function Choice.draw()
         local choiceValue = "+" .. choice.value .. "%"
         local choiceValueHeight = Choice.font:getHeight(choiceValue)
         love.graphics.printf(choiceValue, x, choiceNameY + choiceValueHeight + 40, cardWidth, "center")
+
+        love.graphics.setColor(1, 1, 1)
     end
 end
 

@@ -12,6 +12,7 @@ local Map = require("engine.map.map")
 local enemies = {}
 local nbMonster = 3
 local map
+
 function love.load()
     World.load()
     Camera.init(State.x, State.y, 1)
