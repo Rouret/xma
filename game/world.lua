@@ -15,10 +15,10 @@ function World.load()
         table.insert(edges, {body = edgeBody, shape = edgeShape, fixture = edgeFixture})
     end
 
-    createEdge(0, 0, World.width, 0) -- Bord supérieur
-    createEdge(0, 0, 0, World.height) -- Bord gauche
-    createEdge(World.width, 0, World.width, World.height) -- Bord droit
-    createEdge(0, World.height, World.width, World.height) -- Bord inférieur
+    -- createEdge(0, 0, World.width, 0) -- Bord supérieur
+    -- createEdge(0, 0, 0, World.height) -- Bord gauche
+    -- createEdge(World.width, 0, World.width, World.height) -- Bord droit
+    -- createEdge(0, World.height, World.width, World.height) -- Bord inférieur
 
     return World
 end

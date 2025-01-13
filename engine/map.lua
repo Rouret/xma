@@ -29,32 +29,73 @@ function Map.new(world)
     return self
 end
 
--- Génère la carte procédurale avec collisions
+-- Génère la carte procédurale avec clusters de buissons
 function Map:generate()
+    -- Initialisation des tiles avec des sols
     for y = 1, MAP_HEIGHT do
         self.tiles[y] = {}
         for x = 1, MAP_WIDTH do
-            local isBush = love.math.random(1, 10) == 1 -- 10% de chance d'être un buisson
-            if isBush then
-                -- Tile avec obstacle (buisson)
-                self.tiles[y][x] = {quad = self.bushQuad, collision = true}
+            local randomGroundQuad = self.groundQuads[love.math.random(1, #self.groundQuads)]
+            self.tiles[y][x] = {quad = randomGroundQuad, collision = false}
+        end
+    end
 
-                -- Ajout au moteur physique
-                local body = love.physics.newBody(self.world, (x - 0.5) * TILE_SIZE, (y - 0.5) * TILE_SIZE, "static")
-                local shape = love.physics.newRectangleShape(TILE_SIZE, TILE_SIZE)
-                local fixture = love.physics.newFixture(body, shape)
-                fixture:setUserData(
-                    {
-                        name = "wall"
-                    }
-                )
-            else
-                -- Tile de sol aléatoire
-                local randomGroundQuad = self.groundQuads[love.math.random(1, #self.groundQuads)]
-                self.tiles[y][x] = {quad = randomGroundQuad, collision = false}
+    -- Génération des buissons
+    self:generateBushClusters(1000, 5, 10) -- 100 clusters, min 5 buissons, max 10 buissons par cluster
+end
+
+-- Génère des clusters de buissons
+function Map:generateBushClusters(clusterCount, minSize, maxSize)
+    for i = 1, clusterCount do
+        -- Point de départ aléatoire
+        local startX = love.math.random(1, MAP_WIDTH)
+        local startY = love.math.random(1, MAP_HEIGHT)
+        local clusterSize = love.math.random(minSize, maxSize)
+
+        self:growBushCluster(startX, startY, clusterSize)
+    end
+end
+
+-- Fait croître un cluster de buissons
+function Map:growBushCluster(startX, startY, size)
+    local directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}} -- Haut, droite, bas, gauche
+    local bushCount = 0
+    local queue = {{x = startX, y = startY}}
+
+    while bushCount < size and #queue > 0 do
+        local current = table.remove(queue, 1)
+        local x, y = current.x, current.y
+
+        -- Vérifie si la position est valide
+        if self:isValidTile(x, y) and not self.tiles[y][x].collision then
+            -- Place un buisson
+            self.tiles[y][x] = {quad = self.bushQuad, collision = true}
+            bushCount = bushCount + 1
+
+            -- Ajoute un body pour la collision
+            local body = love.physics.newBody(self.world, (x - 0.5) * TILE_SIZE, (y - 0.5) * TILE_SIZE, "static")
+            local shape = love.physics.newRectangleShape(TILE_SIZE, TILE_SIZE)
+            local fixture = love.physics.newFixture(body, shape)
+            fixture:setUserData(
+                {
+                    name = "wall"
+                }
+            )
+
+            -- Ajoute les voisins à la queue (croissance)
+            for _, dir in ipairs(directions) do
+                local nx, ny = x + dir[1], y + dir[2]
+                if love.math.random() > 0.3 then -- 70% de chance de continuer dans cette direction
+                    table.insert(queue, {x = nx, y = ny})
+                end
             end
         end
     end
+end
+
+-- Vérifie si une position est valide pour un tile
+function Map:isValidTile(x, y)
+    return x >= 1 and x <= MAP_WIDTH and y >= 1 and y <= MAP_HEIGHT
 end
 
 -- Dessine la carte (vue basée sur une caméra)
