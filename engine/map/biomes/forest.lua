@@ -1,4 +1,5 @@
 local TileUtils = require("engine.map.tileUtils")
+local World = require("game.world")
 
 local Forest = {}
 
@@ -13,7 +14,15 @@ Forest.terrainTileSize = 32
 -- Éléments
 Forest.elementsPath = "sprites/tilesets/forest/forest_elements.png"
 Forest.elements = {
-    Little_tree = {width = 19, height = 23, x = 0, y = 0, collision = false}
+    Little_tree = {width = 19, height = 23, x = 0, y = 0, collision = false},
+    Medium_tree = {
+        width = 34,
+        height = 47,
+        x = 20,
+        y = 0,
+        collision = true,
+        hitbox = {x = 20, y = 3, width = 34, height = 44}
+    }
 }
 
 function Forest.loadAssets()
@@ -44,20 +53,47 @@ function Forest.generateTerrain(x, y)
 end
 
 function Forest.generateElement(x, y)
-    if love.math.random() < 0.1 then
-        return {
-            quad = Forest.elementQuads.Little_tree,
-            type = "Little_tree",
-            x = (x - 0.5) * 32,
-            y = (y - 0.5) * 32,
-            collision = Forest.elements.Little_tree.collision
-        }
+    local rand = love.math.random()
+    local elementType
+
+    if rand <= 0.02 then
+        elementType = "Little_tree"
+    elseif rand <= 0.07 then
+        elementType = "Medium_tree"
+    else
+        return nil -- Pas d'élément généré
     end
+
+    local elementData = Forest.elements[elementType]
+
+    local element = {
+        quad = Forest.elementQuads[elementType],
+        type = elementType,
+        x = (x - 0.5) * 32,
+        y = (y - 0.5) * 32,
+        collision = elementData.collision,
+        hitbox = elementData.hitbox and
+            {
+                x = (x - 0.5) * 32 + elementData.hitbox.x,
+                y = (y - 0.5) * 32 + elementData.hitbox.y,
+                width = elementData.hitbox.width,
+                height = elementData.hitbox.height
+            }
+    }
+    return element
 end
 
 -- Fonction pour dessiner un élément
 function Forest.drawElement(element)
     love.graphics.draw(Forest.element, element.quad, element.x, element.y - Forest.elements[element.type].height)
+
+    -- Dessiner la hitbox pour le débogage (optionnel)
+    if element.hitbox and element.collision then
+        local body = love.physics.newBody(World.world, element.hitbox.x, element.hitbox.y, "static")
+        local shape = love.physics.newRectangleShape(element.hitbox.width, element.hitbox.height)
+        local fixture = love.physics.newFixture(body, shape)
+        fixture:setUserData({name = "wall"})
+    end
 end
 
 return Forest
