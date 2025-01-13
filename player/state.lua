@@ -69,7 +69,10 @@ end
 
 function State.getAngleToMouse()
     local mouseX, mouseY = love.mouse.getPosition()
-    return math.atan2(mouseY - State.y, mouseX - State.x)
+    local screenWidth, screenHeight = love.graphics.getDimensions()
+    local playerScreenX = screenWidth / 2
+    local playerScreenY = screenHeight / 2
+    return math.atan2(mouseY - playerScreenY, mouseX - playerScreenX)
 end
 
 function State.gainExperience(amount)

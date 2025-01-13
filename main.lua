@@ -11,16 +11,10 @@ local Camera = require("engine.camera")
 
 local enemies = {}
 local nbMonster = 3
-local mainCamera
-local miniMapCamera
 
 function love.load()
     World.load()
-
-    -- Création de deux caméras : une pour la vue principale et une pour une mini-carte
-    mainCamera = Camera.new(State.x, State.y, 1)
-    miniMapCamera = Camera.new(0, 0, 0.2) -- Mini-carte avec zoom 20%
-
+    Camera.init(State.x, State.y, 1)
     Choice.load()
     Player.load(World.world)
     UI.load()
@@ -46,8 +40,7 @@ function love.update(dt)
     Timer:update(dt)
     Player.update(dt)
 
-    mainCamera:setPosition(State.x, State.y)
-    miniMapCamera:setPosition(World.width / 2, World.height / 2) -- Centrée sur le monde
+    Camera.i:setPosition(State.x, State.y)
 
     -- Mettre à jour tous les ennemis
     for i = #enemies, 1, -1 do
@@ -69,14 +62,14 @@ function love.update(dt)
 end
 
 function love.draw()
-    mainCamera:apply()
+    Camera.i:apply()
 
     World:draw()
     Player.draw()
     drawEnemies()
     GlobalState:draw()
 
-    mainCamera:reset()
+    Camera.i:reset()
 
     UI:draw()
 

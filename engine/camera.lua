@@ -1,7 +1,26 @@
 local camera = {}
 camera.__index = camera
 
--- Crée une nouvelle instance de caméra
+-- Instance unique pour la caméra globale
+camera.i = nil
+
+-- Initialise la caméra globale (singleton)
+function camera.init(x, y, scale)
+    if not camera.i then
+        camera.i =
+            setmetatable(
+            {
+                x = x or 0,
+                y = y or 0,
+                scale = scale or 1
+            },
+            camera
+        )
+    end
+    return camera.i
+end
+
+-- Crée une nouvelle i de caméra (non liée à l'i globale)
 function camera.new(x, y, scale)
     return setmetatable(
         {
