@@ -20,6 +20,7 @@ local MAP_HEIGHT = 1000
 local NOISE_SCALE = 2
 
 function Map.new(world)
+    print("Creating map...")
     local self = setmetatable({}, Map)
 
     self.world = world
@@ -33,6 +34,7 @@ end
 
 -- Génère la carte
 function Map:generate()
+    print("Generating map...")
     -- Générer les cartes de bruit
     local altitudeMap = NoiseUtils.generateNoiseMap(MAP_WIDTH, MAP_HEIGHT, NOISE_SCALE)
     local humidityMap = NoiseUtils.generateNoiseMap(MAP_WIDTH, MAP_HEIGHT, NOISE_SCALE)
@@ -45,6 +47,7 @@ function Map:generate()
 end
 
 function Map:generateTerrain()
+    print("Generating terrain...")
     local tiles = {}
 
     for y = 1, MAP_HEIGHT do
@@ -64,6 +67,7 @@ function Map:generateTerrain()
 end
 
 function Map:generateElements()
+    print("Generating elements...")
     self.elements = {}
 
     for y = 1, MAP_HEIGHT do
@@ -110,12 +114,15 @@ function Map:draw()
 end
 
 function Map:drawElements(startX, endX, startY, endY)
+    local total = 0
     for _, element in ipairs(self.elements) do
         -- Vérifiez si l'élément est visible dans la zone de la caméra
         if
             element.x >= startX * TILE_SIZE and element.x <= endX * TILE_SIZE and element.y >= startY * TILE_SIZE and
                 element.y <= endY * TILE_SIZE
          then
+            total = total + 1
+
             -- Récupérer le module de biome pour dessiner l'élément
             local biomeModule = BiomeRegistry.getBiome(element.biomeName)
             if biomeModule and biomeModule.drawElement then

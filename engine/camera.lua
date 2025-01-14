@@ -1,3 +1,5 @@
+-- engine/camera.lua
+
 local camera = {}
 camera.__index = camera
 
@@ -17,10 +19,13 @@ function camera.init(x, y, scale)
             camera
         )
     end
+
+    camera.i.width = love.graphics.getWidth()
+    camera.i.height = love.graphics.getHeight()
     return camera.i
 end
 
--- Crée une nouvelle i de caméra (non liée à l'i globale)
+-- Crée une nouvelle instance de caméra (non liée à l'instance globale)
 function camera.new(x, y, scale)
     return setmetatable(
         {
@@ -58,11 +63,14 @@ function camera:reset()
     love.graphics.pop()
 end
 
+-- Optimiser getVisibleArea
 function camera:getVisibleArea()
-    local x = self.x - love.graphics.getWidth() / (2 * self.scale)
-    local y = self.y - love.graphics.getHeight() / (2 * self.scale)
-    local width = love.graphics.getWidth() / self.scale
-    local height = love.graphics.getHeight() / self.scale
+    local halfWidth = camera.i.width / (2 * self.scale)
+    local halfHeight = camera.i.height / (2 * self.scale)
+    local x = self.x - halfWidth
+    local y = self.y - halfHeight
+    local width = halfWidth * 2
+    local height = halfHeight * 2
 
     return x, y, width, height
 end

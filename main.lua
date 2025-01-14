@@ -9,11 +9,14 @@ local Game = require("game.game")
 local Choice = require("game.choice")
 local Camera = require("engine.camera")
 local Map = require("engine.map.map")
+local ProFi = require("engine.profiler")
 local enemies = {}
 local nbMonster = 3
 local map
 
-function love.load()
+local PROFILING = false
+
+function love.load(args)
     World.load()
     Camera.init(State.x, State.y, 1)
     Choice.load()
@@ -21,7 +24,7 @@ function love.load()
     UI.load()
     map = Map.new(World.world)
 
-    generateEnemiesFromPlayerLevel(nbMonster)
+    -- generateEnemiesFromPlayerLevel(nbMonster)
 end
 
 function love.update(dt)
@@ -58,7 +61,7 @@ function love.update(dt)
 
     -- Ajouter des ennemis si nécessaire
     if #enemies < nbMonster then
-        generateEnemiesFromPlayerLevel(nbMonster)
+    -- generateEnemiesFromPlayerLevel(nbMonster)
     end
 
     GlobalState:update(dt, World.World)
@@ -93,6 +96,17 @@ function love.wheelmoved(x, y)
 end
 
 function love.keypressed(key)
+    -- if key is F1
+    if key == "f1" then
+        print("Start profiling")
+        ProFi:start()
+    end
+    if key == "f2" then
+        print("Stop profiling")
+        ProFi:stop()
+        ProFi:writeReport("profiler.txt")
+        love.event.quit()
+    end
     if key == "escape" then
         Game.isGamePaused = not Game.isGamePaused
     end

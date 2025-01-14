@@ -80,20 +80,24 @@ function Forest.generateElement(x, y)
                 height = elementData.hitbox.height
             }
     }
+
+    Forest.initElement(element)
+
     return element
 end
 
--- Fonction pour dessiner un élément
-function Forest.drawElement(element)
-    love.graphics.draw(Forest.element, element.quad, element.x, element.y - Forest.elements[element.type].height)
-
-    -- Dessiner la hitbox pour le débogage (optionnel)
+function Forest.initElement(element)
     if element.hitbox and element.collision then
         local body = love.physics.newBody(World.world, element.hitbox.x, element.hitbox.y, "static")
         local shape = love.physics.newRectangleShape(element.hitbox.width, element.hitbox.height)
         local fixture = love.physics.newFixture(body, shape)
         fixture:setUserData({name = "wall"})
     end
+end
+
+-- Fonction pour dessiner un élément
+function Forest.drawElement(element)
+    love.graphics.draw(Forest.element, element.quad, element.x, element.y - Forest.elements[element.type].height)
 end
 
 return Forest
