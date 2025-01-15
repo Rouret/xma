@@ -15,7 +15,6 @@ local nbMonster = 3
 local map
 
 local PROFILING = false
-
 local MODE_FREE_CAMERA = false
 local CAMERA_SPEED = 3000
 
@@ -32,6 +31,11 @@ function generateRandomString(length)
 end
 
 function love.load(args)
+    print("F1: Start profiling")
+    print("F2: Stop profiling")
+    print("F3: Toggle free camera mode")
+    print("F8: Restart")
+
     local seed = generateRandomString(17)
     love.math.setRandomSeed(seed)
 
