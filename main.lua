@@ -16,6 +16,9 @@ local map
 
 local PROFILING = false
 
+local MODE_FREE_CAMERA = false
+local CAMERA_SPEED = 3000
+
 function generateRandomString(length)
     local chars = "0123456789"
     local randomString = ""
@@ -58,11 +61,25 @@ function love.update(dt)
         return
     end
 
-    World.update(dt)
-    Timer:update(dt)
-    Player.update(dt)
-
-    Camera.i:setPosition(State.x, State.y)
+    if MODE_FREE_CAMERA then
+        if love.keyboard.isDown("z") then
+            Camera.i.y = Camera.i.y - CAMERA_SPEED * dt
+        end
+        if love.keyboard.isDown("s") then
+            Camera.i.y = Camera.i.y + CAMERA_SPEED * dt
+        end
+        if love.keyboard.isDown("q") then
+            Camera.i.x = Camera.i.x - CAMERA_SPEED * dt
+        end
+        if love.keyboard.isDown("d") then
+            Camera.i.x = Camera.i.x + CAMERA_SPEED * dt
+        end
+    else
+        World.update(dt)
+        Timer:update(dt)
+        Player.update(dt)
+        Camera.i:setPosition(State.x, State.y)
+    end
 
     -- Mettre à jour tous les ennemis
     for i = #enemies, 1, -1 do
@@ -123,8 +140,16 @@ function love.keypressed(key)
         ProFi:writeReport("profiler.txt")
         love.event.quit()
     end
+    if key == "f8" then
+        -- restart
+        love.event.quit("restart")
+    end
     if key == "escape" then
         Game.isGamePaused = not Game.isGamePaused
+    end
+    if key == "f3" then
+        MODE_FREE_CAMERA = not MODE_FREE_CAMERA
+        print("Free Camera Mode: " .. tostring(MODE_FREE_CAMERA))
     end
 end
 
