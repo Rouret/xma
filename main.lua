@@ -16,7 +16,23 @@ local map
 
 local PROFILING = false
 
+function generateRandomString(length)
+    local chars = "0123456789"
+    local randomString = ""
+
+    for i = 1, length do
+        local randIndex = love.math.random(1, #chars)
+        randomString = randomString .. chars:sub(randIndex, randIndex)
+    end
+
+    return randomString
+end
+
 function love.load(args)
+    local seed = generateRandomString(17)
+    love.math.setRandomSeed(seed)
+
+    print("Seed: " .. seed)
     World.load()
     Camera.init(State.x, State.y, 1)
     Choice.load()
