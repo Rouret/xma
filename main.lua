@@ -36,10 +36,10 @@ function love.load(args)
     print("F3: Toggle free camera mode")
     print("F8: Restart")
 
-    local seed = generateRandomString(17)
+    local seed = tonumber(generateRandomString(17))
+    print("Seed: " .. string.format("%x", seed))
     love.math.setRandomSeed(seed)
 
-    print("Seed: " .. seed)
     World.load()
     Camera.init(State.x, State.y, 1)
     Choice.load()
