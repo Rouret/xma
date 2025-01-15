@@ -88,7 +88,13 @@ end
 
 function Forest.initElement(element)
     if element.hitbox and element.collision then
-        local body = love.physics.newBody(World.world, element.hitbox.x, element.hitbox.y, "static")
+        local body =
+            love.physics.newBody(
+            World.world,
+            element.hitbox.x,
+            element.hitbox.y - Forest.elements[element.type].height / 2,
+            "static"
+        )
         local shape = love.physics.newRectangleShape(element.hitbox.width, element.hitbox.height)
         local fixture = love.physics.newFixture(body, shape)
         fixture:setUserData({name = "wall"})
