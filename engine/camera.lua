@@ -39,8 +39,8 @@ end
 
 -- Définit la position de la caméra
 function camera:setPosition(x, y)
-    self.x = x
-    self.y = y
+    self.x = math.floor(x)
+    self.y = math.floor(y)
 end
 
 -- Définit le zoom de la caméra
