@@ -1,8 +1,9 @@
 local BiomeGenerator = {}
 
 BiomeGenerator.BIOMES = {
-    {name = "Forest", minAltitude = 0.3, minHumidity = 0.5, groundQuad = 2},
-    {name = "Plains", minAltitude = 0.2, maxAltitude = 0.6, minHumidity = 0.3, groundQuad = 3}
+    {name = "Forest", minAltitude = 0, maxAltitude = 0.5, minHumidity = 0.5, maxHumidity = 1},
+    {name = "Desert", minAltitude = 0, maxAltitude = 0.5, minHumidity = 0, maxHumidity = 0.5},
+    {name = "Taiga", minAltitude = 0.5, maxAltitude = 1, minHumidity = 0, maxHumidity = 1}
 }
 function BiomeGenerator.assignBiomes(width, height, altitudeMap, humidityMap)
     local biomes = {}
@@ -28,7 +29,7 @@ function BiomeGenerator.assignBiomes(width, height, altitudeMap, humidityMap)
 
             -- Assigner un biome par défaut si aucun n'est trouvé
             if not assignedBiome then
-                assignedBiome = {name = "Default", groundQuad = 3} -- Par exemple, un biome "plaine"
+                assignedBiome = {name = "Default"}
             end
 
             biomes[y][x] = assignedBiome

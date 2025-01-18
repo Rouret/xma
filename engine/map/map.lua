@@ -4,7 +4,7 @@ local Camera = require("engine.camera")
 local BiomeRegistry = require("engine/map/BiomeRegistry")
 
 -- Charger les biomes et leurs assets
-local biomeFiles = {"Forest"}
+local biomeFiles = {"Forest", "Desert", "Taiga"}
 for _, biomeFile in ipairs(biomeFiles) do
     local biome = require("engine/map/biomes/" .. biomeFile)
     BiomeRegistry.register(biome.name, biome)
