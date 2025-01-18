@@ -7,8 +7,8 @@ function State.load()
     State.status = "idle" -- Example: "idle", "immobilized"
 
     -- Position
-    State.x = 1000
-    State.y = 1000
+    State.x = 980 * 32
+    State.y = 980 * 32
 
     -- Velocity
     State.speed = 1000

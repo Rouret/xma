@@ -25,6 +25,8 @@ function Map.new(world)
 
     self.world = world
     self.layers = {}
+    self.MAP_WIDTH = MAP_WIDTH
+    self.MAP_HEIGHT = MAP_HEIGHT
 
     self:generate()
     self:generateElements()
@@ -32,6 +34,9 @@ function Map.new(world)
     return self
 end
 
+function Map:convertPxToTile(px)
+    return math.floor(px / TILE_SIZE)
+end
 -- Génère la carte
 function Map:generate()
     print("Generating map...")

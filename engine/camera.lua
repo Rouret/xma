@@ -7,7 +7,7 @@ camera.__index = camera
 camera.i = nil
 
 -- Initialise la caméra globale (singleton)
-function camera.init(x, y, scale)
+function camera.init(x, y, scale, map)
     if not camera.i then
         camera.i =
             setmetatable(
@@ -22,6 +22,10 @@ function camera.init(x, y, scale)
 
     camera.i.width = love.graphics.getWidth()
     camera.i.height = love.graphics.getHeight()
+    camera.i.midWidth = camera.i.width / 2
+    camera.i.midHeight = camera.i.height / 2
+    camera.i.map = map
+
     return camera.i
 end
 
@@ -39,6 +43,22 @@ end
 
 -- Définit la position de la caméra
 function camera:setPosition(x, y)
+    local function clamp(value, min, max)
+        if value < min then
+            return min
+        elseif value > max then
+            return max
+        else
+            return value
+        end
+    end
+
+    local midWidth, midHeight = self.midWidth, self.midHeight
+    local mapWidth, mapHeight = self.map.MAP_WIDTH * 32, self.map.MAP_HEIGHT * 32
+
+    x = clamp(x, midWidth, mapWidth - midWidth)
+    y = clamp(y, midHeight, mapHeight - midHeight)
+
     self.x = math.floor(x)
     self.y = math.floor(y)
 end

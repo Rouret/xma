@@ -41,11 +41,11 @@ function love.load(args)
     love.math.setRandomSeed(seed)
 
     World.load()
-    Camera.init(State.x, State.y, 1)
+    map = Map.new(World.world)
+    Camera.init(State.x, State.y, 1, map)
     Choice.load()
     Player.load(World.world)
     UI.load()
-    map = Map.new(World.world)
 
     -- generateEnemiesFromPlayerLevel(nbMonster)
 end
