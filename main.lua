@@ -31,6 +31,7 @@ function generateRandomString(length)
 end
 
 function love.load(args)
+    love.graphics.setDefaultFilter("nearest", "nearest")
     print("F1: Start profiling")
     print("F2: Stop profiling")
     print("F3: Toggle free camera mode")
