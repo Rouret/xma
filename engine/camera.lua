@@ -73,8 +73,8 @@ function camera:apply()
     love.graphics.push()
     love.graphics.scale(self.scale)
     love.graphics.translate(
-        -self.x + love.graphics.getWidth() / (2 * self.scale),
-        -self.y + love.graphics.getHeight() / (2 * self.scale)
+        -self.x + math.floor(love.graphics.getWidth() / (2 * self.scale)),
+        -self.y + math.floor(love.graphics.getHeight() / (2 * self.scale))
     )
 end
 
