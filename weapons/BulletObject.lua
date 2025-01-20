@@ -27,6 +27,9 @@ function BulletObject:init(params)
         error("Position parameters are required")
     end
 
+    -- Events
+    self.beforeDestroyEvent = params.beforeDestroy or self.emptyFunction()
+
     --General
     self.name = "BulletObject_" .. params.name
 
@@ -60,6 +63,15 @@ function BulletObject:init(params)
     return self
 end
 
+-- Event
+
+function BulletObject:beforeDestroy()
+    if self.beforeDestroyEvent == nil then
+        return
+    end
+    self.beforeDestroyEvent(self)
+end
+
 function BulletObject:ajusteRotation()
     return self.direction
 end
@@ -73,9 +85,7 @@ function BulletObject:update(dt)
     -- Incrémenter le TTL
     self.currentTTL = self.currentTTL + dt
     if self.currentTTL >= self.TTL then
-        -- Supprimer la balle
-        GlobalState:removeEntity(self)
-        self.body:destroy()
+        self:destroy()
         return
     end
 
@@ -110,6 +120,7 @@ function BulletObject:onCollision(entity)
 end
 
 function BulletObject:destroy()
+    self:beforeDestroy()
     self.body:destroy()
     GlobalState:removeEntity(self)
 end

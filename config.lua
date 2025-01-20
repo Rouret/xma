@@ -9,6 +9,6 @@ Config.CAMERA_SPEED = 3000
 Config.NO_ELEMENTS = true
 
 -- Debug aim
-Config.DEBUG_AIM = true
+Config.DEBUG_AIM = false
 
 return Config

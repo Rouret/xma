@@ -39,18 +39,19 @@ function FireStaff:init()
                 damage = 0,
                 image = "sprites/weapons/gun/skill2.jpg",
                 effect = function()
-                    local nbFireBall = 3
-                    for i = 1, nbFireBall do
+                    self.status = "casting"
+                    local nbBullet = 12
+                    for i = 1, nbBullet do
                         Timer:after(
-                            0.1 * i,
+                            0.05 * i,
                             function()
                                 GlobalState:addEntity(
                                     FireBall:new(
                                         {
-                                            damage = 20,
+                                            damage = 10,
                                             x = State.x,
                                             y = State.y,
-                                            speed = 2500
+                                            speed = 1500
                                         }
                                     )
                                 )
@@ -67,25 +68,19 @@ function FireStaff:init()
                 damage = 30,
                 image = "sprites/weapons/gun/skill3.jpg",
                 effect = function()
-                    State.status = "immobilized"
-                    -- Ajouter un délai de 500ms avant de tirer
-                    Timer:after(
-                        0.5,
-                        function()
-                            GlobalState:addEntity(
-                                FireBall:new(
-                                    {
-                                        damage = 60,
-                                        x = State.x,
-                                        y = State.y,
-                                        TTL = 2,
-                                        speed = 3250,
-                                        direction = State.getAngleToMouse()
-                                    }
-                                )
-                            )
-                            State.status = "idle" -- Libérer l'état immobilisé
-                        end
+                    self.status = "casting"
+                    GlobalState:addEntity(
+                        FireBall:new(
+                            {
+                                damage = 20,
+                                x = State.x,
+                                y = State.y,
+                                speed = 1500,
+                                TTL = 0.75,
+                                beforeDestroy = function(fireBall)
+                                end
+                            }
+                        )
                     )
                 end
             }
@@ -95,11 +90,19 @@ function FireStaff:init()
     params.imageRatio = 1
 
     Weapon.init(self, params)
+
+    self.animationDuration = 0.5
+    self.animationTimer = 0
+
     return self
 end
 
 function FireStaff:drawInHand(x, y)
     local rotation = State.getAngleToMouse() + math.pi / 2
+
+    if self.status == "casting" then
+        rotation = rotation + math.sin(self.animationTimer * 10) / 10
+    end
 
     love.graphics.draw(
         self.sprite,
@@ -114,6 +117,13 @@ function FireStaff:drawInHand(x, y)
 end
 
 function FireStaff:update(dt)
+    if self.status == "casting" then
+        self.animationTimer = self.animationTimer + dt
+        if self.animationTimer >= self.animationDuration then
+            self.status = "idle"
+            self.animationTimer = 0
+        end
+    end
 end
 
 return FireStaff

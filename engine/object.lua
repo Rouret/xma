@@ -33,4 +33,7 @@ function Object:__call(...)
     return obj
 end
 
+function Object:emptyFunction()
+end
+
 return Object
