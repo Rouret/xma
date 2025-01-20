@@ -6,11 +6,12 @@ local Interaction = require("player.interaction")
 local Draw = require("player.draw")
 local Gun = require("weapons.gun.gun")
 local Sword = require("weapons.sword.sword")
+local FireStaff = require("weapons.fireStaff.fireStaff")
 
 function Player.load(world)
     State.load()
     State.weapons = {
-        Sword:new(),
+        FireStaff:new(),
         Gun:new()
     }
     State.body = love.physics.newBody(world, State.x, State.y, "dynamic") -- Corps dynamique
