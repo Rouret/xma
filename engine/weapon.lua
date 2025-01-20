@@ -68,10 +68,6 @@ end
 function Weapon:defaultDrawInHand(x, y)
     local rotation = State.getAngleToMouse() - math.pi / 2
     love.graphics.draw(self.sprite, x, y, rotation, self.imageRatio, self.imageRatio, 0, 0)
-    -- red Dot to x, y
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.circle("fill", x, y, 5)
-    love.graphics.setColor(1, 1, 1)
 end
 
 -- Draw gun in the back

@@ -17,7 +17,7 @@ function FireBall:init(params)
 end
 
 function FireBall:ajusteRotation()
-    return self.direction + math.pi / 2
+    return self.direction
 end
 
 return FireBall

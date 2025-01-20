@@ -70,16 +70,7 @@ end
 
 -- Draw the gun
 function BulletObject:draw()
-    love.graphics.draw(
-        self.image,
-        self.x,
-        self.y,
-        BulletObject:ajusteRotation(),
-        self.imageRatio,
-        self.imageRatio,
-        0,
-        0
-    )
+    love.graphics.draw(self.image, self.x, self.y, self:ajusteRotation(), self.imageRatio, self.imageRatio, 0, 0)
 end
 
 function BulletObject:update(dt)
