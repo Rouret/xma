@@ -97,4 +97,7 @@ function Gun:init()
     return self
 end
 
+function Gun:update(dt)
+end
+
 return Gun

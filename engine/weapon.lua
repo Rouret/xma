@@ -29,6 +29,7 @@ function Weapon:init(params)
 
     -- General
     self.name = params.name or "Unnamed Weapon"
+    self.status = "idle"
 
     -- Draw options
     self.imageRatio = params.imageRatio or 1
@@ -45,7 +46,7 @@ function Weapon:init(params)
     return self
 end
 
-function Weapon:update(dt, world)
+function Weapon:update(dt)
     error("update method not implemented")
 end
 

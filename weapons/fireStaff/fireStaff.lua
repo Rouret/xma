@@ -17,6 +17,7 @@ function FireStaff:init()
                 damage = 10,
                 image = "sprites/weapons/gun/skill1.jpg",
                 effect = function()
+                    self.status = "casting"
                     GlobalState:addEntity(
                         FireBall:new(
                             {
@@ -110,6 +111,9 @@ function FireStaff:drawInHand(x, y)
         self.sprintWidth,
         self.spriteHeight / 2
     )
+end
+
+function FireStaff:update(dt)
 end
 
 return FireStaff

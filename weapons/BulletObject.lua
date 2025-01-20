@@ -14,10 +14,6 @@ end
 
 function BulletObject:init(params)
     params = params or {}
-    -- print all the parameters
-    for key, value in pairs(params) do
-        print(key, value)
-    end
 
     if not params.imagePath then
         error("Sprite parameter is required")

@@ -29,6 +29,7 @@ function Player.update(dt)
 
         -- Update weapons skill
         for _, weapon in ipairs(State.weapons) do
+            weapon:update(dt)
             for _, skill in ipairs(weapon.skills) do
                 skill:updateCooldown(currentTime)
             end
