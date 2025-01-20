@@ -10,13 +10,12 @@ local Choice = require("game.choice")
 local Camera = require("engine.camera")
 local Map = require("engine.map.map")
 local ProFi = require("engine.profiler")
+local Debug = require("engine.debug")
+local Config = require("config")
 local enemies = {}
 local nbMonster = 3
 local map
-
-local PROFILING = false
-local MODE_FREE_CAMERA = false
-local CAMERA_SPEED = 3000
+local debug
 
 function generateRandomString(length)
     local chars = "0123456789"
@@ -31,11 +30,8 @@ function generateRandomString(length)
 end
 
 function love.load(args)
+    Debug.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
-    print("F1: Start profiling")
-    print("F2: Stop profiling")
-    print("F3: Toggle free camera mode")
-    print("F8: Restart")
 
     local seed = tonumber(generateRandomString(17))
     print("Seed: " .. string.format("%x", seed))
@@ -66,19 +62,8 @@ function love.update(dt)
         return
     end
 
-    if MODE_FREE_CAMERA then
-        if love.keyboard.isDown("z") then
-            Camera.i.y = Camera.i.y - CAMERA_SPEED * dt
-        end
-        if love.keyboard.isDown("s") then
-            Camera.i.y = Camera.i.y + CAMERA_SPEED * dt
-        end
-        if love.keyboard.isDown("q") then
-            Camera.i.x = Camera.i.x - CAMERA_SPEED * dt
-        end
-        if love.keyboard.isDown("d") then
-            Camera.i.x = Camera.i.x + CAMERA_SPEED * dt
-        end
+    if Config.MODE_FREE_CAMERA then
+        Debug.update(dt)
     else
         World.update(dt)
         Timer:update(dt)
@@ -134,28 +119,11 @@ function love.wheelmoved(x, y)
 end
 
 function love.keypressed(key)
-    -- if key is F1
-    if key == "f1" then
-        print("Start profiling")
-        ProFi:start()
-    end
-    if key == "f2" then
-        print("Stop profiling")
-        ProFi:stop()
-        ProFi:writeReport("profiler.txt")
-        love.event.quit()
-    end
-    if key == "f8" then
-        -- restart
-        love.event.quit("restart")
-    end
     if key == "escape" then
         Game.isGamePaused = not Game.isGamePaused
     end
-    if key == "f3" then
-        MODE_FREE_CAMERA = not MODE_FREE_CAMERA
-        print("Free Camera Mode: " .. tostring(MODE_FREE_CAMERA))
-    end
+
+    Debug.keypressed(key)
 end
 
 function generateEnemiesFromPlayerLevel(nbMonster)

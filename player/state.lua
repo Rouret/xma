@@ -13,6 +13,12 @@ function State.load()
     -- Velocity
     State.speed = 1000
 
+    -- Stamina
+    State.stamina = 100
+    State.maxStamina = 100
+    State.staminaRegen = 10
+    State.staminaRegenCooldown = 2
+
     -- Health
     State.health = 100
     State.maxHealth = 100
