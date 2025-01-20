@@ -41,6 +41,8 @@ function State.load()
     State.body = nil
     State.shape = nil
     State.fixture = nil
+
+    State.temp = 0
 end
 
 function State.switchWeapon()

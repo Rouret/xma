@@ -91,6 +91,7 @@ function Gun:init()
         )
     }
     params.image = "sprites/weapons/gun/gun.png"
+    params.imageRatio = 1
 
     Weapon.init(self, params)
     return self

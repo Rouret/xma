@@ -62,9 +62,9 @@ function love.update(dt)
         return
     end
 
-    if Config.MODE_FREE_CAMERA then
-        Debug.update(dt)
-    else
+    Debug.update(dt)
+
+    if not Config.MODE_FREE_CAMERA then
         World.update(dt)
         Timer:update(dt)
         Player.update(dt)
@@ -106,6 +106,7 @@ function love.draw()
     if Choice.hasGeneratedChoices then
         Choice.draw()
     end
+    Debug.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
 end
 

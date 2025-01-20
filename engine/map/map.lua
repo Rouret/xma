@@ -2,6 +2,7 @@ local NoiseUtils = require("engine.map.noiseUtils")
 local BiomeGenerator = require("engine.map.biomeGenerator")
 local Camera = require("engine.camera")
 local BiomeRegistry = require("engine/map/BiomeRegistry")
+local Config = require("config")
 
 -- Charger les biomes et leurs assets
 local biomeFiles = {"Forest", "Desert", "Taiga"}
@@ -48,7 +49,9 @@ function Map:generate()
     -- Générer le terrain
     self:generateTerrain()
     -- Générer les éléments
-    self:generateElements()
+    if not Config.NO_ELEMENTS then
+        self:generateElements()
+    end
 end
 
 function Map:generateTerrain()
@@ -113,8 +116,9 @@ function Map:draw()
             end
         end
     end
-
-    self:drawElements(startX, endX, startY, endY)
+    if not Config.NO_ELEMENTS then
+        self:drawElements(startX, endX, startY, endY)
+    end
 end
 
 function Map:drawElements(startX, endX, startY, endY)

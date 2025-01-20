@@ -10,7 +10,7 @@ local Sword = require("weapons.sword.sword")
 function Player.load(world)
     State.load()
     State.weapons = {
-        Gun:new(),
+        Sword:new(),
         Gun:new()
     }
     State.body = love.physics.newBody(world, State.x, State.y, "dynamic") -- Corps dynamique

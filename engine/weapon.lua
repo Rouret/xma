@@ -27,8 +27,19 @@ function Weapon:init(params)
         error("Sprite parameter is required")
     end
 
+    -- General
     self.name = params.name or "Unnamed Weapon"
+
+    -- Draw options
+    self.imageRatio = params.imageRatio or 1
+
+    -- Sprite
     self.sprite = love.graphics.newImage(params.image)
+    local spriteWidth, spriteHeight = self.sprite:getDimensions()
+    self.spriteWidth = spriteWidth
+    self.spriteHeight = spriteHeight
+
+    -- Skills
     self.skills = params.skills or {}
 
     return self
@@ -50,8 +61,17 @@ end
 
 -- Draw gun in hand
 function Weapon:drawInHand(x, y)
+    self:defaultDrawInHand(x, y)
+end
+
+-- Draw gun in hand
+function Weapon:defaultDrawInHand(x, y)
     local rotation = State.getAngleToMouse() - math.pi / 2
-    love.graphics.draw(self.sprite, x, y, rotation, 1, 1, 0, 0)
+    love.graphics.draw(self.sprite, x, y, rotation, self.imageRatio, self.imageRatio, 0, 0)
+    -- red Dot to x, y
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.circle("fill", x, y, 5)
+    love.graphics.setColor(1, 1, 1)
 end
 
 -- Draw gun in the back

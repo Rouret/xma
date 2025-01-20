@@ -1,6 +1,7 @@
 local Camera = require("engine.camera")
 local Config = require("config")
 local ProFi = require("engine.profiler")
+local State = require("player.state")
 local Debug = {}
 
 function Debug.load()
@@ -57,4 +58,23 @@ function Debug.keypressed(key)
     end
 end
 
+function Debug.draw()
+    if Config.DEBUG_AIM then
+        -- DRAW LINE FROM PLAYER TO MOUSE
+        local mouseX, mouseY = love.mouse.getPosition()
+        local screenWidth, screenHeight = love.graphics.getDimensions()
+        local playerScreenX = screenWidth / 2
+        local playerScreenY = screenHeight / 2
+
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.line(playerScreenX, playerScreenY, mouseX, mouseY)
+        love.graphics.setColor(1, 1, 1)
+
+        -- PRINT ANGLE TO MOUSE
+        local angle = string.format("%.2f", State.getAngleToMouse())
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print(angle, playerScreenX, playerScreenY + 20)
+        love.graphics.setColor(1, 1, 1)
+    end
+end
 return Debug
