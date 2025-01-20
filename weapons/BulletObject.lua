@@ -1,6 +1,7 @@
 local GlobalState = require("game.state")
 local World = require("game.world")
 local State = require("player.state")
+local Object = require("engine.object")
 
 BulletObject = Object:extend()
 BulletObject.__index = BulletObject

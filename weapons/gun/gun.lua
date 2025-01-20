@@ -18,7 +18,7 @@ function Gun:init()
                 image = "sprites/weapons/gun/skill1.jpg",
                 effect = function()
                     GlobalState:addEntity(
-                        Bullet.new(
+                        Bullet:new(
                             {
                                 damage = 20,
                                 x = State.x,
@@ -44,7 +44,7 @@ function Gun:init()
                             0.1 * i,
                             function()
                                 GlobalState:addEntity(
-                                    Bullet.new(
+                                    Bullet:new(
                                         {
                                             damage = 20,
                                             x = State.x,
@@ -72,7 +72,7 @@ function Gun:init()
                         0.5,
                         function()
                             GlobalState:addEntity(
-                                Bullet.new(
+                                Bullet:new(
                                     {
                                         damage = 60,
                                         x = State.x,
