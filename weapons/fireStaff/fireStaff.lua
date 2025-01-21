@@ -2,90 +2,19 @@ local Skills = require("skills")
 local GlobalState = require("game.state")
 local FireBall = require("weapons.fireStaff.fireBall")
 local State = require("player.state")
-local Timer = require("timer")
 local Weapon = require("engine.weapon")
+local FireZone = require("weapons.fireStaff.fireZone")
 
 local FireStaff = Weapon:extend()
 
 function FireStaff:init()
-    params = params or {}
+    local params = {}
     params.skills = {
-        Skills.new(
-            {
-                name = "Shoot",
-                cooldown = 0.5,
-                damage = 10,
-                image = "sprites/weapons/gun/skill1.jpg",
-                effect = function()
-                    self.status = "casting"
-                    GlobalState:addEntity(
-                        FireBall:new(
-                            {
-                                damage = 20,
-                                x = State.x,
-                                y = State.y,
-                                speed = 1500,
-                                TTL = 0.75
-                            }
-                        )
-                    )
-                end
-            }
-        ),
-        Skills.new(
-            {
-                name = "Multi shoot",
-                cooldown = 3,
-                damage = 0,
-                image = "sprites/weapons/gun/skill2.jpg",
-                effect = function()
-                    self.status = "casting"
-                    local nbBullet = 12
-                    for i = 1, nbBullet do
-                        Timer:after(
-                            0.05 * i,
-                            function()
-                                GlobalState:addEntity(
-                                    FireBall:new(
-                                        {
-                                            damage = 10,
-                                            x = State.x,
-                                            y = State.y,
-                                            speed = 1500
-                                        }
-                                    )
-                                )
-                            end
-                        )
-                    end
-                end
-            }
-        ),
-        Skills.new(
-            {
-                name = "Sniper shoot",
-                cooldown = 5,
-                damage = 30,
-                image = "sprites/weapons/gun/skill3.jpg",
-                effect = function()
-                    self.status = "casting"
-                    GlobalState:addEntity(
-                        FireBall:new(
-                            {
-                                damage = 20,
-                                x = State.x,
-                                y = State.y,
-                                speed = 1500,
-                                TTL = 0.75,
-                                beforeDestroy = function(fireBall)
-                                end
-                            }
-                        )
-                    )
-                end
-            }
-        )
+        self:skill1(),
+        self:skill2(),
+        self:skill3()
     }
+
     params.image = "sprites/weapons/fireStaff/firestaff.png"
     params.imageRatio = 1
 
@@ -124,6 +53,98 @@ function FireStaff:update(dt)
             self.animationTimer = 0
         end
     end
+end
+
+function FireStaff:skill1()
+    return Skills.new(
+        {
+            name = "Shoot",
+            cooldown = 0.5,
+            damage = 10,
+            image = "sprites/weapons/gun/skill1.jpg",
+            effect = function()
+                self.status = "casting"
+                GlobalState:addEntity(
+                    FireBall:new(
+                        {
+                            damage = 35,
+                            x = State.x,
+                            y = State.y,
+                            speed = 1500,
+                            TTL = 0.75
+                        }
+                    )
+                )
+            end
+        }
+    )
+end
+
+function FireStaff:skill2()
+    return Skills.new(
+        {
+            name = "Circle fire",
+            cooldown = 3,
+            damage = 0,
+            image = "sprites/weapons/gun/skill2.jpg",
+            effect = function()
+                self.status = "casting"
+                for i = 0, 360, 45 do
+                    GlobalState:addEntity(
+                        FireBall:new(
+                            {
+                                damage = 15,
+                                x = State.x,
+                                y = State.y,
+                                speed = 1200,
+                                TTL = 0.4,
+                                direction = math.rad(i),
+                                imageRatio = 1.5
+                            }
+                        )
+                    )
+                end
+            end
+        }
+    )
+end
+
+function FireStaff:skill3()
+    return Skills.new(
+        {
+            name = "Sniper shoot",
+            cooldown = 5,
+            damage = 30,
+            image = "sprites/weapons/gun/skill3.jpg",
+            effect = function()
+                self.status = "casting"
+                GlobalState:addEntity(
+                    FireBall:new(
+                        {
+                            damage = 20,
+                            x = State.x,
+                            y = State.y,
+                            speed = 1500,
+                            TTL = 0.75,
+                            beforeDestroy = function(fireBall)
+                                GlobalState:addEntity(
+                                    FireZone:new(
+                                        {
+                                            x = fireBall.x,
+                                            y = fireBall.y,
+                                            radius = 100,
+                                            damage = 10,
+                                            duration = 2
+                                        }
+                                    )
+                                )
+                            end
+                        }
+                    )
+                )
+            end
+        }
+    )
 end
 
 return FireStaff
