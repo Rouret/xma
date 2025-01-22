@@ -64,6 +64,7 @@ function UI.drawPlayerStat()
     love.graphics.draw(Choice.config[Choice.Type.DAMAGE].image, x, y)
     local damageValue = UI.formatValue(State.damage)
     love.graphics.setFont(UI.font.small)
+
     local textHeight = UI.font.small:getHeight(damageValue)
     love.graphics.print(damageValue, x + UI.switch.itemSize + UI.switch.gap, y + (UI.switch.itemSize - textHeight) / 2)
 end

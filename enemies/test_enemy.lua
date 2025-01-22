@@ -1,4 +1,3 @@
-local World = require("game.world")
 local State = require("player.state")
 local Enemy = require("engine.enemy")
 local Camera = require("engine.camera")

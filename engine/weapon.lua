@@ -1,5 +1,3 @@
-local GlobalState = require("game.state")
-local World = require("game.world")
 local Object = require("engine.object")
 local State = require("player.state")
 

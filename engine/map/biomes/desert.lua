@@ -1,5 +1,4 @@
 local TileUtils = require("engine.map.tileUtils")
-local World = require("game.world")
 
 local Desert = {}
 

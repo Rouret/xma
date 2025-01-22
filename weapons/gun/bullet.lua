@@ -1,6 +1,3 @@
-local GlobalState = require("game.state")
-local World = require("game.world")
-local State = require("player.state")
 local BulletObject = require("weapons.BulletObject")
 
 local Bullet = BulletObject:extend()

@@ -1,5 +1,3 @@
--- engine/camera.lua
-
 local camera = {}
 camera.__index = camera
 
