@@ -10,7 +10,8 @@ local Camera = require("engine.camera")
 local Map = require("engine.map.map")
 local Debug = require("engine.debug")
 local Config = require("config")
-
+local TestEnemy = require("enemies.test_enemy")
+local enemies = {}
 local map
 
 function generateRandomString(length)
@@ -39,6 +40,21 @@ function love.load()
     Choice.load()
     Player.load(World.world)
     UI.load()
+
+    local enemy =
+        TestEnemy:new(
+        {
+            x = State.x + 500,
+            y = State.y + 500,
+            speed = 100,
+            radius = 20,
+            health = 500,
+            maxHealth = 500
+        }
+    )
+    table.insert(enemies, enemy)
+
+    print(enemy)
 end
 
 function love.update(dt)
@@ -57,6 +73,9 @@ function love.update(dt)
     end
 
     Debug.update(dt)
+    for _, enemy in ipairs(enemies) do
+        enemy:update(dt, World.World)
+    end
 
     if not Config.MODE_FREE_CAMERA then
         World.update(dt)
@@ -77,6 +96,11 @@ function love.draw()
     Player.draw()
     Camera.i:reset()
     UI:draw()
+
+    -- draw enemy
+    for _, enemy in ipairs(enemies) do
+        enemy:draw()
+    end
 
     if Choice.hasGeneratedChoices then
         Choice.draw()

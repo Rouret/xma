@@ -1,7 +1,4 @@
--- Enemy.lua
 local Entity = require("engine.entity")
-local World = require("game.world")
-local State = require("player.state")
 
 local Enemy = Entity:extend()
 
@@ -18,7 +15,7 @@ function Enemy:init(params)
 
     -- Appelle Entity.init avec les paramètres modifiés
     Entity.init(self, params)
-
+    self.hasCollided = true
     -- Ajoute des propriétés spécifiques à Enemy
     self.health = params.health or 100
     self.speed = params.speed or 200
@@ -37,7 +34,7 @@ function Enemy:takeDamage(damage)
     end
 end
 
-function Entity:isAlive()
+function Enemy:isAlive()
     return self.health > 0
 end
 

@@ -8,7 +8,7 @@ function Skills.new(params)
     self.cooldown = params.cooldown -- Temps de recharge en secondes
     self.lastUsed = -params.cooldown -- Assure que la compétence est utilisable au début
     self.effect = params.effect -- Fonction déclenchant l'effet de la compétence
-    self.damage = params.damage -- Dégâts infligés par la compétence
+    self.damage = params.damage or 0 -- Dégâts infligés par la compétence
     self.image = love.graphics.newImage(params.image or "sprites/weapons/empty_skill.png") -- Image de la compétence
     self.song = love.audio.newSource(params.song or "sprites/weapons/empty_skill.wav", "static") -- Son de la compétence
 

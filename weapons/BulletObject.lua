@@ -34,6 +34,7 @@ function BulletObject:init(params)
 
     --General
     self.name = "BulletObject_" .. params.name
+    self.hasCollided = true
 
     -- TTL
     self.TTL = params.TTL or 1
@@ -138,8 +139,12 @@ function BulletObject:onCollision(entity)
         return
     end
 
-    entity:takeDamage(State.calcDamage(self.damage))
+    entity:takeDamage(self.damage)
     self:destroy()
+end
+
+function BulletObject:isAlive()
+    return self.currentTTL < self.TTL
 end
 
 function BulletObject:destroy()

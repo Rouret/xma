@@ -4,7 +4,7 @@ local FireBall = require("weapons.fireStaff.fireBall")
 local State = require("player.state")
 local Weapon = require("engine.weapon")
 local FireZone = require("weapons.fireStaff.fireZone")
-
+local World = require("game.world")
 local FireStaff = Weapon:extend()
 
 function FireStaff:init()
@@ -94,8 +94,7 @@ function FireStaff:skill1()
         {
             name = "Shoot",
             cooldown = 0.5,
-            damage = 10,
-            image = "sprites/weapons/gun/skill1.jpg",
+            image = "sprites/weapons/fireStaff/skill1.png",
             effect = function()
                 self.status = "casting"
                 GlobalState:addEntity(
@@ -119,8 +118,7 @@ function FireStaff:skill2()
         {
             name = "Circle fire",
             cooldown = 3,
-            damage = 0,
-            image = "sprites/weapons/gun/skill2.jpg",
+            image = "sprites/weapons/fireStaff/skill2.png",
             effect = function()
                 self.status = "skill2"
                 for i = 0, 360, 45 do
@@ -148,31 +146,36 @@ function FireStaff:skill3()
         {
             name = "Sniper shoot",
             cooldown = 1,
-            damage = 30,
-            image = "sprites/weapons/gun/skill3.jpg",
+            image = "sprites/weapons/fireStaff/skill3.png",
             effect = function()
                 self.status = "casting"
                 self.skill3.particles:start()
                 GlobalState:addEntity(
                     FireBall:new(
                         {
-                            damage = 20,
+                            damage = 10,
                             x = State.x,
                             y = State.y,
                             speed = 1100,
                             TTL = 0.8,
                             beforeDestroy = function(fireBall)
                                 self.skill3.particles:stop()
-                                GlobalState:addEntity(
-                                    FireZone:new(
-                                        {
-                                            x = fireBall.x,
-                                            y = fireBall.y,
-                                            radius = 100,
-                                            damage = 10,
-                                            TTL = 5
-                                        }
-                                    )
+                                -- New FireZone need to do a World Operation, we need to delay this
+                                table.insert(
+                                    World.delayCallbacks,
+                                    function()
+                                        GlobalState:addEntity(
+                                            FireZone:new(
+                                                {
+                                                    x = fireBall.x,
+                                                    y = fireBall.y,
+                                                    radius = 100,
+                                                    damage = 10,
+                                                    TTL = 5
+                                                }
+                                            )
+                                        )
+                                    end
                                 )
                             end,
                             afterUpdate = function(_, dt)
