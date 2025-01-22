@@ -1,5 +1,4 @@
 local Player = require("player.init")
-local ChasingEnemy = require("enemies.chasing_enemy")
 local GlobalState = require("game.state")
 local UI = require("game.ui")
 local State = require("player.state")
@@ -9,13 +8,10 @@ local Game = require("game.game")
 local Choice = require("game.choice")
 local Camera = require("engine.camera")
 local Map = require("engine.map.map")
-local ProFi = require("engine.profiler")
 local Debug = require("engine.debug")
 local Config = require("config")
-local enemies = {}
-local nbMonster = 3
+
 local map
-local debug
 
 function generateRandomString(length)
     local chars = "0123456789"
@@ -29,7 +25,7 @@ function generateRandomString(length)
     return randomString
 end
 
-function love.load(args)
+function love.load()
     Debug.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -43,8 +39,6 @@ function love.load(args)
     Choice.load()
     Player.load(World.world)
     UI.load()
-
-    -- generateEnemiesFromPlayerLevel(nbMonster)
 end
 
 function love.update(dt)
@@ -71,36 +65,17 @@ function love.update(dt)
         Camera.i:setPosition(State.x, State.y)
     end
 
-    -- Mettre à jour tous les ennemis
-    for i = #enemies, 1, -1 do
-        local enemy = enemies[i]
-        enemy:update(dt, World.world)
-
-        -- Supprimer les ennemis morts
-        if not enemy:isAlive() then
-            table.remove(enemies, i)
-        end
-    end
-
-    -- Ajouter des ennemis si nécessaire
-    if #enemies < nbMonster then
-    -- generateEnemiesFromPlayerLevel(nbMonster)
-    end
-
     GlobalState:update(dt, World.World)
 end
 
 function love.draw()
     Camera.i:apply()
 
-    map:draw(camera)
+    map:draw()
     World:draw()
-    Player.draw()
-    drawEnemies()
     GlobalState:draw()
-
+    Player.draw()
     Camera.i:reset()
-
     UI:draw()
 
     if Choice.hasGeneratedChoices then
@@ -125,30 +100,4 @@ function love.keypressed(key)
     end
 
     Debug.keypressed(key)
-end
-
-function generateEnemiesFromPlayerLevel(nbMonster)
-    for i = #enemies + 1, nbMonster do
-        local x = love.math.random(0, love.graphics.getWidth())
-        local y = love.math.random(0, love.graphics.getHeight())
-        local enemy =
-            ChasingEnemy:new(
-            {
-                x = x,
-                y = y,
-                speed = 100 + State.level * 10,
-                radius = 20,
-                health = 100 + State.level * 10,
-                maxHealth = 100 + State.level * 10
-            }
-        )
-        table.insert(enemies, enemy)
-    end
-    return enemies
-end
-
-function drawEnemies()
-    for _, enemy in ipairs(enemies) do
-        enemy:draw()
-    end
 end

@@ -23,11 +23,34 @@ function FireStaff:init()
     self.animationDuration = 0.5
     self.animationTimer = 0
 
+    -- Skill 2 effect
+    self.skill2 = {
+        rotation = 0,
+        duration = 0.2,
+        timer = 0
+    }
+    self.rotationInc = math.rad(360) / self.skill2.duration
+
+    --Skill 3 particule, particule on the fireball
+    self.skill3 = {}
+    self.skill3.particles =
+        love.graphics.newParticleSystem(love.graphics.newImage("sprites/weapons/fireStaff/fire_particule.png"), 100)
+
+    self.skill3.particles:setParticleLifetime(0.5, 1)
+    self.skill3.particles:setSizeVariation(1)
+    self.skill3.particles:setEmissionRate(20)
+    self.skill3.particles:setLinearAcceleration(-100, -100, 100, 100)
+    self.skill3.particles:setColors(255, 255, 255, 255, 255, 255, 255, 0)
+    self.skill3.particles:setSpeed(200, 300)
+    self.skill3.particles:setSpread(math.pi * 2)
+    self.skill3.particles:setEmissionArea("uniform", 10, 10)
+    self.skill3.particles:setSizes(2, 1, 0.5)
+
     return self
 end
 
 function FireStaff:drawInHand(x, y)
-    local rotation = State.getAngleToMouse() + math.pi / 2
+    local rotation = State.getAngleToMouse() + math.pi / 2 - self.skill2.rotation
 
     if self.status == "casting" then
         rotation = rotation + math.sin(self.animationTimer * 10) / 10
@@ -51,6 +74,17 @@ function FireStaff:update(dt)
         if self.animationTimer >= self.animationDuration then
             self.status = "idle"
             self.animationTimer = 0
+        end
+    end
+
+    if self.status == "skill2" then
+        self.skill2.timer = self.skill2.timer + dt
+        if self.skill2.timer >= self.skill2.duration then
+            self.status = "idle"
+            self.skill2.timer = 0
+            self.skill2.rotation = 0
+        else
+            self.skill2.rotation = self.skill2.rotation + self.rotationInc * dt
         end
     end
 end
@@ -88,7 +122,7 @@ function FireStaff:skill2()
             damage = 0,
             image = "sprites/weapons/gun/skill2.jpg",
             effect = function()
-                self.status = "casting"
+                self.status = "skill2"
                 for i = 0, 360, 45 do
                     GlobalState:addEntity(
                         FireBall:new(
@@ -99,7 +133,7 @@ function FireStaff:skill2()
                                 speed = 1200,
                                 TTL = 0.4,
                                 direction = math.rad(i),
-                                imageRatio = 1.5
+                                imageRatio = 3
                             }
                         )
                     )
@@ -113,20 +147,22 @@ function FireStaff:skill3()
     return Skills.new(
         {
             name = "Sniper shoot",
-            cooldown = 5,
+            cooldown = 1,
             damage = 30,
             image = "sprites/weapons/gun/skill3.jpg",
             effect = function()
                 self.status = "casting"
+                self.skill3.particles:start()
                 GlobalState:addEntity(
                     FireBall:new(
                         {
                             damage = 20,
                             x = State.x,
                             y = State.y,
-                            speed = 1500,
-                            TTL = 0.75,
+                            speed = 1100,
+                            TTL = 0.8,
                             beforeDestroy = function(fireBall)
+                                self.skill3.particles:stop()
                                 GlobalState:addEntity(
                                     FireZone:new(
                                         {
@@ -134,10 +170,17 @@ function FireStaff:skill3()
                                             y = fireBall.y,
                                             radius = 100,
                                             damage = 10,
-                                            duration = 2
+                                            TTL = 5
                                         }
                                     )
                                 )
+                            end,
+                            afterUpdate = function(_, dt)
+                                self.skill3.particles:update(dt)
+                            end,
+                            afterDraw = function(fireBall)
+                                self.skill3.particles:setPosition(fireBall.x, fireBall.y)
+                                love.graphics.draw(self.skill3.particles, 0, 0)
                             end
                         }
                     )

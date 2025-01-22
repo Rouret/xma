@@ -5,7 +5,7 @@ camera.__index = camera
 
 -- Instance unique pour la caméra globale
 camera.i = nil
-
+local DEFAULT_SCALE = 0.5
 -- Initialise la caméra globale (singleton)
 function camera.init(x, y, scale, map)
     if not camera.i then
@@ -14,7 +14,7 @@ function camera.init(x, y, scale, map)
             {
                 x = x or 0,
                 y = y or 0,
-                scale = scale or 1
+                scale = scale or DEFAULT_SCALE
             },
             camera
         )
@@ -35,7 +35,7 @@ function camera.new(x, y, scale)
         {
             x = x or 0,
             y = y or 0,
-            scale = scale or 1
+            scale = scale or DEFAULT_SCALE
         },
         camera
     )

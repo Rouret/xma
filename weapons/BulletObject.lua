@@ -29,6 +29,8 @@ function BulletObject:init(params)
 
     -- Events
     self.beforeDestroyEvent = params.beforeDestroy or self.emptyFunction()
+    self.afterUpdateEvent = params.afterUpdate or self.emptyFunction()
+    self.afterDrawEvent = params.afterDraw or self.emptyFunction()
 
     --General
     self.name = "BulletObject_" .. params.name
@@ -72,6 +74,20 @@ function BulletObject:beforeDestroy()
     self.beforeDestroyEvent(self)
 end
 
+function BulletObject:afterUpdate(dt)
+    if self.afterUpdateEvent == nil then
+        return
+    end
+    self.afterUpdateEvent(self, dt)
+end
+
+function BulletObject:afterDraw()
+    if self.afterDrawEvent == nil then
+        return
+    end
+    self.afterDrawEvent(self)
+end
+
 function BulletObject:ajusteRotation()
     return self.direction
 end
@@ -79,6 +95,7 @@ end
 -- Draw the gun
 function BulletObject:draw()
     love.graphics.draw(self.image, self.x, self.y, self:ajusteRotation(), self.imageRatio, self.imageRatio, 0, 0)
+    self:afterDraw()
 end
 
 function BulletObject:update(dt)
@@ -96,6 +113,8 @@ function BulletObject:update(dt)
 
     -- Synchroniser les coordonnées logiques avec celles du body
     self.x, self.y = self.body:getPosition()
+
+    self:afterUpdate(dt)
 end
 
 function BulletObject:takeDamage(damage)
@@ -103,6 +122,10 @@ end
 
 function BulletObject:onCollision(entity)
     if entity.name == "player" then
+        return
+    end
+
+    if not entity.hasCollided then
         return
     end
 
