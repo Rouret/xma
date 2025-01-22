@@ -70,15 +70,14 @@ function UI.drawPlayerStat()
 end
 
 function UI.drawSwitchWeapon()
-    local weapon = State.weapons[State.currentWeaponIndex]
-    local previousWeapon = State.weapons[State.currentWeaponIndex - 1] or State.weapons[#State.weapons]
-    local nextWeapon = State.weapons[State.currentWeaponIndex + 1] or State.weapons[1]
+    local currentWeapon = State.getCurrentWeapon().sprite
+    local nextWeapon = State.getNextWeapon().sprite
 
     local x = ((UI.screenWidth - UI.skills.size) / 2) - UI.switch.itemSize - UI.switch.gap
     local y = UI.screenHeight - UI.skills.skillSize
 
     -- Draw previous weapon
-    love.graphics.draw(UI.emptyImage, x, y)
+    love.graphics.draw(currentWeapon, x, y)
 
     local imageToDraw
     if State.canSwitchWeapon() then
@@ -89,7 +88,7 @@ function UI.drawSwitchWeapon()
 
     love.graphics.draw(imageToDraw, x, y + UI.switch.gap + UI.switch.itemSize)
 
-    love.graphics.draw(UI.emptyImage, x, y + (UI.switch.gap + UI.switch.itemSize) * 2)
+    love.graphics.draw(nextWeapon, x, y + (UI.switch.gap + UI.switch.itemSize) * 2)
 end
 
 function UI.drawPlayerExp()

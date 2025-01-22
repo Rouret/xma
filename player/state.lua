@@ -51,6 +51,14 @@ function State.switchWeapon()
     end
 end
 
+function State.getCurrentWeapon()
+    return State.weapons[State.currentWeaponIndex]
+end
+
+function State.getNextWeapon()
+    return State.weapons[(State.currentWeaponIndex % #State.weapons) + 1]
+end
+
 function State.canSwitchWeapon()
     return love.timer.getTime() - State.weaponSwitchTime > State.WEAPON_SWITCH_COOLDOWN
 end
