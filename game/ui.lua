@@ -1,5 +1,4 @@
 local State = require("player.state")
-local Choice = require("game.choice")
 local UI = {}
 
 local cooldownOverlay = love.graphics.newImage("sprites/weapons/on_cd_skill.png")
@@ -46,27 +45,6 @@ function UI:draw()
     UI.drawPlayerHealth()
     UI.drawPlayerExp()
     UI.drawSwitchWeapon()
-    UI.drawPlayerStat()
-end
-
-function UI.drawPlayerStat()
-    local x = (UI.skills.size / 2) + (UI.screenWidth / 2) + UI.switch.gap
-    local y = UI.screenHeight - UI.skills.skillSize
-
-    love.graphics.draw(Choice.config[Choice.Type.SPEED].image, x, y)
-    local speedValue = UI.formatValue(State.speed)
-    love.graphics.setFont(UI.font.small)
-    local textHeight = UI.font.small:getHeight(speedValue)
-    love.graphics.print(speedValue, x + UI.switch.itemSize + UI.switch.gap, y + (UI.switch.itemSize - textHeight) / 2)
-
-    y = y + UI.switch.itemSize + UI.switch.gap
-
-    love.graphics.draw(Choice.config[Choice.Type.DAMAGE].image, x, y)
-    local damageValue = UI.formatValue(State.damage)
-    love.graphics.setFont(UI.font.small)
-
-    local textHeight = UI.font.small:getHeight(damageValue)
-    love.graphics.print(damageValue, x + UI.switch.itemSize + UI.switch.gap, y + (UI.switch.itemSize - textHeight) / 2)
 end
 
 function UI.drawSwitchWeapon()

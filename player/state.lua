@@ -96,14 +96,7 @@ function State.gainExperience(amount)
     if State.experience >= State.level * 100 then
         State.level = State.level + 1
         State.experience = 0
-
-        Game.isGamePaused = true
-        Game.needToGenerateChoice = true
     end
-end
-
-function State.calcDamage(damage)
-    return damage * (State.damage / 100)
 end
 
 return State

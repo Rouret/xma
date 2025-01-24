@@ -5,13 +5,11 @@ local State = require("player.state")
 local Timer = require("timer")
 local World = require("game.world")
 local Game = require("game.game")
-local Choice = require("game.choice")
 local Camera = require("engine.camera")
 local Map = require("engine.map.map")
 local Debug = require("engine.debug")
 local Config = require("config")
-local TestEnemy = require("enemies.test_enemy")
-local enemies = {}
+local ChasingEnemy = require("enemies.chasing_enemy")
 local map
 
 function generateRandomString(length)
@@ -37,45 +35,18 @@ function love.load()
     World.load()
     map = Map.new(World.world)
     Camera.init(State.x, State.y, 1, map)
-    Choice.load()
     Player.load(World.world)
     UI.load()
-
-    local enemy =
-        TestEnemy:new(
-        {
-            x = State.x + 500,
-            y = State.y + 500,
-            speed = 100,
-            radius = 20,
-            health = 500,
-            maxHealth = 500
-        }
-    )
-    table.insert(enemies, enemy)
-
-    print(enemy)
 end
 
 function love.update(dt)
-    -- Générer un choix si nécessaire
-    if Game.needToGenerateChoice then
-        Choice.generateChoice()
-        Game.needToGenerateChoice = false
-        return
-    end
-
     -- Mettre à jour le choix si le jeu est en pause
     if Game.isGamePaused then
         World.update(dt)
-        Choice.update(dt)
         return
     end
 
     Debug.update(dt)
-    for _, enemy in ipairs(enemies) do
-        enemy:update(dt, World.World)
-    end
 
     if not Config.MODE_FREE_CAMERA then
         World.update(dt)
@@ -97,20 +68,8 @@ function love.draw()
     Camera.i:reset()
     UI:draw()
 
-    -- draw enemy
-    for _, enemy in ipairs(enemies) do
-        enemy:draw()
-    end
-
-    if Choice.hasGeneratedChoices then
-        Choice.draw()
-    end
     Debug.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
-end
-
-function love.mousepressed(x, y, button)
-    Choice.mousepressed(x, y, button)
 end
 
 --de zoom when scrolling

@@ -1,6 +1,6 @@
 local Entity = require("engine.entity")
 
-local Enemy = Entity:extend()
+Enemy = Entity:extend()
 
 function Enemy:init(params)
     params = params or {}
@@ -32,6 +32,10 @@ function Enemy:takeDamage(damage)
     if self.health <= 0 then
         self:die()
     end
+end
+
+function Enemy:die()
+    self:destroy()
 end
 
 function Enemy:isAlive()

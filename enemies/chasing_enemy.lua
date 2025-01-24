@@ -1,6 +1,6 @@
 local State = require("player.state")
 local Enemy = require("engine.enemy")
-
+local Camera = require("engine.camera")
 local ChasingEnemy = Enemy:extend()
 ChasingEnemy.__index = ChasingEnemy
 
@@ -37,14 +37,23 @@ end
 
 function ChasingEnemy:draw()
     love.graphics.setColor(1, 0, 0) -- Set color to red
-    love.graphics.circle("fill", self.x, self.y, self.radius)
+    love.graphics.circle("fill", 0, 0, self.radius)
+    love.graphics.setColor(1, 1, 1) -- Reset color to white
+
+    local camX, camY = Camera.i.x, Camera.i.y
+    local screenWidth, screenHeight = love.graphics.getDimensions()
+    local drawX = self.x - camX + screenWidth / 2
+    local drawY = self.y - camY + screenHeight / 2
+
+    love.graphics.setColor(1, 0, 0) -- Set color to red
+    love.graphics.circle("fill", drawX, drawY, self.radius)
     love.graphics.setColor(1, 1, 1) -- Reset color to white
 
     -- Dessiner la barre de vie
     local healthBarWidth = 100
     local healthBarHeight = 10
-    local healthBarX = self.x - healthBarWidth / 2
-    local healthBarY = self.y - self.radius - healthBarHeight
+    local healthBarX = drawX - healthBarWidth / 2
+    local healthBarY = drawY - self.radius - healthBarHeight
     love.graphics.setColor(1, 0, 0) -- Set color to red
     love.graphics.rectangle("fill", healthBarX, healthBarY, healthBarWidth, healthBarHeight)
     love.graphics.setColor(0, 1, 0) -- Set color to green
@@ -58,30 +67,12 @@ function ChasingEnemy:draw()
     love.graphics.setColor(1, 1, 1) -- Reset color to white
 end
 
-function ChasingEnemy:takeDamage(damage)
-    self.health = self.health - damage
-    if self.health <= 0 then
-        self:destroy()
-    end
-end
-
-function ChasingEnemy:destroy()
-    State.gainExperience(100)
-    self.fixture:destroy()
-    GlobalState:removeEntity(self)
-end
-
 function ChasingEnemy:onCollision(entity)
     if entity.name ~= "player" then
         return
     end
 
     State.takeDamage(self.damage)
-end
-
-function ChasingEnemy:die()
-    State.gainExperience(self.exp)
-    self:destroy()
 end
 
 return ChasingEnemy
