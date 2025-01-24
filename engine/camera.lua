@@ -81,7 +81,6 @@ function camera:reset()
     love.graphics.pop()
 end
 
--- Optimiser getVisibleArea
 function camera:getVisibleArea()
     local halfWidth = camera.i.width / (2 * self.scale)
     local halfHeight = camera.i.height / (2 * self.scale)
@@ -91,6 +90,12 @@ function camera:getVisibleArea()
     local height = halfHeight * 2
 
     return x, y, width, height
+end
+
+function camera:isVisible(x, y, objectWidth, objectHeight)
+    local camX, camY, camWidth, camHeight = self:getVisibleArea()
+
+    return x + objectWidth > camX and x < camX + camWidth and y + objectHeight > camY and y < camY + camHeight
 end
 
 return camera

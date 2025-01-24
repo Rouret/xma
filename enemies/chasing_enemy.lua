@@ -8,6 +8,8 @@ function ChasingEnemy:init(params)
     params = params or {}
     params.shape = love.physics.newCircleShape(params.radius or 50)
     params.bodyType = "dynamic"
+    params.width = params.radius * 2
+    params.height = params.radius * 2
     Enemy.init(self, params)
 
     self.fixture:setUserData(self)

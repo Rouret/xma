@@ -54,6 +54,10 @@ function BulletObject:init(params)
     self.image = love.graphics.newImage(params.imagePath)
     local imageWidth, imageHeight = self.image:getDimensions()
 
+    -- Size
+    self.width = imageWidth * self.imageRatio
+    self.height = imageHeight * self.imageRatio
+
     -- Body
     self.body = love.physics.newBody(World.world, self.x, self.y, "dynamic")
     self.shape = love.physics.newRectangleShape(imageWidth, imageHeight)

@@ -1,3 +1,5 @@
+local Camera = require("engine.camera")
+
 -- Global state table for all entities
 GlobalState = {
     entities = {}
@@ -30,7 +32,8 @@ end
 -- Function to draw all entities in the global state
 function GlobalState:draw()
     for _, entity in ipairs(self.entities) do
-        if entity.draw then
+        local isOnScreen = Camera.i:isVisible(entity.x, entity.y, entity.width, entity.height)
+        if entity.draw and isOnScreen then
             entity:draw()
         end
     end

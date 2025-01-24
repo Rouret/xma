@@ -24,6 +24,10 @@ function Entity:init(params)
     self.x = params.x or 0
     self.y = params.y or 0
 
+    -- Size
+    self.width = params.width or 0
+    self.height = params.height or 0
+
     -- Physics
     self.body = love.physics.newBody(World.world, self.x, self.y, params.bodyType)
     self.shape = params.shape

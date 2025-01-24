@@ -36,6 +36,10 @@ function FireZone:new(params)
     self.radius = params.radius or 100
     self.TTL = params.TTL or 1
 
+    -- Size
+    self.width = self.radius * 2
+    self.height = self.radius * 2
+
     -- Damage
     self.damage = params.damage or 2
     self.currentDamageTick = 0
