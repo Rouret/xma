@@ -1,4 +1,4 @@
-local Skills = require("skills")
+local Skills = require("engine.skills")
 local GlobalState = require("game.state")
 local FireBall = require("weapons.fireStaff.fireBall")
 local State = require("player.state")

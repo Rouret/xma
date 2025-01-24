@@ -1,8 +1,8 @@
-local Skills = require("skills")
+local Skills = require("engine.skills")
 local GlobalState = require("game.state")
 local Bullet = require("weapons.gun.bullet")
 local State = require("player.state")
-local Timer = require("timer")
+local Timer = require("engine.timer")
 local Weapon = require("engine.weapon")
 
 local Gun = Weapon:extend()

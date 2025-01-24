@@ -2,14 +2,13 @@ local Player = require("player.init")
 local GlobalState = require("game.state")
 local UI = require("game.ui")
 local State = require("player.state")
-local Timer = require("timer")
+local Timer = require("engine.timer")
 local World = require("game.world")
 local Game = require("game.game")
 local Camera = require("engine.camera")
 local Map = require("engine.map.map")
 local Debug = require("engine.debug")
 local Config = require("config")
-local ChasingEnemy = require("enemies.chasing_enemy")
 local map
 
 function generateRandomString(length)
@@ -25,6 +24,7 @@ function generateRandomString(length)
 end
 
 function love.load()
+    print("Welcome to Xma")
     Debug.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -70,11 +70,6 @@ function love.draw()
 
     Debug.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
-end
-
---de zoom when scrolling
-function love.wheelmoved(x, y)
-    Camera.i.scale = Camera.i.scale + y * 0.1
 end
 
 function love.keypressed(key)
