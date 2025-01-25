@@ -1,11 +1,15 @@
 local TileUtils = require("engine.map.tileUtils")
-local World = require("game.world")
 
 local Taiga = {}
 
 -- Général
 Taiga.name = "Taiga"
-Taiga.spawnProbability = 0.9
+Taiga.minAltitude = 0.5
+Taiga.maxAltitude = 1
+Taiga.minHumidity = 0
+Taiga.maxHumidity = 1
+Taiga.color = {1, 1, 1}
+Taiga.sub = {}
 
 -- Terrain
 Taiga.terrainPath = "sprites/tilesets/taiga/taiga_ground.png"

@@ -97,3 +97,7 @@ function love.keypressed(key)
 
     Debug.keypressed(key)
 end
+
+function love.keyreleased(key)
+    Debug.keyreleased(key)
+end

@@ -4,7 +4,12 @@ local Desert = {}
 
 -- Général
 Desert.name = "Desert"
-Desert.spawnProbability = 0.9
+Desert.minAltitude = 0
+Desert.maxAltitude = 0.5
+Desert.minHumidity = 0
+Desert.maxHumidity = 0.5
+Desert.color = {1, 1, 0}
+Desert.sub = {}
 
 -- Terrain
 Desert.terrainPath = "sprites/tilesets/desert/desert_ground.png"

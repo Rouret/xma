@@ -5,11 +5,14 @@ local State = require("player.state")
 local Debug = {}
 
 local Map
+
+local showBiome = false
 function Debug.load(map)
     print("F1: Start profiling")
     print("F2: Stop profiling")
     print("F3: Toggle free camera mode")
     print("F4: TP close to beacon")
+    print("F5: Toggle biome graph")
     print("F8: Restart")
 
     -- Initialisation de la caméra en mode libre si nécessaire
@@ -71,6 +74,15 @@ function Debug.keypressed(key)
             State.y = y
         end
     end
+    if key == "f5" then
+        showBiome = true
+    end
+end
+
+function Debug.keyreleased(key)
+    if key == "f5" then
+        showBiome = false
+    end
 end
 
 function Debug.draw()
@@ -106,6 +118,69 @@ function Debug.draw()
         love.graphics.setColor(0, 0, 0)
         love.graphics.print("X: " .. playerX .. " Y: " .. playerY, x, y)
         love.graphics.setColor(1, 1, 1)
+    end
+    if Config.DRAW_BIOME_GRAPH and showBiome then
+        local width, height = love.graphics.getDimensions()
+
+        local scaleX = width - 50
+        local scaleY = height - 50
+
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.line(50, height - 50, scaleX, height - 50)
+        love.graphics.line(50, height - 50, 50, 50)
+
+        love.graphics.print("Altitude", scaleX - 40, height - 40)
+        love.graphics.print("Humidity", 10, 10)
+
+        love.graphics.setColor(0, 0, 0)
+        for i = 0, 10 do
+            local xTick = 50 + scaleX * (i * 0.1)
+            love.graphics.line(xTick, height - 50, xTick, height - 40)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.print(string.format("%.1f", i * 0.1), xTick - 10, height - 40)
+        end
+
+        for i = 0, 10 do
+            local yTick = height - 50 - scaleY * (i * 0.1)
+            love.graphics.line(50, yTick, 60, yTick)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.print(string.format("%.1f", i * 0.1), 10, yTick - 10)
+        end
+        love.graphics.setColor(1, 1, 1)
+
+        for biomeName, biomeData in pairs(Map.BIOMES) do
+            local x1 = 50 + scaleX * biomeData.minAltitude
+            local y1 = height - 50 - scaleY * biomeData.maxHumidity
+            local x2 = 50 + scaleX * biomeData.maxAltitude
+            local y2 = height - 50 - scaleY * biomeData.minHumidity
+
+            love.graphics.setColor(biomeData.color)
+
+            love.graphics.rectangle("fill", x1, y1, x2 - x1, y2 - y1)
+
+            -- Draw grey border for each biome
+            love.graphics.setColor(0.5, 0.5, 0.5)
+            love.graphics.rectangle("line", x1, y1, x2 - x1, y2 - y1)
+
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print(biomeName, (x1 + x2) / 2 - 10, (y1 + y2) / 2)
+
+            if biomeData.sub then
+                for _, subBiomeData in pairs(biomeData.sub) do
+                    local subX1 = 50 + scaleX * subBiomeData.minAltitude
+                    local subY1 = height - 50 - scaleY * subBiomeData.maxHumidity
+                    local subX2 = 50 + scaleX * subBiomeData.maxAltitude
+                    local subY2 = height - 50 - scaleY * subBiomeData.minHumidity
+
+                    love.graphics.setColor(subBiomeData.color)
+
+                    love.graphics.rectangle("fill", subX1, subY1, subX2 - subX1, subY2 - subY1)
+
+                    love.graphics.setColor(0, 0, 0)
+                    love.graphics.print(subBiomeData.name, (subX1 + subX2) / 2 - 10, (subY1 + subY2) / 2)
+                end
+            end
+        end
     end
 end
 return Debug

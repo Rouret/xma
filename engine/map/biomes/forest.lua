@@ -5,7 +5,24 @@ local Forest = {}
 
 -- Général
 Forest.name = "Forest"
-Forest.spawnProbability = 0.9
+
+Forest.minAltitude = 0
+Forest.maxAltitude = 0.5
+Forest.minHumidity = 0.5
+Forest.maxHumidity = 1
+Forest.color = {0, 1, 0}
+
+Forest.sub = {
+    {
+        elementName = "Medium_tree",
+        name = "Forest",
+        minAltitude = 0.25,
+        maxAltitude = 0.35,
+        minHumidity = 0.6,
+        maxHumidity = 0.75,
+        color = {144 / 255, 203 / 255, 162 / 255}
+    }
+}
 
 -- Terrain
 Forest.terrainPath = "sprites/tilesets/forest/forest_ground.png"
@@ -52,38 +69,37 @@ function Forest.generateTerrain(x, y)
     }
 end
 
-function Forest.generateElement(x, y)
-    local rand = love.math.random()
-    local elementType
+function Forest.generateElement(x, y, altitude, humidity)
+    for _, subElement in ipairs(Forest.sub) do
+        if
+            altitude > subElement.minAltitude and altitude < subElement.maxAltitude and
+                humidity > subElement.minHumidity and
+                humidity < subElement.maxHumidity
+         then
+            local elementType = subElement.elementName
+            local elementData = Forest.elements[elementType]
 
-    if rand <= 0.02 then
-        elementType = "Little_tree"
-    elseif rand <= 0.07 then
-        elementType = "Medium_tree"
-    else
-        return nil -- Pas d'élément généré
-    end
-
-    local elementData = Forest.elements[elementType]
-
-    local element = {
-        quad = Forest.elementQuads[elementType],
-        type = elementType,
-        x = (x - 0.5) * 32,
-        y = (y - 0.5) * 32,
-        collision = elementData.collision,
-        hitbox = elementData.hitbox and
-            {
-                x = (x - 0.5) * 32 + elementData.hitbox.x,
-                y = (y - 0.5) * 32 + elementData.hitbox.y,
-                width = elementData.hitbox.width,
-                height = elementData.hitbox.height
+            local element = {
+                quad = Forest.elementQuads[elementType],
+                type = elementType,
+                x = (x - 0.5) * 32,
+                y = (y - 0.5) * 32,
+                collision = elementData.collision,
+                hitbox = elementData.hitbox and
+                    {
+                        x = (x - 0.5) * 32 + elementData.hitbox.x,
+                        y = (y - 0.5) * 32 + elementData.hitbox.y,
+                        width = elementData.hitbox.width,
+                        height = elementData.hitbox.height
+                    }
             }
-    }
 
-    Forest.initElement(element)
+            Forest.initElement(element)
 
-    return element
+            return element
+        end
+    end
+    return nil
 end
 
 function Forest.initElement(element)
@@ -97,7 +113,7 @@ function Forest.initElement(element)
         )
         local shape = love.physics.newRectangleShape(element.hitbox.width, element.hitbox.height)
         local fixture = love.physics.newFixture(body, shape)
-        fixture:setUserData({name = "wall"})
+        fixture:setUserData({name = "wall", type = "wall"})
     end
 end
 
