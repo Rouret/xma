@@ -52,6 +52,10 @@ function Entity:draw()
     error("draw method not implemented")
 end
 
+function Entity:isAlive()
+    error("draw method not implemented")
+end
+
 function Entity:destroy()
     self.body:destroy()
     GlobalState:removeEntity(self)

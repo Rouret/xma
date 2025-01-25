@@ -9,6 +9,7 @@ local Camera = require("engine.camera")
 local Map = require("engine.map.map")
 local Debug = require("engine.debug")
 local Config = require("config")
+
 local map
 
 function generateRandomString(length)
@@ -44,6 +45,16 @@ function love.load()
     Player.load(World.world)
     UI.load()
     Debug.load(map)
+
+    -- TP the player close to the beacon
+    local beacon = map.beacon
+    if beacon then
+        local spawnX = beacon.x + beacon.width / 2 + 50
+        local spawnY = beacon.y + beacon.height / 2 + 50
+        State.body:setPosition(spawnX, spawnY)
+        State.x = spawnX
+        State.y = spawnY
+    end
 end
 
 function love.update(dt)
