@@ -8,13 +8,6 @@ local Map
 
 local showBiome = false
 function Debug.load(map)
-    print("F1: Start profiling")
-    print("F2: Stop profiling")
-    print("F3: Toggle free camera mode")
-    print("F4: TP close to beacon")
-    print("F5: Toggle biome graph")
-    print("F8: Restart")
-
     -- Initialisation de la caméra en mode libre si nécessaire
     if Config.MODE_FREE_CAMERA then
         Camera.i:setPosition(0, 0) -- Position initiale de la caméra
@@ -86,6 +79,17 @@ function Debug.keyreleased(key)
 end
 
 function Debug.draw()
+    local width, height = love.graphics.getDimensions()
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", 5, height - 150, 250, 140)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print("F1: Start profiling", 10, height - 140)
+    love.graphics.print("F2: Stop profiling", 10, height - 120)
+    love.graphics.print("F3: Toggle free camera mode", 10, height - 100)
+    love.graphics.print("F4: TP close to beacon", 10, height - 80)
+    love.graphics.print("F5: Toggle biome graph", 10, height - 60)
+    love.graphics.print("F8: Restart", 10, height - 40)
+
     if Config.DEBUG_AIM then
         -- DRAW LINE FROM PLAYER TO MOUSE
         local mouseX, mouseY = love.mouse.getPosition()
