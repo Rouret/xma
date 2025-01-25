@@ -56,7 +56,7 @@ function camera:setPosition(x, y)
     end
 
     local midWidth, midHeight = self.midWidth, self.midHeight
-    local mapWidth, mapHeight = self.map.MAP_WIDTH * 32, self.map.MAP_HEIGHT * 32
+    local mapWidth, mapHeight = self.map.MAP_WIDTH * self.map.TILE_SIZE, self.map.MAP_HEIGHT * self.map.TILE_SIZE
 
     x = clamp(x, midWidth, mapWidth - midWidth)
     y = clamp(y, midHeight, mapHeight - midHeight)

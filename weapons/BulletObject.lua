@@ -109,7 +109,7 @@ function BulletObject:update(dt)
     self.currentTTL = self.currentTTL + dt
     if self.currentTTL >= self.TTL then
         self:destroy()
-        return
+        return 
     end
 
     -- Déplacer le body physique

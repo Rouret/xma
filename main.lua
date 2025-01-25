@@ -28,10 +28,16 @@ function love.load()
 
     love.graphics.setDefaultFilter("nearest", "nearest")
 
+    -- Custom cursor
+    local cursor = love.mouse.newCursor("sprites/cursor.png", 0, 0)
+    love.mouse.setCursor(cursor)
+
+    -- Seed
     local seed = tonumber(generateRandomString(17))
     print("Seed: " .. string.format("%x", seed))
     love.math.setRandomSeed(seed)
 
+    -- Init
     World.load()
     map = Map.new(World.world)
     Camera.init(State.x, State.y, 1, map)

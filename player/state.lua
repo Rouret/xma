@@ -1,6 +1,5 @@
 local State = {}
 local love = require("love")
-local Game = require("game.game")
 
 function State.load()
     State.name = "player"
