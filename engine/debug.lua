@@ -4,16 +4,20 @@ local ProFi = require("engine.profiler")
 local State = require("player.state")
 local Debug = {}
 
-function Debug.load()
+local Map
+function Debug.load(map)
     print("F1: Start profiling")
     print("F2: Stop profiling")
     print("F3: Toggle free camera mode")
+    print("F4: TP close to beacon")
     print("F8: Restart")
 
     -- Initialisation de la caméra en mode libre si nécessaire
     if Config.MODE_FREE_CAMERA then
         Camera.i:setPosition(0, 0) -- Position initiale de la caméra
     end
+
+    Map = map
 
     return Debug
 end
@@ -56,6 +60,17 @@ function Debug.keypressed(key)
         Config.MODE_FREE_CAMERA = not Config.MODE_FREE_CAMERA
         print("Free Camera Mode: " .. tostring(Config.MODE_FREE_CAMERA))
     end
+    if key == "f4" then
+        print("Teleporting to beacon")
+        local beacon = Map.beacon
+        if beacon then
+            local x = (beacon.x + 200)
+            local y = (beacon.y + 200)
+            State.body:setPosition(x, y)
+            State.x = x
+            State.y = y
+        end
+    end
 end
 
 function Debug.draw()
@@ -74,6 +89,22 @@ function Debug.draw()
         local angle = string.format("%.2f", State.getAngleToMouse())
         love.graphics.setColor(0, 0, 0)
         love.graphics.print(angle, playerScreenX, playerScreenY + 20)
+        love.graphics.setColor(1, 1, 1)
+    end
+
+    if Config.DRAW_COORDS then
+        -- draw coord beyond center of screen
+        local screenWidth, screenHeight = love.graphics.getDimensions()
+        local centerX = screenWidth / 2
+        local centerY = screenHeight / 2
+
+        local x = centerX
+        local y = centerY + 30
+        local playerX = string.format("%.2f", State.x) / 32
+        local playerY = string.format("%.2f", State.y) / 32
+
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print("X: " .. playerX .. " Y: " .. playerY, x, y)
         love.graphics.setColor(1, 1, 1)
     end
 end

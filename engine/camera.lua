@@ -1,3 +1,4 @@
+local State = require("player.state")
 local camera = {}
 camera.__index = camera
 
@@ -23,6 +24,9 @@ function camera.init(x, y, scale, map)
     camera.i.midWidth = camera.i.width / 2
     camera.i.midHeight = camera.i.height / 2
     camera.i.map = map
+
+    camera.i.mx = camera.i.width / camera.i.map.MAP_WIDTH
+    camera.i.my = camera.i.height / camera.i.map.MAP_HEIGHT
 
     return camera.i
 end
@@ -93,9 +97,58 @@ function camera:getVisibleArea()
 end
 
 function camera:isVisible(x, y, objectWidth, objectHeight)
-    local camX, camY, camWidth, camHeight = self:getVisibleArea()
+    local a = {x = x, y = y}
+    local b = {x = x + objectWidth, y = y + objectHeight}
 
-    return x + objectWidth > camX and x < camX + camWidth and y + objectHeight > camY and y < camY + camHeight
+    return self:isPositionInCamera(a.x, a.y) and self:isPositionInCamera(b.x, b.y)
+end
+
+function camera:getT()
+    local tx = State.x - camera.i.width / (2 * self.scale)
+    local ty = State.y - camera.i.height / (2 * self.scale)
+
+    if tx < 0 then
+        tx = 0
+    end
+
+    if ty < 0 then
+        ty = 0
+    end
+
+    return tx, ty
+end
+
+function camera:isPositionInCamera(x, y)
+    local transform = love.math.newTransform()
+    transform:scale(self.scale)
+    transform:translate(
+        -self.x + math.floor(love.graphics.getWidth() / (2 * self.scale)),
+        -self.y + math.floor(love.graphics.getHeight() / (2 * self.scale))
+    )
+
+    -- Applique la transformation
+    local sx, sy = transform:transformPoint(x, y)
+
+    return sx >= 0 and sx <= camera.i.width and sy >= 0 and sy <= camera.i.height
+end
+
+function camera:worldToScreen(x, y)
+    -- Créer une transformation avec la mise à l'échelle et la translation
+    local transform = love.math.newTransform()
+
+    -- Appliquer la mise à l'échelle
+    transform:scale(self.scale)
+
+    -- Appliquer la translation (ajustement pour centrer la vue)
+    transform:translate(
+        -self.x + math.floor(love.graphics.getWidth() / (2 * self.scale)),
+        -self.y + math.floor(love.graphics.getHeight() / (2 * self.scale))
+    )
+
+    -- Appliquer la transformation au point
+    local sx, sy = transform:transformPoint(x, y)
+
+    return sx, sy
 end
 
 return camera

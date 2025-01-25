@@ -2,6 +2,8 @@ local NoiseUtils = require("engine.map.noiseUtils")
 local BiomeGenerator = require("engine.map.biomeGenerator")
 local Camera = require("engine.camera")
 local BiomeRegistry = require("engine/map/BiomeRegistry")
+
+local Beacon = require("items.beacon")
 local Config = require("config")
 
 -- Charger les biomes et leurs assets
@@ -16,7 +18,6 @@ local Map = {}
 Map.__index = Map
 
 function Map.new(world)
-    print("Creating map...")
     local self = setmetatable({}, Map)
 
     self.world = world
@@ -24,10 +25,20 @@ function Map.new(world)
     self.MAP_HEIGHT = 1000
     self.TILE_SIZE = 32
     self.NOISE_SCALE = 2
-
+    self.tiles = {}
+    self.elements = {}
+    self.beacon = nil
     self:generate()
 
     return self
+end
+
+function Map:gridToWorld(xTile, yTile)
+    return xTile * self.TILE_SIZE, yTile * self.TILE_SIZE
+end
+
+function Map:worldToGrid(x, y)
+    return math.floor(x / self.TILE_SIZE), math.floor(y / self.TILE_SIZE)
 end
 
 function Map:convertPxToTile(px)
@@ -43,13 +54,11 @@ function Map:generate()
 
     -- Assigner les biomes
     self.biomes = BiomeGenerator.assignBiomes(self.MAP_WIDTH, self.MAP_HEIGHT, altitudeMap, humidityMap) or {}
-    self.tiles = {}
-    self.elements = {}
 
-    -- Générer le terrain
     self:generateTerrain()
-    -- Générer les éléments
-    if not Config.NO_ELEMENTS then
+    self:generateBeacon()
+
+    if not Config.NO_GENERATION_ELEMENTS then
         self:generateElements()
     end
 end
@@ -91,6 +100,26 @@ function Map:generateElements()
     end
 end
 
+function Map:generateBeacon(x, y)
+    --random x and Y but the beacon needs to be within 80% of the center, not on the border
+    local pourcentage = 0.8
+    local sx = self.MAP_WIDTH * (1 - pourcentage) / 2
+    local dx = self.MAP_WIDTH * pourcentage
+    local sy = self.MAP_HEIGHT * (1 - pourcentage) / 2
+    local dy = self.MAP_HEIGHT * pourcentage
+
+    local randomX = love.math.random(sx, sx + dx)
+    local randomY = love.math.random(sy, sy + dy)
+    local beaconX, beaconY = self:gridToWorld(randomX, randomY)
+    local beacon = Beacon:new({x = beaconX, y = beaconY})
+    self.beacon = beacon
+
+    print("Beacon generated at " .. randomX .. ", " .. randomY)
+
+    GlobalState:addEntity(beacon)
+end
+
+-- Draw
 function Map:draw()
     local camX, camY, camWidth, camHeight = Camera.i:getVisibleArea()
 
@@ -99,6 +128,14 @@ function Map:draw()
     local startY = math.max(1, math.floor(camY / self.TILE_SIZE))
     local endY = math.min(self.MAP_HEIGHT, math.ceil((camY + camHeight) / self.TILE_SIZE))
 
+    self:drawTiles(startX, endX, startY, endY)
+
+    if not Config.NO_DRAW_ELEMENTS then
+        self:drawElements(startX, endX, startY, endY)
+    end
+end
+
+function Map:drawTiles(startX, endX, startY, endY)
     for y = startY, endY do
         for x = startX, endX do
             local biome = self.biomes[y][x]
@@ -106,29 +143,18 @@ function Map:draw()
                 local biomeModule = BiomeRegistry.getBiome(biome.name)
                 if biomeModule then
                     local tile = self.tiles[y][x]
-                    love.graphics.draw(
-                        biomeModule.terrain,
-                        tile.quad,
-                        (x - 1) * self.TILE_SIZE,
-                        (y - 1) * self.TILE_SIZE
-                    )
+                    love.graphics.draw(biomeModule.terrain, tile.quad, self:gridToWorld(x - 1, y - 1))
                 end
             end
         end
-    end
-    if not Config.NO_ELEMENTS then
-        self:drawElements(startX, endX, startY, endY)
     end
 end
 
 function Map:drawElements(startX, endX, startY, endY)
     for _, element in ipairs(self.elements) do
         -- Vérifiez si l'élément est visible dans la zone de la caméra
-        if
-            element.x >= startX * self.TILE_SIZE and element.x <= endX * self.TILE_SIZE and
-                element.y >= startY * self.TILE_SIZE and
-                element.y <= endY * self.TILE_SIZE
-         then
+        local elementX, elementY = self:worldToGrid(element.x, element.y)
+        if elementX >= startX and elementX <= endX and elementY >= startY and elementY <= endY then
             -- Récupérer le module de biome pour dessiner l'élément
             local biomeModule = BiomeRegistry.getBiome(element.biomeName)
             if biomeModule and biomeModule.drawElement then

@@ -1,5 +1,5 @@
 local Camera = require("engine.camera")
-
+local Config = require("config")
 -- Global state table for all entities
 GlobalState = {
     entities = {}
@@ -8,15 +8,27 @@ GlobalState = {
 -- Function to add an entity to the global state
 function GlobalState:addEntity(entity)
     table.insert(self.entities, entity)
+    if Config.DEBUG_GLOBAL_STATE then
+        print("Entity added, current length: " .. #self.entities)
+    end
 end
 
 -- Function to remove an entity from the global state
 function GlobalState:removeEntity(entity)
-    for i, e in ipairs(self.entities) do
-        if e == entity then
+    local found = false
+    for i = #self.entities, 1, -1 do
+        if self.entities[i] == entity then
             table.remove(self.entities, i)
+            found = true
             break
         end
+    end
+    if not found then
+        error("LEAK: Entity not found in global state" .. entity.name)
+    end
+
+    if Config.DEBUG_GLOBAL_STATE then
+        print("Entity removed, current length: " .. #self.entities)
     end
 end
 
@@ -33,6 +45,7 @@ end
 function GlobalState:draw()
     for _, entity in ipairs(self.entities) do
         local isOnScreen = Camera.i:isVisible(entity.x, entity.y, entity.width, entity.height)
+
         if entity.draw and isOnScreen then
             entity:draw()
         end
