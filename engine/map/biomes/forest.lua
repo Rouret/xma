@@ -14,21 +14,21 @@ Forest.color = {0, 1, 0}
 
 Forest.sub = {
     {
-        elementName = "Medium_tree",
+        elementName = "Big_tree",
         name = "Forest",
-        minAltitude = 0.15,
-        maxAltitude = 0.35,
-        minHumidity = 0.65,
-        maxHumidity = 0.85,
+        minAltitude = 0.,
+        maxAltitude = 0.20,
+        minHumidity = 0.5,
+        maxHumidity = 0.7,
         color = {144 / 255, 203 / 255, 162 / 255},
         probability = 0.8,
         element = {
-            width = 34,
-            height = 47,
-            x = 20,
-            y = 0,
+            width = 57,
+            height = 94,
+            x = 58,
+            y = 3,
             collision = true,
-            hitbox = {x = 20, y = 3, width = 34, height = 44}
+            hitbox = {x = 57 / 2, y = 0, width = 57, height = 94}
         }
     }
 }
@@ -91,16 +91,19 @@ function Forest.generateElement(x, y, altitude, humidity)
             local elementType = subElement.elementName
             local elementData = subElement.element
 
+            x = x * 32
+            y = y * 32
+
             local elementCreated = {
                 quad = subElement.quad,
                 type = elementType,
-                x = (x) * 32,
-                y = (y) * 32,
+                x = x,
+                y = y,
                 collision = elementData.collision,
                 hitbox = elementData.hitbox and
                     {
-                        x = (x * 32) + elementData.hitbox.x,
-                        y = (y * 32) + elementData.hitbox.y,
+                        x = x + elementData.hitbox.x,
+                        y = y + elementData.hitbox.y,
                         width = elementData.hitbox.width,
                         height = elementData.hitbox.height
                     } or

@@ -22,7 +22,7 @@ function Map.new(world)
     self.MAP_WIDTH = 1000
     self.MAP_HEIGHT = 1000
     self.TILE_SIZE = 32
-    self.NOISE_SCALE = 10
+    self.NOISE_SCALE = 5
     self.tiles = {}
     self.elements = {}
     self.beacon = nil
@@ -162,10 +162,10 @@ end
 function Map:draw()
     local camX, camY, camWidth, camHeight = Camera.i:getVisibleArea()
 
-    local startX = math.max(1, math.floor(camX / self.TILE_SIZE))
-    local endX = math.min(self.MAP_WIDTH, math.ceil((camX + camWidth) / self.TILE_SIZE))
-    local startY = math.max(1, math.floor(camY / self.TILE_SIZE))
-    local endY = math.min(self.MAP_HEIGHT, math.ceil((camY + camHeight) / self.TILE_SIZE))
+    local startX = math.max(1, math.floor(camX / self.TILE_SIZE)) - 10
+    local endX = math.min(self.MAP_WIDTH, math.ceil((camX + camWidth) / self.TILE_SIZE)) + 10
+    local startY = math.max(1, math.floor(camY / self.TILE_SIZE)) - 10
+    local endY = math.min(self.MAP_HEIGHT, math.ceil((camY + camHeight) / self.TILE_SIZE)) + 10
 
     self:drawTiles(startX, endX, startY, endY)
 
