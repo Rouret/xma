@@ -104,7 +104,8 @@ function FireStaff:skill1()
                             x = State.x,
                             y = State.y,
                             speed = 1500,
-                            TTL = 0.75
+                            TTL = 0.75,
+                            from = "player"
                         }
                     )
                 )
@@ -131,7 +132,8 @@ function FireStaff:skill2()
                                 speed = 1200,
                                 TTL = 0.4,
                                 direction = math.rad(i),
-                                imageRatio = 3
+                                imageRatio = 3,
+                                from = "player"
                             }
                         )
                     )
@@ -158,6 +160,7 @@ function FireStaff:skill3()
                             y = State.y,
                             speed = 1100,
                             TTL = 0.8,
+                            from = "player",
                             beforeDestroy = function(fireBall)
                                 self.skill3.particles:stop()
                                 -- New FireZone need to do a World Operation, we need to delay this
@@ -171,7 +174,8 @@ function FireStaff:skill3()
                                                     y = fireBall.y,
                                                     radius = 100,
                                                     damage = 10,
-                                                    TTL = 5
+                                                    TTL = 5,
+                                                    from = "player"
                                                 }
                                             )
                                         )

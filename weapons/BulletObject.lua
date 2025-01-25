@@ -28,6 +28,10 @@ function BulletObject:init(params)
         error("Position parameters are required")
     end
 
+    if not params.from then
+        error("from parameter is required")
+    end
+
     -- Events
     self.beforeDestroyEvent = params.beforeDestroy or self.emptyFunction()
     self.afterUpdateEvent = params.afterUpdate or self.emptyFunction()
@@ -35,7 +39,8 @@ function BulletObject:init(params)
 
     --General
     self.name = "BulletObject_" .. params.name
-    self.hasCollided = true
+    self.type = "bullet"
+    self.from = params.from
 
     -- TTL
     self.TTL = params.TTL or 1
@@ -109,7 +114,7 @@ function BulletObject:update(dt)
     self.currentTTL = self.currentTTL + dt
     if self.currentTTL >= self.TTL then
         self:destroy()
-        return 
+        return
     end
 
     -- Déplacer le body physique
@@ -131,15 +136,15 @@ function BulletObject:onCollision(entity)
         return
     end
 
-    if not entity.hasCollided then
+    if entity.type and entity.type == "bullet" then
         return
     end
 
-    if string.match(entity.name, "BulletObject") then
+    if entity.type and entity.type == "zone" then
         return
     end
 
-    if entity.name == "wall" then
+    if entity.type and entity.type == "wall" then
         self:destroy()
         return
     end

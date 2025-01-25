@@ -30,7 +30,9 @@ function FireZone:new(params)
     end
 
     self.name = "FireZone"
-    self.hasCollided = false
+    self.type = "zone"
+    self.from = "player"
+
     self.x = params.x or 0
     self.y = params.y or 0
     self.radius = params.radius or 100
@@ -118,6 +120,10 @@ end
 
 function FireZone:onCollision(other)
     if other.name == "player" then
+        return
+    end
+
+    if other.type and other.type == "bullet" then
         return
     end
 

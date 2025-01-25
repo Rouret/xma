@@ -100,7 +100,7 @@ function camera:isVisible(x, y, objectWidth, objectHeight)
     local a = {x = x, y = y}
     local b = {x = x + objectWidth, y = y + objectHeight}
 
-    return self:isPositionInCamera(a.x, a.y) and self:isPositionInCamera(b.x, b.y)
+    return self:isPositionInCamera(a.x, a.y) or self:isPositionInCamera(b.x, b.y)
 end
 
 function camera:getT()

@@ -15,7 +15,6 @@ function Enemy:init(params)
 
     -- Appelle Entity.init avec les paramètres modifiés
     Entity.init(self, params)
-    self.hasCollided = true
     -- Ajoute des propriétés spécifiques à Enemy
     self.health = params.health or 100
     self.speed = params.speed or 200

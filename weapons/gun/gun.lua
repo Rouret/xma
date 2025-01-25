@@ -24,7 +24,8 @@ function Gun:init()
                                 x = State.x,
                                 y = State.y,
                                 speed = 1500,
-                                TTL = 0.75
+                                TTL = 0.75,
+                                from = "player"
                             }
                         )
                     )
@@ -49,7 +50,8 @@ function Gun:init()
                                             damage = 20,
                                             x = State.x,
                                             y = State.y,
-                                            speed = 2500
+                                            speed = 2500,
+                                            from = "player"
                                         }
                                     )
                                 )
@@ -79,7 +81,8 @@ function Gun:init()
                                         y = State.y,
                                         TTL = 2,
                                         speed = 3250,
-                                        direction = State.getAngleToMouse()
+                                        direction = State.getAngleToMouse(),
+                                        from = "player"
                                     }
                                 )
                             )

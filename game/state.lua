@@ -18,13 +18,11 @@ function GlobalState:removeEntity(entity)
     local found = false
     for i = #self.entities, 1, -1 do
         if self.entities[i] == entity then
-            table.remove(self.entities, i)
             found = true
+            table.remove(self.entities, i)
+
             break
         end
-    end
-    if not found then
-        error("LEAK: Entity not found in global state" .. entity.name)
     end
 
     if Config.DEBUG_GLOBAL_STATE then

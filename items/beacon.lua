@@ -22,7 +22,8 @@ function Beacon:init(params)
 
     -- General
     self.name = "Beacon"
-    self.hasCollided = false
+    self.type = "wall"
+    self.hp = 1000
 
     -- Transform
     self.x = params.x
@@ -31,7 +32,6 @@ function Beacon:init(params)
     print("Beacon created at " .. self.x .. ", " .. self.y)
 
     -- Sprite
-
     self.image = love.graphics.newImage("sprites/items/beacon/beacon.png")
     local imageWidth, imageHeight = self.image:getDimensions()
 
@@ -64,14 +64,19 @@ function Beacon:destroy()
 end
 
 function Beacon:onCollision(entity)
-    -- DETECT COLLISION
     if entity.name == "Player" then
         return
     end
 
-    if entity.destroy then
+    if entity.type and entity.type == "zone" then
+        return
+    end
+
+    if entity.type and entity.type == "bullet" then
         entity:destroy()
     end
+
+    return
 end
 
 return Beacon

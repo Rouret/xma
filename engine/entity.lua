@@ -21,6 +21,7 @@ function Entity:init(params)
 
     -- Basic properties
     self.name = params.name or "Unnamed Entity"
+    self.type = "wall"
     self.x = params.x or 0
     self.y = params.y or 0
 
@@ -32,6 +33,9 @@ function Entity:init(params)
     self.body = love.physics.newBody(World.world, self.x, self.y, params.bodyType)
     self.shape = params.shape
     self.fixture = love.physics.newFixture(self.body, self.shape)
+
+    -- Collision
+    self.noCollisionWith = params.noCollisionWith or {}
 
     return self
 end
