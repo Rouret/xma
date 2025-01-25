@@ -25,7 +25,7 @@ end
 
 function love.load()
     print("Welcome to Xma")
-    Debug.load()
+
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     local seed = tonumber(generateRandomString(17))
@@ -37,6 +37,7 @@ function love.load()
     Camera.init(State.x, State.y, 1, map)
     Player.load(World.world)
     UI.load()
+    Debug.load(map)
 end
 
 function love.update(dt)
