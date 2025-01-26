@@ -15,12 +15,9 @@ end
 
 -- Function to remove an entity from the global state
 function GlobalState:removeEntity(entity)
-    local found = false
     for i = #self.entities, 1, -1 do
         if self.entities[i] == entity then
-            found = true
             table.remove(self.entities, i)
-
             break
         end
     end

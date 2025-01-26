@@ -23,7 +23,7 @@ end
 function Player.update(dt)
     local currentTime = love.timer.getTime()
     if State.isAlive() then
-        Movement.update(dt)
+        Movement.update()
         Interaction.update(dt)
         Animation.update(dt)
 

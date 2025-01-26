@@ -11,7 +11,9 @@ function Draw.draw()
 
     -- Draw weapon
     local weapon = State.weapons[State.currentWeaponIndex]
-    weapon:draw()
+    if weapon then
+        weapon:draw()
+    end
 end
 
 return Draw

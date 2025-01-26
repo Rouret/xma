@@ -48,14 +48,25 @@ function UI:draw()
 end
 
 function UI.drawSwitchWeapon()
-    local currentWeapon = State.getCurrentWeapon().sprite
-    local nextWeapon = State.getNextWeapon().sprite
+    local currentWeapon = State.getCurrentWeapon()
+    local nextWeapon = State.getNextWeapon()
+
+    if not currentWeapon then
+        currentWeapon = {sprite = UI.emptyImage}
+    end
+
+    if not nextWeapon then
+        nextWeapon = {sprite = UI.emptyImage}
+    end
+
+    local currentWeaponSprite = currentWeapon.sprite
+    local nextWeaponSprite = nextWeapon.sprite
 
     local x = ((UI.screenWidth - UI.skills.size) / 2) - UI.switch.itemSize - UI.switch.gap
     local y = UI.screenHeight - UI.skills.skillSize
 
     -- Draw previous weapon
-    love.graphics.draw(currentWeapon, x, y)
+    love.graphics.draw(currentWeaponSprite, x, y)
 
     local imageToDraw
     if State.canSwitchWeapon() then
@@ -66,7 +77,7 @@ function UI.drawSwitchWeapon()
 
     love.graphics.draw(imageToDraw, x, y + UI.switch.gap + UI.switch.itemSize)
 
-    love.graphics.draw(nextWeapon, x, y + (UI.switch.gap + UI.switch.itemSize) * 2)
+    love.graphics.draw(nextWeaponSprite, x, y + (UI.switch.gap + UI.switch.itemSize) * 2)
 end
 
 function UI.drawPlayerExp()
@@ -128,6 +139,9 @@ end
 
 function UI.drawSkills()
     local weapon = State.weapons[State.currentWeaponIndex]
+    if not weapon then
+        return
+    end
     local totalWidth = (#weapon.skills * UI.skills.skillSize) + ((#weapon.skills - 1) * UI.skills.gap)
     local x = (UI.screenWidth - totalWidth) / 2
     local y = UI.screenHeight - UI.skills.skillSize

@@ -16,12 +16,12 @@ Forest.sub = {
     {
         elementName = "Big_tree",
         name = "Forest",
-        minAltitude = 0.,
+        minAltitude = 0.1,
         maxAltitude = 0.20,
         minHumidity = 0.5,
         maxHumidity = 0.7,
         color = {144 / 255, 203 / 255, 162 / 255},
-        probability = 0.8,
+        probability = 0.44,
         element = {
             width = 57,
             height = 94,

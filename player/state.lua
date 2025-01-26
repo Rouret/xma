@@ -51,11 +51,11 @@ function State.switchWeapon()
 end
 
 function State.getCurrentWeapon()
-    return State.weapons[State.currentWeaponIndex]
+    return State.weapons[State.currentWeaponIndex] or nil
 end
 
 function State.getNextWeapon()
-    return State.weapons[(State.currentWeaponIndex % #State.weapons) + 1]
+    return State.weapons[(State.currentWeaponIndex % #State.weapons) + 1] or nil
 end
 
 function State.canSwitchWeapon()
