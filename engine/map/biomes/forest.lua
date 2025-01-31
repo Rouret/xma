@@ -23,12 +23,66 @@ Forest.sub = {
         color = {144 / 255, 203 / 255, 162 / 255},
         probability = 0.44,
         element = {
-            width = 57,
-            height = 94,
-            x = 58,
-            y = 3,
+            width = 55,
+            height = 85,
+            x = 0,
+            y = 66,
             collision = true,
-            hitbox = {x = 57 / 2, y = 0, width = 57, height = 94}
+            hitbox = {x = 0, y = 0, width = 55, height = 85}
+        }
+    },
+    {
+        elementName = "Big_stone",
+        name = "Big_stone",
+        minAltitude = 0.3,
+        maxAltitude = 0.40,
+        minHumidity = 0.5,
+        maxHumidity = 0.7,
+        color = {144 / 255, 203 / 255, 162 / 255},
+        probability = 0.05,
+        element = {
+            width = 50,
+            height = 50,
+            x = 49,
+            y = 0,
+            collision = true,
+            hitbox = {x = 0, y = 0, width = 50, height = 50}
+        }
+    },
+    {
+        elementName = "Small_stone",
+        name = "Small_stone",
+        minAltitude = 0.3,
+        maxAltitude = 0.40,
+        minHumidity = 0.8,
+        maxHumidity = 1,
+        color = {144 / 255, 203 / 255, 162 / 255},
+        probability = 0.2,
+        element = {
+            width = 40,
+            height = 30,
+            x = 0,
+            y = 0,
+            collision = true,
+            hitbox = {x = 0, y = 0, width = 40, height = 30}
+        }
+    },
+    {
+        elementName = "Big_bush",
+        name = "Big_bush",
+        minAltitude = 0.1,
+        maxAltitude = 0.50,
+        minHumidity = 0.7,
+        maxHumidity = 1,
+        color = {144 / 255, 203 / 255, 162 / 255},
+        probability = 1,
+        element = {
+            width = 50,
+            height = 50,
+            x = 0,
+            y = 181,
+            collision = true,
+            hitbox = {x = 0, y = 181, width = 50, height = 50}
         }
     }
 }

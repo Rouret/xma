@@ -1,8 +1,6 @@
 local State = require("player.state")
 local UI = {}
 
-local cooldownOverlay = love.graphics.newImage("sprites/weapons/on_cd_skill.png")
-
 function UI.load()
     local screenWidth, screenHeight = love.graphics.getDimensions()
     UI.screenWidth = screenWidth
@@ -34,6 +32,8 @@ function UI.load()
     UI.font.medium = love.graphics.newFont(24)
     UI.font.small = love.graphics.newFont(16)
 
+    UI.cooldownOverlay = love.graphics.newImage("sprites/weapons/on_cd_skill.png")
+
     return UI
 end
 
@@ -41,10 +41,11 @@ function UI.update()
 end
 
 function UI:draw()
-    UI.drawSkills()
+    local mouseX, mouseY = love.mouse.getPosition()
     UI.drawPlayerHealth()
     UI.drawPlayerExp()
     UI.drawSwitchWeapon()
+    UI.drawSkills(mouseX, mouseY)
 end
 
 function UI.drawSwitchWeapon()
@@ -137,7 +138,7 @@ function UI.drawPlayerHealth()
     love.graphics.setColor(1, 1, 1)
 end
 
-function UI.drawSkills()
+function UI.drawSkills(mouseX, mouseY)
     local weapon = State.weapons[State.currentWeaponIndex]
     if not weapon then
         return
@@ -147,19 +148,7 @@ function UI.drawSkills()
     local y = UI.screenHeight - UI.skills.skillSize
     for i, skill in ipairs(weapon.skills) do
         local calcX = x + (i - 1) * (UI.skills.skillSize + UI.skills.gap)
-        love.graphics.draw(skill.image, calcX, y)
-        if skill.remainingCooldownInSeconds > 0 then
-            love.graphics.draw(cooldownOverlay, calcX, y)
-            local cooldownText = UI.formatTime(skill.remainingCooldownInSeconds)
-            love.graphics.setFont(UI.font.big)
-            local textWidth = UI.font.big:getWidth(cooldownText)
-            local textHeight = UI.font.big:getHeight(cooldownText)
-            love.graphics.print(
-                cooldownText,
-                calcX + (UI.skills.skillSize - textWidth) / 2,
-                y + (UI.skills.skillSize - textHeight) / 2
-            )
-        end
+        skill:drawUI(calcX, y, mouseX, mouseY)
     end
 end
 

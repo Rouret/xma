@@ -1,3 +1,5 @@
+local UI = require("game.ui")
+
 local Skills = {}
 Skills.__index = Skills
 
@@ -44,6 +46,44 @@ function Skills:use(currentTime, ...)
         return true -- Compétence utilisée avec succès
     else
         return false -- Compétence encore en cooldown
+    end
+end
+
+function Skills:drawUI(x, y, mouseX, mouseY)
+    local skillSize = UI.skills.skillSize
+    love.graphics.draw(self.image, x, y)
+    if self.remainingCooldownInSeconds > 0 then
+        love.graphics.draw(UI.cooldownOverlay, x, y)
+        local cooldownText = UI.formatTime(self.remainingCooldownInSeconds)
+        love.graphics.setFont(UI.font.big)
+        local textWidth = UI.font.big:getWidth(cooldownText)
+        local textHeight = UI.font.big:getHeight()
+        love.graphics.print(cooldownText, x + (skillSize - textWidth) / 2, y + (skillSize - textHeight) / 2)
+    end
+
+    -- Detect hover
+    local isHovered = mouseX >= x and mouseX <= x + skillSize and mouseY >= y and mouseY <= y + skillSize
+
+    -- draw a popup with defailt folow the mouse
+    if isHovered then
+        -- white background
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.setFont(UI.font.small)
+        local text = self.name
+        local textWidth = UI.font.small:getWidth(text)
+        local textHeight = UI.font.small:getHeight()
+
+        -- 32 padding
+        local padding = 32
+        local popupWidth = textWidth + padding
+        local popupHeight = textHeight + padding
+        local popupX = mouseX - popupWidth / 2
+        local popupY = mouseY - popupHeight - 10
+        -- draw the name of the skill
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.rectangle("fill", popupX, popupY, popupWidth, popupHeight)
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print(text, popupX + padding / 2, popupY + padding / 2)
     end
 end
 

@@ -22,12 +22,30 @@ Taiga.sub = {
         color = {236 / 255, 240 / 255, 243 / 255},
         probability = 0.5,
         element = {
-            width = 60,
-            height = 91,
+            width = 55,
+            height = 85,
             x = 0,
             y = 0,
             collision = true,
-            hitbox = {x = 0, y = 0, width = 60, height = 91}
+            hitbox = {x = 0, y = 0, width = 55, height = 85}
+        }
+    },
+      {
+        elementName = "Big_tree",
+        name = "Taiga",
+        minAltitude = 0.65,
+        maxAltitude = 0.85,
+        minHumidity = 0.4,
+        maxHumidity = 0.6,
+        color = {236 / 255, 240 / 255, 243 / 255},
+        probability = 0.5,
+        element = {
+            width = 55,
+            height = 85,
+            x = 0,
+            y = 0,
+            collision = true,
+            hitbox = {x = 0, y = 0, width = 55, height = 85}
         }
     }
 }
