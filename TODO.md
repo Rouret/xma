@@ -1,2 +1,1 @@
-- Intégrer les cactus
 - Faire du random grid pour les elements
