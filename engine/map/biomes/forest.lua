@@ -12,16 +12,30 @@ Forest.minHumidity = 0.5
 Forest.maxHumidity = 1
 Forest.color = {0, 1, 0}
 
+--[[
+    2 types of spawn strategies:
+        - perlin: spawn based on perlin noise
+            minAltitude
+            maxAltitude
+            minHumidity
+            maxHumidity
+            probability
+        - random: spawn randomly
+            probability
+]]
 Forest.sub = {
     {
         elementName = "Big_tree",
         name = "Forest",
-        minAltitude = 0.1,
-        maxAltitude = 0.20,
-        minHumidity = 0.5,
-        maxHumidity = 0.7,
         color = {144 / 255, 203 / 255, 162 / 255},
-        probability = 0.44,
+        type = "perlin",
+        typeMeta = {
+            minAltitude = 0.1,
+            maxAltitude = 0.20,
+            minHumidity = 0.5,
+            maxHumidity = 0.7,
+            probability = 0.44
+        },
         element = {
             width = 55,
             height = 85,
@@ -34,12 +48,11 @@ Forest.sub = {
     {
         elementName = "Big_stone",
         name = "Big_stone",
-        minAltitude = 0.3,
-        maxAltitude = 0.40,
-        minHumidity = 0.5,
-        maxHumidity = 0.7,
+        type = "random",
+        typeMeta = {
+            probability = 0.001
+        },
         color = {144 / 255, 203 / 255, 162 / 255},
-        probability = 0.05,
         element = {
             width = 50,
             height = 50,
@@ -52,12 +65,11 @@ Forest.sub = {
     {
         elementName = "Small_stone",
         name = "Small_stone",
-        minAltitude = 0.3,
-        maxAltitude = 0.40,
-        minHumidity = 0.8,
-        maxHumidity = 1,
+        type = "random",
+        typeMeta = {
+            probability = 0.001
+        },
         color = {144 / 255, 203 / 255, 162 / 255},
-        probability = 0.2,
         element = {
             width = 40,
             height = 30,
@@ -70,12 +82,11 @@ Forest.sub = {
     {
         elementName = "Big_bush",
         name = "Big_bush",
-        minAltitude = 0.1,
-        maxAltitude = 0.50,
-        minHumidity = 0.7,
-        maxHumidity = 1,
+        type = "random",
+        typeMeta = {
+            probability = 0.001
+        },
         color = {144 / 255, 203 / 255, 162 / 255},
-        probability = 1,
         element = {
             width = 50,
             height = 50,
@@ -131,55 +142,92 @@ end
 
 function Forest.generateElement(x, y, altitude, humidity)
     for _, subElement in ipairs(Forest.sub) do
-        local probability = love.math.random()
-
-        if (probability > subElement.probability) then
-            return nil
+        local temp = nil
+        if subElement.type == "perlin" then
+            temp = Forest.generateElementPerlin(subElement, x, y, altitude, humidity)
         end
 
-        if
-            altitude > subElement.minAltitude and altitude < subElement.maxAltitude and
-                humidity > subElement.minHumidity and
-                humidity < subElement.maxHumidity
-         then
-            local elementType = subElement.elementName
-            local elementData = subElement.element
+        if temp then
+            return temp
+        end
 
-            x = x * 32
-            y = y * 32
+        if subElement.type == "random" then
+            temp = Forest.generateElementRandom(subElement, x, y)
+        end
 
-            local elementCreated = {
-                quad = subElement.quad,
-                type = elementType,
-                x = x,
-                y = y,
-                collision = elementData.collision,
-                hitbox = elementData.hitbox and
-                    {
-                        x = x + elementData.hitbox.x,
-                        y = y + elementData.hitbox.y,
-                        width = elementData.hitbox.width,
-                        height = elementData.hitbox.height
-                    } or
-                    nil
-            }
-
-            Forest.initElement(elementCreated)
-
-            return elementCreated
+        if temp then
+            return temp
         end
     end
+
     return nil
 end
 
-function Forest.initElement(element)
-    if element.hitbox and element.collision then
+function Forest.generateElementPerlin(subElement, x, y, altitude, humidity)
+    local probability = love.math.random()
+
+    if (probability > subElement.typeMeta.probability) then
+        return nil
+    end
+
+    if
+        altitude > subElement.typeMeta.minAltitude and altitude < subElement.typeMeta.maxAltitude and
+            humidity > subElement.typeMeta.minHumidity and
+            humidity < subElement.typeMeta.maxHumidity
+     then
+        return Forest.initElement(subElement, x, y)
+    end
+
+    return nil
+end
+
+function Forest.generateElementRandom(subElement, x, y)
+    local probability = love.math.random()
+
+    if (probability > subElement.typeMeta.probability) then
+        return nil
+    end
+
+    return Forest.initElement(subElement, x, y)
+end
+
+function Forest.initElement(element, x, y)
+    local elementType = element.elementName
+    local elementData = element.element
+
+    x = x * 32
+    y = y * 32
+
+    local elementCreated = {
+        quad = element.quad,
+        type = elementType,
+        x = x,
+        y = y,
+        collision = elementData.collision,
+        hitbox = elementData.hitbox and
+            {
+                x = x + elementData.hitbox.x,
+                y = y + elementData.hitbox.y,
+                width = elementData.hitbox.width,
+                height = elementData.hitbox.height
+            } or
+            nil
+    }
+
+    if elementCreated.hitbox and elementCreated.collision then
         local body =
-            love.physics.newBody(World.world, element.hitbox.x, element.hitbox.y - element.hitbox.height / 2, "static")
-        local shape = love.physics.newRectangleShape(element.hitbox.width, element.hitbox.height)
+            love.physics.newBody(
+            World.world,
+            elementCreated.hitbox.x,
+            elementCreated.hitbox.y - elementCreated.hitbox.height / 2,
+            "static"
+        )
+        local shape = love.physics.newRectangleShape(elementCreated.hitbox.width, elementCreated.hitbox.height)
         local fixture = love.physics.newFixture(body, shape)
         fixture:setUserData({name = "wall", type = "wall"})
     end
+
+    return elementCreated
 end
 
 function Forest.drawElement(element)
