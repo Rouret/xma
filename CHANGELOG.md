@@ -1,14 +1,15 @@
 # Changelog
 
 
-## v0.0.4 - 24/01/25
+## v0.0.4 - 31/01/25
 
+### Added or Changed
+- 3 biomes
+
+## v0.0.3 - 24/01/25
 ### Added or Changed
 - Add Fire Staff
 - Add biome
-
-## v0.0.3 - ???
-
 
 ## v0.0.2 - 12/01/25
 

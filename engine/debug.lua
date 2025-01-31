@@ -9,6 +9,9 @@ local Map
 
 local showBiome = false
 function Debug.load(map)
+    if not Config.DEV_MODE then
+        return
+    end
     -- Initialisation de la caméra en mode libre si nécessaire
     if Config.MODE_FREE_CAMERA then
         Camera.i:setPosition(0, 0) -- Position initiale de la caméra
@@ -20,6 +23,9 @@ function Debug.load(map)
 end
 
 function Debug.update(dt)
+    if not Config.DEV_MODE then
+        return
+    end
     if Config.MODE_FREE_CAMERA then
         -- Déplacements de la caméra avec les touches ZQSD (WASD en QWERTY)
         if love.keyboard.isDown("z") then
@@ -38,6 +44,9 @@ function Debug.update(dt)
 end
 
 function Debug.keypressed(key)
+    if not Config.DEV_MODE then
+        return
+    end
     if key == "f1" then
         print("Start profiling")
         ProFi:start()
@@ -74,6 +83,9 @@ function Debug.keypressed(key)
 end
 
 function Debug.keyreleased(key)
+    if not Config.DEV_MODE then
+        return
+    end
     if key == "f5" then
         showBiome = false
     end
@@ -82,6 +94,19 @@ end
 function Debug.draw()
     love.graphics.setFont(UI.font.small)
     local width, height = love.graphics.getDimensions()
+    if not Config.DEV_MODE then
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", 5, height - 150, 250, 140)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.print("ZQSD - Move", 10, height - 140)
+        love.graphics.print("Left Click: Spell 1", 10, height - 120)
+        love.graphics.print("2: Spell 2", 10, height - 100)
+        love.graphics.print("3: Spell 3", 10, height - 80)
+        love.graphics.print("e: switch weapon", 10, height - 60)
+        love.graphics.print("alt-f4 : quit", 10, height - 40)
+        return
+    end
+
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", 5, height - 150, 250, 140)
     love.graphics.setColor(1, 1, 1)

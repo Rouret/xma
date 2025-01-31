@@ -8,7 +8,7 @@ GlobalState = {
 -- Function to add an entity to the global state
 function GlobalState:addEntity(entity)
     table.insert(self.entities, entity)
-    if Config.DEBUG_GLOBAL_STATE then
+    if Config.DEV_MODE and Config.DEBUG_GLOBAL_STATE then
         print("Entity added, current length: " .. #self.entities)
     end
 end
@@ -22,7 +22,7 @@ function GlobalState:removeEntity(entity)
         end
     end
 
-    if Config.DEBUG_GLOBAL_STATE then
+    if Config.DEV_MODE and Config.DEBUG_GLOBAL_STATE then
         print("Entity removed, current length: " .. #self.entities)
     end
 end

@@ -1,5 +1,7 @@
 local Config = {}
 
+Config.DEV_MODE = false
+
 -- Debug Inputs
 Config.PROFILING = false
 Config.MODE_FREE_CAMERA = false
