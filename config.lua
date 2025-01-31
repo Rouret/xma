@@ -1,6 +1,6 @@
 local Config = {}
 
-Config.DEV_MODE = false
+Config.DEV_MODE = true
 
 -- Debug Inputs
 Config.PROFILING = false

@@ -38,6 +38,23 @@ function Taiga:init()
                 collision = true,
                 hitbox = {x = 0, y = 0, width = 55, height = 85}
             }
+        },
+        {
+            elementName = "Big_rock",
+            name = "Taiga",
+            types = {"random"},
+            randomMeta = {
+                probability = 0.001
+            },
+            color = {236 / 255, 240 / 255, 243 / 255},
+            element = {
+                width = 50,
+                height = 50,
+                x = 0,
+                y = 96,
+                collision = true,
+                hitbox = {x = 0, y = 0, width = 50, height = 50}
+            }
         }
     }
 

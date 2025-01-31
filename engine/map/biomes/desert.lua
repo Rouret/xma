@@ -38,6 +38,23 @@ function Desert:init()
                 collision = true,
                 hitbox = {x = 0, y = 0, width = 45, height = 60}
             }
+        },
+        {
+            elementName = "Small_stone",
+            name = "Small_stone",
+            types = {"random"},
+            randomMeta = {
+                probability = 0.001
+            },
+            color = {144 / 255, 203 / 255, 162 / 255},
+            element = {
+                width = 40,
+                height = 30,
+                x = 48,
+                y = 0,
+                collision = true,
+                hitbox = {x = 0, y = 0, width = 40, height = 30}
+            }
         }
     }
 
