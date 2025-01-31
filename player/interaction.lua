@@ -3,7 +3,7 @@ local Interaction = {}
 
 function Interaction.update(dt)
     local weapon = State.weapons[State.currentWeaponIndex]
-    if love.keyboard.isDown("1") then
+    if love.mouse.isDown(1) then
         weapon.skills[1]:use(love.timer.getTime())
     end
     if love.keyboard.isDown("2") then
