@@ -2,6 +2,7 @@ local Camera = require("engine.camera")
 local Config = require("config")
 local ProFi = require("engine.profiler")
 local State = require("player.state")
+local UI = require("game.ui")
 local Debug = {}
 
 local Map
@@ -79,6 +80,7 @@ function Debug.keyreleased(key)
 end
 
 function Debug.draw()
+    love.graphics.setFont(UI.font.small)
     local width, height = love.graphics.getDimensions()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", 5, height - 150, 250, 140)

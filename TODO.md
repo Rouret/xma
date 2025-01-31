@@ -1,3 +1,2 @@
-- Corriger le font qui augmente
 - Intégrer les cactus
 - Faire du random grid pour les elements
