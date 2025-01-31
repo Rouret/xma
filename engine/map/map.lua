@@ -3,13 +3,14 @@ local Camera = require("engine.camera")
 local Beacon = require("items.beacon")
 local Config = require("config")
 
+--- local biomeFiles = {"Forest", "Desert", "Taiga"}
 local biomeFiles = {"Forest", "Desert", "Taiga"}
 local BIOMES = {}
 
-for _, biomeFile in ipairs(biomeFiles) do
-    local biomeModule = require("engine/map/biomes/" .. biomeFile)
-    BIOMES[biomeModule.name] = biomeModule
-    biomeModule.loadAssets()
+for _, biomeName in ipairs(biomeFiles) do
+    local biomeModule = require("engine/map/biomes/" .. biomeName)
+    local biome = biomeModule:new()
+    BIOMES[biomeName] = biome
 end
 
 local Map = {}
@@ -92,7 +93,7 @@ function Map:assignBiomes(width, height, altitudeMap, humidityMap)
 
             -- Si aucun biome n'est trouvé, assigner un biome par défaut
             if not assignedBiome then
-                assignedBiome = BIOMES["Default"] -- Assurer un biome par défaut
+                assignedBiome = BIOMES[""] -- Assurer un biome par défaut
             end
 
             biomes[y][x] = assignedBiome
@@ -111,7 +112,7 @@ function Map:generateTerrain()
         for x = 1, self.MAP_WIDTH do
             local biomeModule = self.biomes[y][x]
             if biomeModule then
-                self.tiles[y][x] = biomeModule.generateTerrain(x, y)
+                self.tiles[y][x] = biomeModule:generateTerrain(x, y)
             end
         end
     end
@@ -130,7 +131,7 @@ function Map:generateElements()
                 local humidity = self.humidityMap[y][x]
 
                 -- Générer l'élément en utilisant les informations de hauteur et humidité
-                local element = biomeModule.generateElement(x, y, altitude, humidity)
+                local element = biomeModule:generateElement(x, y, altitude, humidity)
                 if element then
                     element.biomeName = biomeModule.name
                     table.insert(self.elements, element)
@@ -152,8 +153,6 @@ function Map:generateBeacon(x, y)
     local randomY = love.math.random(sy, sy + dy)
     local beaconX, beaconY = self:gridToWorld(randomX, randomY)
     self.beacon = Beacon:new({x = beaconX, y = beaconY})
-
-    print("Beacon generated at " .. randomX .. ", " .. randomY)
 
     GlobalState:addEntity(self.beacon)
 end
@@ -194,7 +193,7 @@ function Map:drawElements(startX, endX, startY, endY)
         if elementX >= startX and elementX <= endX and elementY >= startY and elementY <= endY then
             local biomeModule = BIOMES[element.biomeName]
             if biomeModule and biomeModule.drawElement then
-                biomeModule.drawElement(element)
+                biomeModule:drawElement(element)
             end
         end
     end
