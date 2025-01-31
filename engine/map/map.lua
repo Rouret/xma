@@ -3,15 +3,15 @@ local Camera = require("engine.camera")
 local Beacon = require("items.beacon")
 local Config = require("config")
 
---- local biomeFiles = {"Forest", "Desert", "Taiga"}
-local biomeFiles = {"Forest", "Desert", "Taiga"}
-local BIOMES = {}
+local Forest = require("engine.map.biomes.forest")
+local Desert = require("engine.map.biomes.desert")
+local Taiga = require("engine.map.biomes.taiga")
 
-for _, biomeName in ipairs(biomeFiles) do
-    local biomeModule = require("engine/map/biomes/" .. biomeName)
-    local biome = biomeModule:new()
-    BIOMES[biomeName] = biome
-end
+local BIOMES = {
+    ["Forest"] = Forest:new(),
+    ["Desert"] = Desert:new(),
+    ["Taiga"] = Taiga:new()
+}
 
 local Map = {}
 Map.__index = Map

@@ -1,4 +1,4 @@
-local Biome = require("engine.map.Biome")
+local Biome = require("engine.map.biome")
 
 Forest = Biome:extend()
 Forest.__index = Forest

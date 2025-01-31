@@ -30,8 +30,6 @@ function Beacon:init(params)
     self.x = params.x
     self.y = params.y
 
-    print("Beacon created at " .. self.x .. ", " .. self.y)
-
     -- Sprite
     self.image = love.graphics.newImage("sprites/items/beacon/beacon.png")
     local imageWidth, imageHeight = self.image:getDimensions()
