@@ -1,1 +1,3 @@
-- Faire du random grid pour les elements
+- faire le spawn par voisin
+- corriger les collisions
+- factoriser ceci pour pas repeter le code des biomes

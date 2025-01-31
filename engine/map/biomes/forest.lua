@@ -28,13 +28,16 @@ Forest.sub = {
         elementName = "Big_tree",
         name = "Forest",
         color = {144 / 255, 203 / 255, 162 / 255},
-        type = "perlin",
-        typeMeta = {
+        types = {"perlin", "random"},
+        perlinMeta = {
             minAltitude = 0.1,
             maxAltitude = 0.20,
             minHumidity = 0.5,
             maxHumidity = 0.7,
             probability = 0.44
+        },
+        randomMeta = {
+            probability = 0.01
         },
         element = {
             width = 55,
@@ -48,8 +51,8 @@ Forest.sub = {
     {
         elementName = "Big_stone",
         name = "Big_stone",
-        type = "random",
-        typeMeta = {
+        types = {"random"},
+        randomMeta = {
             probability = 0.001
         },
         color = {144 / 255, 203 / 255, 162 / 255},
@@ -65,8 +68,8 @@ Forest.sub = {
     {
         elementName = "Small_stone",
         name = "Small_stone",
-        type = "random",
-        typeMeta = {
+        types = {"random"},
+        randomMeta = {
             probability = 0.001
         },
         color = {144 / 255, 203 / 255, 162 / 255},
@@ -82,8 +85,8 @@ Forest.sub = {
     {
         elementName = "Big_bush",
         name = "Big_bush",
-        type = "random",
-        typeMeta = {
+        types = {"random"},
+        randomMeta = {
             probability = 0.001
         },
         color = {144 / 255, 203 / 255, 162 / 255},
@@ -143,20 +146,22 @@ end
 function Forest.generateElement(x, y, altitude, humidity)
     for _, subElement in ipairs(Forest.sub) do
         local temp = nil
-        if subElement.type == "perlin" then
-            temp = Forest.generateElementPerlin(subElement, x, y, altitude, humidity)
-        end
+        for _, spawnType in ipairs(subElement.types) do
+            if spawnType == "perlin" then
+                temp = Forest.generateElementPerlin(subElement, x, y, altitude, humidity)
+            end
 
-        if temp then
-            return temp
-        end
+            if temp then
+                return temp
+            end
 
-        if subElement.type == "random" then
-            temp = Forest.generateElementRandom(subElement, x, y)
-        end
+            if spawnType == "random" then
+                temp = Forest.generateElementRandom(subElement, x, y)
+            end
 
-        if temp then
-            return temp
+            if temp then
+                return temp
+            end
         end
     end
 
@@ -166,14 +171,14 @@ end
 function Forest.generateElementPerlin(subElement, x, y, altitude, humidity)
     local probability = love.math.random()
 
-    if (probability > subElement.typeMeta.probability) then
+    if (probability > subElement.perlinMeta.probability) then
         return nil
     end
 
     if
-        altitude > subElement.typeMeta.minAltitude and altitude < subElement.typeMeta.maxAltitude and
-            humidity > subElement.typeMeta.minHumidity and
-            humidity < subElement.typeMeta.maxHumidity
+        altitude > subElement.perlinMeta.minAltitude and altitude < subElement.perlinMeta.maxAltitude and
+            humidity > subElement.perlinMeta.minHumidity and
+            humidity < subElement.perlinMeta.maxHumidity
      then
         return Forest.initElement(subElement, x, y)
     end
@@ -184,7 +189,7 @@ end
 function Forest.generateElementRandom(subElement, x, y)
     local probability = love.math.random()
 
-    if (probability > subElement.typeMeta.probability) then
+    if (probability > subElement.randomMeta.probability) then
         return nil
     end
 
