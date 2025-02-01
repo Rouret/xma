@@ -3,6 +3,7 @@ local Config = require("config")
 local ProFi = require("engine.profiler")
 local State = require("player.state")
 local UI = require("game.ui")
+local TheRock = require("enemies.therock")
 local Debug = {}
 
 local Map
@@ -80,6 +81,16 @@ function Debug.keypressed(key)
     if key == "f5" then
         showBiome = true
     end
+    if key == "f6" then
+        GlobalState:addEntity(
+            TheRock:new(
+                {
+                    x = State.x + 300,
+                    y = State.y + 300
+                }
+            )
+        )
+    end
 end
 
 function Debug.keyreleased(key)
@@ -115,7 +126,8 @@ function Debug.draw()
     love.graphics.print("F3: Toggle free camera mode", 10, height - 100)
     love.graphics.print("F4: TP close to beacon", 10, height - 80)
     love.graphics.print("F5: Toggle biome graph", 10, height - 60)
-    love.graphics.print("F8: Restart", 10, height - 40)
+    love.graphics.print("F6: Spawn the rock", 10, height - 40)
+    love.graphics.print("F8: Restart", 10, height - 20)
 
     if Config.DEBUG_AIM then
         -- DRAW LINE FROM PLAYER TO MOUSE

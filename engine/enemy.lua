@@ -1,6 +1,13 @@
 local Entity = require("engine.entity")
 
 Enemy = Entity:extend()
+Enemy.__index = Enemy
+
+function Enemy:new(params)
+    local instance = setmetatable({}, self)
+    instance:init(params)
+    return instance
+end
 
 function Enemy:init(params)
     params = params or {}
