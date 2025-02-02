@@ -163,8 +163,24 @@ function Map:draw()
 
     local startX = math.max(1, math.floor(camX / self.TILE_SIZE)) - 10
     local endX = math.min(self.MAP_WIDTH, math.ceil((camX + camWidth) / self.TILE_SIZE)) + 10
-    local startY = math.max(1, math.floor(camY / self.TILE_SIZE)) - 10
+    local startY = math.max(1, math.floor(camY / self.TILE_SIZE)) - 10 or 0
     local endY = math.min(self.MAP_HEIGHT, math.ceil((camY + camHeight) / self.TILE_SIZE)) + 10
+
+    if startX < 0 then
+        startX = 0
+    end
+
+    if startY < 0 then
+        startY = 0
+    end
+
+    if endX > self.MAP_WIDTH then
+        endX = self.MAP_WIDTH
+    end
+
+    if endY > self.MAP_HEIGHT then
+        endY = self.MAP_HEIGHT
+    end
 
     self:drawTiles(startX, endX, startY, endY)
 
@@ -178,6 +194,7 @@ function Map:drawTiles(startX, endX, startY, endY)
     for y = startY, endY do
         for x = startX, endX do
             local biomeModule = self.biomes[y][x]
+
             if biomeModule then
                 local tile = self.tiles[y][x]
                 love.graphics.draw(biomeModule.terrain, tile.quad, self:gridToWorld(x - 1, y - 1))

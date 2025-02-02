@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.5 - 31/01/25
+
+### Added or Changed
+- Correctioen du bug quand on arrive en bas de la map
+- 1 monstres par biomes
 
 ## v0.0.4 - 31/01/25
 

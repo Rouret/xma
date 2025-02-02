@@ -18,6 +18,6 @@ Config.DRAW_BIOME_GRAPH = true
 -- Debug aim
 Config.DEBUG_AIM = false
 
-Config.DRAW_COORDS = false
+Config.DRAW_COORDS = true
 
 return Config
