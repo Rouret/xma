@@ -26,7 +26,6 @@ function Enemy:init(params)
     self.health = params.health or 100
     self.speed = params.speed or 200
     self.maxHealth = params.maxHealth or 100
-    self.radius = params.radius or 50
     self.damage = params.damage or 10
     self.exp = params.exp or 10
 
@@ -40,7 +39,12 @@ function Enemy:takeDamage(damage)
     end
 end
 
+function Enemy:beforeDie()
+    -- Override this method
+end
+
 function Enemy:die()
+    self:beforeDie()
     self:destroy()
 end
 

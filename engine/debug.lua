@@ -4,7 +4,7 @@ local ProFi = require("engine.profiler")
 local State = require("player.state")
 local UI = require("game.ui")
 local TheRock = require("enemies.therock")
-local SandSlime = require("enemies.sandslime")
+local SandSlime = require("enemies.sandslime.sandslime")
 local Debug = {}
 
 local Map

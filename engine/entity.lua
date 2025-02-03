@@ -21,7 +21,7 @@ function Entity:init(params)
 
     -- Basic properties
     self.name = params.name or "Unnamed Entity"
-    self.type = "wall"
+    self.type = "enemie"
     self.x = params.x or 0
     self.y = params.y or 0
 
