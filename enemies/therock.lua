@@ -16,7 +16,7 @@ function TheRock:init(params)
     self.image = love.graphics.newImage("sprites/enemies/therock/therock.png")
     -- c'est du 64x64 avec 3 frame sur le meme ligne
     local g = anim8.newGrid(64, 64, self.image:getWidth(), self.image:getHeight())
-    self.animation = anim8.newAnimation(g("1-3", 1), 0.1)
+    self.animation = anim8.newAnimation(g("1-9", 1), 0.07)
 
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
@@ -73,10 +73,15 @@ function TheRock:draw()
     local dy = State.y - self.y
     local angle = math.atan2(dy, dx)
 
-    --draw particules
-    if not self.hasCollided then
-        self.animation:draw(self.image, self.x, self.y, angle, 1, 1, 32, 32)
+    -- Determine the direction to flip the animation
+    local scaleX = 1
+    if self.x > State.x then
+        scaleX = -1
+    end
 
+    -- Draw particles
+    if not self.hasCollided then
+        self.animation:draw(self.image, self.x, self.y, angle, scaleX, 1, 32, 32)
         return
     end
 

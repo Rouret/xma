@@ -4,6 +4,7 @@ local ProFi = require("engine.profiler")
 local State = require("player.state")
 local UI = require("game.ui")
 local TheRock = require("enemies.therock")
+local SandSlime = require("enemies.sandslime")
 local Debug = {}
 
 local Map
@@ -91,6 +92,16 @@ function Debug.keypressed(key)
             )
         )
     end
+    if key == "f7" then
+        GlobalState:addEntity(
+            SandSlime:new(
+                {
+                    x = State.x + 300,
+                    y = State.y + 300
+                }
+            )
+        )
+    end
 end
 
 function Debug.keyreleased(key)
@@ -117,17 +128,20 @@ function Debug.draw()
         love.graphics.print("alt-f4 : quit", 10, height - 40)
         return
     end
+    local nbOfbinds = 8
+    local heightOfBind = 20
 
     love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle("fill", 5, height - 150, 250, 140)
+    love.graphics.rectangle("fill", 5, height - nbOfbinds * heightOfBind, 250, nbOfbinds * heightOfBind)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print("F1: Start profiling", 10, height - 140)
-    love.graphics.print("F2: Stop profiling", 10, height - 120)
-    love.graphics.print("F3: Toggle free camera mode", 10, height - 100)
-    love.graphics.print("F4: TP close to beacon", 10, height - 80)
-    love.graphics.print("F5: Toggle biome graph", 10, height - 60)
-    love.graphics.print("F6: Spawn the rock", 10, height - 40)
-    love.graphics.print("F8: Restart", 10, height - 20)
+    love.graphics.print("F1: Start profiling", 10, height - nbOfbinds * heightOfBind + heightOfBind * 0)
+    love.graphics.print("F2: Stop profiling", 10, height - nbOfbinds * heightOfBind + heightOfBind * 1)
+    love.graphics.print("F3: Toggle free camera mode", 10, height - nbOfbinds * heightOfBind + heightOfBind * 2)
+    love.graphics.print("F4: TP close to beacon", 10, height - nbOfbinds * heightOfBind + heightOfBind * 3)
+    love.graphics.print("F5: Toggle biome graph", 10, height - nbOfbinds * heightOfBind + heightOfBind * 4)
+    love.graphics.print("F6: Spawn the rock", 10, height - nbOfbinds * heightOfBind + heightOfBind * 5)
+    love.graphics.print("F7: Spawn sand slime", 10, height - nbOfbinds * heightOfBind + heightOfBind * 6)
+    love.graphics.print("F8: Restart", 10, height - nbOfbinds * heightOfBind + heightOfBind * 7)
 
     if Config.DEBUG_AIM then
         -- DRAW LINE FROM PLAYER TO MOUSE
