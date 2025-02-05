@@ -46,6 +46,7 @@ function UI:draw()
     UI.drawPlayerExp()
     UI.drawSwitchWeapon()
     UI.drawSkills(mouseX, mouseY)
+    UI.drawEffects()
 end
 
 function UI.drawSwitchWeapon()
@@ -159,6 +160,9 @@ end
 
 function UI.formatValue(value)
     return string.format("%d", math.floor(value))
+end
+
+function UI.drawEffects()
 end
 
 return UI

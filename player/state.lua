@@ -9,6 +9,9 @@ function State.load()
     State.x = 50 * 32
     State.y = 50 * 32
 
+    -- Effects
+    State.effects = {}
+
     -- Velocity
     State.speed = 1000
 
@@ -96,6 +99,29 @@ function State.gainExperience(amount)
         State.level = State.level + 1
         State.experience = 0
     end
+end
+
+function State.addEffect(effect)
+    table.insert(State.effects, effect)
+    effect:apply(State)
+end
+
+function State:updateEffects(dt)
+    for i = #State.effects, 1, -1 do
+        local effect = State.effects[i]
+        if not effect:update(dt, State) then
+            table.remove(State.effects, i)
+        end
+    end
+end
+
+function State.hasEffect(effectName)
+    for _, effect in ipairs(State.effects) do
+        if effect.name == effectName then
+            return true
+        end
+    end
+    return false
 end
 
 return State

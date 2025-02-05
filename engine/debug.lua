@@ -176,6 +176,22 @@ function Debug.draw()
         love.graphics.print("X: " .. playerX .. " Y: " .. playerY, x, y)
         love.graphics.setColor(1, 1, 1)
     end
+
+    if Config.DRAW_EFFECTS then
+        local screenWidth, screenHeight = love.graphics.getDimensions()
+        local centerX = screenWidth / 2
+        local centerY = screenHeight / 2
+
+        for i, effect in ipairs(State.effects) do
+            local x = centerX
+            local y = centerY + 30 + i * 20
+            local text = effect.name .. " " .. string.format("%.2f", effect.remainingTime) .. " s"
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print(text, x, y)
+            love.graphics.setColor(1, 1, 1)
+        end
+    end
+
     if Config.DRAW_BIOME_GRAPH and showBiome then
         local width, height = love.graphics.getDimensions()
 

@@ -21,6 +21,7 @@ function Player.load(world)
 end
 
 function Player.update(dt)
+    State:updateEffects(dt)
     local currentTime = love.timer.getTime()
     if State.isAlive() then
         Movement.update()

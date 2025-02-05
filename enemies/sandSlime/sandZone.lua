@@ -1,9 +1,10 @@
 local Object = require("engine.object")
 local GlobalState = require("game.state")
-
-local SandZone = Object:extend()
 local World = require("game.world")
 local State = require("player.state")
+local Effect = require("engine.effect")
+
+local SandZone = Object:extend()
 
 SandZone = Object:extend()
 SandZone.__index = SandZone
@@ -23,7 +24,7 @@ function SandZone:new(params)
     self.x = params.x or 0
     self.y = params.y or 0
     self.radius = 150 / 2
-    self.TTL = 10
+    self.TTL = 5
     self.currentTTL = 0
 
     -- Size
@@ -41,8 +42,6 @@ function SandZone:new(params)
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
     self.body:setBullet(true)
-
-    self.playerSpeedMemo = 0
     self.onContactWith = {}
 
     return self
@@ -72,14 +71,34 @@ function SandZone:onCollision(entity)
     if entity.name ~= "player" then
         return
     end
+    print("Collision with player")
 
-    self.playerSpeedMemo = State.speed
+    if entity:hasEffect("sand_slow") then
+        print("Already slowed")
+        return
+    end
 
-    State.speed = State.speed * 0.2
+    State.addEffect(
+        Effect:new(
+            {
+                name = "sand_slow",
+                duration = 2,
+                applyFunc = function(entity, effect)
+                    effect.memo = entity.speed
+                    entity.speed = entity.speed * 0.6
+                end,
+                removeFunc = function(entity, effect)
+                    entity.speed = effect.memo
+                end,
+                actionFunc = function(entity, effect)
+                    -- Nothing to do
+                end
+            }
+        )
+    )
 end
 
 function SandZone:onEndCollision(other)
-    State.speed = self.playerSpeedMemo
 end
 
 return SandZone

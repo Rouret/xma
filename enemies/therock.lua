@@ -25,6 +25,7 @@ function TheRock:init(params)
     -- death
     self.deathTTL = 0.35
     self.deathCurrent = 0
+
     -- particules of rock
     self.particles =
         love.graphics.newParticleSystem(love.graphics.newImage("sprites/enemies/therock/particle.png"), 100)

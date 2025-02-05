@@ -19,5 +19,6 @@ Config.DRAW_BIOME_GRAPH = true
 Config.DEBUG_AIM = false
 
 Config.DRAW_COORDS = true
+Config.DRAW_EFFECTS = true
 
 return Config

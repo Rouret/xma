@@ -37,6 +37,9 @@ function Entity:init(params)
     -- Collision
     self.noCollisionWith = params.noCollisionWith or {}
 
+    -- Effects
+    self.effects = {}
+
     return self
 end
 
@@ -54,6 +57,29 @@ end
 
 function Entity:isAlive()
     error("draw method not implemented")
+end
+
+function Entity:addEffect(effect)
+    table.insert(self.effects, effect)
+    effect:apply(self)
+end
+
+function Entity:updateEffects(dt)
+    for i = #self.effects, 1, -1 do
+        local effect = self.effects[i]
+        if not effect:update(dt, self) then
+            table.remove(self.effects, i)
+        end
+    end
+end
+
+function Entity:hasEffect(effectName)
+    for _, effect in ipairs(self.effects) do
+        if effect.name == effectName then
+            return true
+        end
+    end
+    return false
 end
 
 function Entity:destroy()
