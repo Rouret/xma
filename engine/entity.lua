@@ -83,7 +83,9 @@ function Entity:hasEffect(effectName)
 end
 
 function Entity:destroy()
-    self.body:destroy()
+    if not self.body:isDestroyed() then
+        self.body:destroy()
+    end
     GlobalState:removeEntity(self)
 end
 

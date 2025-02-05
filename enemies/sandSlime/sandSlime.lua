@@ -12,18 +12,25 @@ function SandSlime:init(params)
     params.name = "SandSlime"
     params.shape = love.physics.newRectangleShape(45, 45)
     params.bodyType = "dynamic"
-    params.width = 45
-    params.height = 45
     params.speed = 100
     params.health = 1
     params.maxHealth = 1
+
+    -- Chargement des images
+    self.image = love.graphics.newImage("sprites/enemies/sand_slime/sand_slime.png")
+    self.deathImage = love.graphics.newImage("sprites/enemies/sand_slime/sand_slime_death.png")
+
+    -- Création des animations
+    local grid = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight())
+    self.animation = anim8.newAnimation(grid("1-5", 1), 0.15)
+
+    local deathGrid = anim8.newGrid(60, 45, self.deathImage:getWidth(), self.deathImage:getHeight())
+    params.deathAnimation = anim8.newAnimation(deathGrid("1-6", 1), 0.04)
+
+    -- Initialisation de l'ennemi avec les paramètres
     Enemy.init(self, params)
 
-    self.image = love.graphics.newImage("sprites/enemies/sand_slime/sand_slime.png")
-    -- c'est du 64x64 avec 3 frame sur le meme ligne
-    local g = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight())
-    self.animation = anim8.newAnimation(g("1-5", 1), 0.15)
-
+    -- Configuration physique
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
     self.body:setBullet(true)
@@ -31,7 +38,7 @@ function SandSlime:init(params)
     return self
 end
 
-function SandSlime:update(dt)
+function SandSlime:u(dt)
     self.animation:update(dt)
 
     -- Calculer la direction vers le joueur
@@ -51,7 +58,7 @@ function SandSlime:update(dt)
     self.x, self.y = self.body:getPosition()
 end
 
-function SandSlime:beforeDie()
+function SandSlime:beforeRealDie()
     table.insert(
         World.delayCallbacks,
         function()
@@ -67,8 +74,12 @@ function SandSlime:beforeDie()
     )
 end
 
-function SandSlime:draw()
+function SandSlime:d()
     self.animation:draw(self.image, self.x, self.y, 0, 1, 1, 22.5, 22.5)
+end
+
+function SandSlime:drawDeathAnimation()
+    self.deathAnimation:draw(self.deathImage, self.x, self.y, 0, 1, 1, 30, 22.5)
 end
 
 function SandSlime:onCollision(entity)
