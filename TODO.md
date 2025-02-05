@@ -1,0 +1,1 @@
+- init weakness and effect of player

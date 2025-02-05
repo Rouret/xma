@@ -22,7 +22,7 @@ function SandSlime:init(params)
     self.image = love.graphics.newImage("sprites/enemies/sand_slime/sand_slime.png")
     -- c'est du 64x64 avec 3 frame sur le meme ligne
     local g = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight())
-    self.animation = anim8.newAnimation(g("1-5", 1), 0.1)
+    self.animation = anim8.newAnimation(g("1-5", 1), 0.15)
 
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
