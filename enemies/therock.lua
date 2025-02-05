@@ -42,7 +42,7 @@ function TheRock:init(params)
     return self
 end
 
-function TheRock:update(dt, world)
+function TheRock:u(dt)
     self.animation:update(dt)
 
     -- Calculer la direction vers le joueur
@@ -69,7 +69,7 @@ function TheRock:update(dt, world)
     end
 end
 
-function TheRock:draw()
+function TheRock:d()
     local dx = State.x - self.x
     local dy = State.y - self.y
     local angle = math.atan2(dy, dx)
