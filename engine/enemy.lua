@@ -30,6 +30,8 @@ function Enemy:init(params)
     self.damage = params.damage or 10
     self.exp = params.exp or 10
 
+    self.zindex = 10
+
     -- Animation de mort
     self.deathAnimation = params.deathAnimation or nil
     self.deathTick = 0

@@ -38,6 +38,12 @@ end
 
 -- Function to draw all entities in the global state
 function GlobalState:draw()
+    table.sort(
+        self.entities,
+        function(a, b)
+            return (a.zindex or 0) < (b.zindex or 0)
+        end
+    )
     for _, entity in ipairs(self.entities) do
         local isOnScreen = Camera.i:isVisible(entity.x, entity.y, entity.width, entity.height)
 

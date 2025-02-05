@@ -25,7 +25,7 @@ function SandSlime:init(params)
     self.animation = anim8.newAnimation(grid("1-5", 1), 0.15)
 
     local deathGrid = anim8.newGrid(60, 45, self.deathImage:getWidth(), self.deathImage:getHeight())
-    params.deathAnimation = anim8.newAnimation(deathGrid("1-6", 1), 0.04)
+    params.deathAnimation = anim8.newAnimation(deathGrid("1-6", 1), 0.08)
 
     -- Initialisation de l'ennemi avec les paramètres
     Enemy.init(self, params)
@@ -58,7 +58,7 @@ function SandSlime:u(dt)
     self.x, self.y = self.body:getPosition()
 end
 
-function SandSlime:beforeRealDie()
+function SandSlime:beforeDie()
     table.insert(
         World.delayCallbacks,
         function()

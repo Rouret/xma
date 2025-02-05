@@ -28,6 +28,7 @@ function UI.load()
     UI.emptyImage = love.graphics.newImage("sprites/empty_image.png")
 
     UI.font = {}
+    UI.font.XL = love.graphics.newFont(48)
     UI.font.big = love.graphics.newFont(36)
     UI.font.medium = love.graphics.newFont(24)
     UI.font.small = love.graphics.newFont(16)
@@ -163,6 +164,36 @@ function UI.formatValue(value)
 end
 
 function UI.drawEffects()
+    local x = UI.screenWidth - 100
+    local y = 20
+    local paddingY = 5 -- Espace entre chaque effet
+
+    if #State.effects == 0 then
+        return
+    end
+
+    love.graphics.setFont(UI.font.big)
+    love.graphics.setColor(1, 1, 1)
+
+    for _, effect in ipairs(State.effects) do
+        if effect.UIIcon then
+            local image = effect.UIIcon
+            local imgHeight = image:getHeight()
+
+            -- Dessiner l'icône
+            love.graphics.draw(image, x, y)
+
+            -- Dessiner le temps restant
+            local text = UI.formatTime(effect.remainingTime)
+            local textWidth = UI.font.big:getWidth(text)
+            local textHeight = UI.font.big:getHeight()
+
+            love.graphics.print(text, x - textWidth - 5, y + (imgHeight - textHeight) / 2)
+
+            -- Décaler vers le bas pour l'effet suivant
+            y = y + imgHeight + paddingY
+        end
+    end
 end
 
 return UI

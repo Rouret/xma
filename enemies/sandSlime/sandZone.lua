@@ -23,7 +23,15 @@ function SandZone:new(params)
 
     self.x = params.x or 0
     self.y = params.y or 0
+
+    -- Radius
     self.radius = 150 / 2
+
+    -- Radius start with "startRadius" and grow to "maxRadius" in "raddiusTimeGrow" seconds
+    self.maxRadius = 150 / 2
+    self.startRadius = 50
+    self.raddiusTimeGrow = 0.5 --second
+
     self.TTL = 5
     self.currentTTL = 0
 
@@ -52,6 +60,19 @@ function SandZone:update(dt)
         return
     end
 
+    if self.currentTTL < self.raddiusTimeGrow then
+        local radiusGrowth = (self.maxRadius - self.startRadius) * (self.currentTTL / self.raddiusTimeGrow)
+        self.radius = self.startRadius + radiusGrowth
+        self.shape:setRadius(self.radius)
+        self.width = self.radius * 2
+        self.height = self.radius * 2
+    else
+        self.radius = self.maxRadius
+        self.shape:setRadius(self.radius)
+        self.width = self.radius * 2
+        self.height = self.radius * 2
+    end
+
     self.currentTTL = self.currentTTL + dt
     if self.currentTTL >= self.TTL then
         return self:destroy()
@@ -64,14 +85,22 @@ function SandZone:destroy()
 end
 
 function SandZone:draw()
-    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.radius, self.radius)
+    love.graphics.draw(
+        self.image,
+        self.x,
+        self.y,
+        0,
+        self.radius / (self.image:getWidth() / 2),
+        self.radius / (self.image:getHeight() / 2),
+        self.image:getWidth() / 2,
+        self.image:getHeight() / 2
+    )
 end
 
 function SandZone:onCollision(entity)
     if entity.name ~= "player" then
         return
     end
-    print("Collision with player")
 
     if entity:hasEffect("sand_slow") then
         print("Already slowed")
@@ -83,6 +112,7 @@ function SandZone:onCollision(entity)
             {
                 name = "sand_slow",
                 duration = 2,
+                UIName = "slowness",
                 applyFunc = function(entity, effect)
                     effect.memo = entity.speed
                     entity.speed = entity.speed * 0.6

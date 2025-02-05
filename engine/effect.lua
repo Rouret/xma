@@ -1,5 +1,5 @@
 local Object = require("engine.object")
-
+local EffectUIImagesPath = require("effects.effectsConfig")
 local Effect = Object:extend()
 Effect.__index = Effect
 
@@ -14,7 +14,19 @@ function Effect:init(params)
         error("Effect must have an applyFunc, removeFunc and actionFunc")
     end
 
+    if not params.UIName then
+        error("Effect must have a UIName")
+    end
+
+    if EffectUIImagesPath[params.UIName] == nil then
+        error("Effect UIName '" .. params.UIName .. "' not found in effectsConfig.lua")
+    end
+
     self.name = params.name or "Unnamed Effect"
+
+    -- UI
+    self.UIName = params.UIName
+    self.UIIcon = love.graphics.newImage(EffectUIImagesPath[self.UIName])
 
     -- Propriétés optionnelles
     self.duration = params.duration or 5
