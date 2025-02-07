@@ -5,6 +5,7 @@ local State = require("player.state")
 local UI = require("game.ui")
 local TheRock = require("enemies.therock")
 local SandSlime = require("enemies.sandslime.sandslime")
+local IceSlime = require("enemies.iceslime.iceslime")
 local Debug = {}
 
 local Map
@@ -82,7 +83,7 @@ function Debug.keypressed(key)
     if key == "f5" then
         showBiome = true
     end
-    if key == "f6" then
+    if key == "f9" then
         GlobalState:addEntity(
             TheRock:new(
                 {
@@ -92,9 +93,19 @@ function Debug.keypressed(key)
             )
         )
     end
-    if key == "f7" then
+    if key == "f10" then
         GlobalState:addEntity(
             SandSlime:new(
+                {
+                    x = State.x + 300,
+                    y = State.y + 300
+                }
+            )
+        )
+    end
+    if key == "f11" then
+        GlobalState:addEntity(
+            IceSlime:new(
                 {
                     x = State.x + 300,
                     y = State.y + 300
@@ -128,7 +139,7 @@ function Debug.draw()
         love.graphics.print("alt-f4 : quit", 10, height - 40)
         return
     end
-    local nbOfbinds = 8
+    local nbOfbinds = 9
     local heightOfBind = 20
 
     love.graphics.setColor(0, 0, 0)
@@ -139,9 +150,10 @@ function Debug.draw()
     love.graphics.print("F3: Toggle free camera mode", 10, height - nbOfbinds * heightOfBind + heightOfBind * 2)
     love.graphics.print("F4: TP close to beacon", 10, height - nbOfbinds * heightOfBind + heightOfBind * 3)
     love.graphics.print("F5: Toggle biome graph", 10, height - nbOfbinds * heightOfBind + heightOfBind * 4)
-    love.graphics.print("F6: Spawn the rock", 10, height - nbOfbinds * heightOfBind + heightOfBind * 5)
-    love.graphics.print("F7: Spawn sand slime", 10, height - nbOfbinds * heightOfBind + heightOfBind * 6)
-    love.graphics.print("F8: Restart", 10, height - nbOfbinds * heightOfBind + heightOfBind * 7)
+    love.graphics.print("F8: Restart", 10, height - nbOfbinds * heightOfBind + heightOfBind * 5)
+    love.graphics.print("F9: Spawn the rock", 10, height - nbOfbinds * heightOfBind + heightOfBind * 6)
+    love.graphics.print("F10: Spawn sand slime", 10, height - nbOfbinds * heightOfBind + heightOfBind * 7)
+    love.graphics.print("F11: Spawn ice slime", 10, height - nbOfbinds * heightOfBind + heightOfBind * 8)
 
     if Config.DEBUG_AIM then
         -- DRAW LINE FROM PLAYER TO MOUSE
