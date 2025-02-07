@@ -15,9 +15,6 @@ function Enemy:init(params)
     if not params.shape or not params.bodyType then
         error("Shape parameter is required")
     end
-    if params.haveDeathAnimation and not params.deathAnimation then
-        error("Death animation is required")
-    end
 
     -- Appelle Entity.init avec les paramètres modifiés
     Entity.init(self, params)
@@ -33,7 +30,10 @@ function Enemy:init(params)
     self.zindex = 10
 
     -- Animation de mort
-    self.deathAnimation = params.deathAnimation or nil
+
+    -- Bool pour simplifier les écritures conditionnelles
+    self.haveDeathAnimation = params.deathDuration or false
+    self.deathDuration = params.deathDuration or 0
     self.deathTick = 0
 end
 
@@ -45,12 +45,12 @@ function Enemy:takeDamage(damage)
 end
 
 function Enemy:update(dt)
-    if self.deathAnimation and self.health <= 0 then
+    if self:isInDeathAnimation() then
         self.deathTick = self.deathTick + dt
-        if self.deathTick >= self.deathAnimation.totalDuration then
+        if self.deathTick >= self.deathDuration then
             self:realDie()
         else
-            self.deathAnimation:update(dt)
+            self:updateDeathAnimation(dt)
         end
     else
         self:u(dt) -- Méthode à implémenter par les sous-classes
@@ -66,11 +66,15 @@ function Enemy:d()
 end
 
 function Enemy:drawDeathAnimation()
-    error("Enemy: d(draw) method not implemented")
+    error("Enemy: drawDeathAnimation method not implemented")
+end
+
+function Enemy:updateDeathAnimation(dt)
+    error("Enemy: updateDeathAnimation method not implemented")
 end
 
 function Enemy:draw()
-    if self.deathAnimation and self.health <= 0 then
+    if self:isInDeathAnimation() then
         self:drawDeathAnimation()
     else
         self:d()
@@ -79,7 +83,7 @@ end
 
 function Enemy:die()
     self:beforeDie()
-    if self.deathAnimation then
+    if self.haveDeathAnimation then
         self.body:destroy()
     else
         self:realDie()
@@ -101,6 +105,10 @@ end
 
 function Enemy:isAlive()
     return self.health > 0
+end
+
+function Enemy:isInDeathAnimation()
+    return not self:isAlive() and self.haveDeathAnimation
 end
 
 return Enemy

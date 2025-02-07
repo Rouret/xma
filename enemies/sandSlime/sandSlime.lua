@@ -21,11 +21,13 @@ function SandSlime:init(params)
     self.deathImage = love.graphics.newImage("sprites/enemies/sand_slime/sand_slime_death.png")
 
     -- Création des animations
-    local grid = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight())
-    self.animation = anim8.newAnimation(grid("1-5", 1), 0.15)
+    local movementgAnimationGrid = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight())
+    self.movementAnimation = anim8.newAnimation(movementgAnimationGrid("1-5", 1), 0.15)
 
-    local deathGrid = anim8.newGrid(60, 45, self.deathImage:getWidth(), self.deathImage:getHeight())
-    params.deathAnimation = anim8.newAnimation(deathGrid("1-6", 1), 0.08)
+    local deathAnimationGrid = anim8.newGrid(60, 45, self.deathImage:getWidth(), self.deathImage:getHeight())
+    self.deathAnimation = anim8.newAnimation(deathAnimationGrid("1-6", 1), 0.08)
+
+    params.deathDuration = self.deathAnimation.totalDuration
 
     -- Initialisation de l'ennemi avec les paramètres
     Enemy.init(self, params)
@@ -39,7 +41,7 @@ function SandSlime:init(params)
 end
 
 function SandSlime:u(dt)
-    self.animation:update(dt)
+    self.movementAnimation:update(dt)
 
     -- Calculer la direction vers le joueur
     local dx = State.x - self.body:getX()
@@ -75,7 +77,11 @@ function SandSlime:beforeDie()
 end
 
 function SandSlime:d()
-    self.animation:draw(self.image, self.x, self.y, 0, 1, 1, 22.5, 22.5)
+    self.movementAnimation:draw(self.image, self.x, self.y, 0, 1, 1, 22.5, 22.5)
+end
+
+function SandSlime:updateDeathAnimation(dt)
+    self.deathAnimation:update(dt)
 end
 
 function SandSlime:drawDeathAnimation()

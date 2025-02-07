@@ -5,12 +5,20 @@ local TheRock = Enemy:extend()
 TheRock.__index = TheRock
 
 function TheRock:init(params)
+    -- death
+    self.deathTTL = 0.35
+    self.deathCurrent = 0
+
     params = params or {}
     params.radius = 32
     params.shape = love.physics.newCircleShape(params.radius)
     params.bodyType = "dynamic"
     params.width = params.radius * 2
     params.height = params.radius * 2
+    params.health = 1
+    params.maxHealth = 1
+    params.deathDuration = self.deathTTL
+    print(params.deathDuration)
     Enemy.init(self, params)
 
     self.image = love.graphics.newImage("sprites/enemies/therock/therock.png")
@@ -21,10 +29,6 @@ function TheRock:init(params)
     self.fixture:setUserData(self)
     self.fixture:setSensor(true)
     self.body:setBullet(true)
-
-    -- death
-    self.deathTTL = 0.35
-    self.deathCurrent = 0
 
     -- particules of rock
     self.particles =
@@ -88,6 +92,18 @@ function TheRock:d()
 
     self.particles:setPosition(self.x, self.y)
     love.graphics.draw(self.particles, self.x, self.y)
+end
+
+function TheRock:updateDeathAnimation(dt)
+    self.particles:update(dt)
+end
+
+function TheRock:drawDeathAnimation()
+    love.graphics.draw(self.particles, self.x, self.y)
+end
+
+function TheRock:beforeDie()
+    self.particles:emit(20)
 end
 
 function TheRock:onCollision(entity)
