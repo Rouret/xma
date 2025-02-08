@@ -6,6 +6,7 @@ local UI = require("game.ui")
 local TheRock = require("enemies.therock")
 local SandSlime = require("enemies.sandslime.sandslime")
 local IceSlime = require("enemies.iceslime.iceslime")
+local EnemyManager = require("engine.enemy.enemymanger")
 local Debug = {}
 
 local Map
@@ -267,5 +268,33 @@ function Debug.draw()
             end
         end
     end
+
+    if Config.WAVE_STATS then
+        -- draw at the bottom right
+
+        local startX = width - 300
+        local startY = height - 200
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", startX, startY, 300, 200)
+        love.graphics.setColor(1, 1, 1)
+
+        love.graphics.print("Wave: " .. EnemyManager.waveNumber, startX + 10, startY + 10)
+        love.graphics.print(
+            "Health: " .. EnemyManager.currentWaveModel.healthMultiplier * EnemyManager.currenthealthMultiplier,
+            startX + 10,
+            startY + 30
+        )
+        love.graphics.print(
+            "Speed: " .. EnemyManager.currentWaveModel.speedMultiplier * EnemyManager.currentSpeedMultiplier,
+            startX + 10,
+            startY + 40
+        )
+        love.graphics.print(
+            "Damage: " .. EnemyManager.currentWaveModel.damageMultiplier * EnemyManager.currentDamageMultiplier,
+            startX + 10,
+            startY + 50
+        )
+    end
 end
+
 return Debug

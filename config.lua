@@ -24,5 +24,6 @@ Config.DRAW_EFFECTS = true
 
 -- Ennemies Manager
 Config.ENNEMIES_MANAGER_LOG = true
+Config.WAVE_STATS = true
 
 return Config

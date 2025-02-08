@@ -105,6 +105,8 @@ end
 
 function TheRock:onCollision(entity)
     if entity.name == "player" then
+        entity.takeDamage(self.damage)
+
         self:die()
     end
 end

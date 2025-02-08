@@ -31,16 +31,22 @@ local maxRangeTypeB = 400 * 32 -- 700 tiles*
 local sessionDuration = 10 -- 12 minutes
 local specialWaveDuration = 3 -- 3 minutes
 local lastWaveChange = love.timer.getTime()
+-- Difficulté
+local increaseHealthMultiplier = 1.10
+local increaseSpeedMultiplier = 1.05
+local increaseDamageMultiplier = 1.05
 
 local waveModels = {
-    speed = {spawnMultiplier = 1.5, healthMultiplier = 0.5, speedMultiplier = 2},
-    strong = {spawnMultiplier = 0.5, healthMultiplier = 3, speedMultiplier = 0.7},
-    swarm = {spawnMultiplier = 2, healthMultiplier = 0.7, speedMultiplier = 1.2},
-    sniper = {spawnMultiplier = 0.7, healthMultiplier = 1, speedMultiplier = 1.5},
-    mixed = {spawnMultiplier = 1, healthMultiplier = 1, speedMultiplier = 1},
-    berserk = {spawnMultiplier = 1, healthMultiplier = 1.5, speedMultiplier = 1.5}
+    speed = {spawnMultiplier = 1.5, healthMultiplier = 0.5, speedMultiplier = 2, damageMultiplier = 0.5},
+    strong = {spawnMultiplier = 0.5, healthMultiplier = 3, speedMultiplier = 0.7, damageMultiplier = 2},
+    swarm = {spawnMultiplier = 2, healthMultiplier = 0.7, speedMultiplier = 1.2, damageMultiplier = 0.7},
+    sniper = {spawnMultiplier = 0.7, healthMultiplier = 1, speedMultiplier = 1.5, damageMultiplier = 2},
+    mixed = {spawnMultiplier = 1, healthMultiplier = 1, speedMultiplier = 1, damageMultiplier = 1},
+    berserk = {spawnMultiplier = 1, healthMultiplier = 1.5, speedMultiplier = 1.5, damageMultiplier = 1.5}
 }
-EnemyManager.currentMultiplier = 1
+EnemyManager.currenthealthMultiplier = 1
+EnemyManager.currentSpeedMultiplier = 1
+EnemyManager.currentDamageMultiplier = 1
 EnemyManager.currentWaveModel = waveModels.mixed
 EnemyManager.waveNumber = 1
 
@@ -103,7 +109,10 @@ function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesTy
             x = randomX,
             y = randomY,
             enemiesType = enemiesType,
-            target = target
+            target = target,
+            healthMultiplier = EnemyManager.currentWaveModel.healthMultiplier * EnemyManager.currenthealthMultiplier,
+            speedMultiplier = EnemyManager.currentWaveModel.speedMultiplier * EnemyManager.currentSpeedMultiplier,
+            damageMultiplier = EnemyManager.currentWaveModel.damageMultiplier * EnemyManager.currentDamageMultiplier
         }
     )
 
@@ -119,7 +128,9 @@ function EnemyManager.update()
     if EnemyManager.waveNumber % 2 == 0 then -- Current wave is a special wave
         if currentTime - lastWaveChange > specialWaveDuration then -- Special wave is over
             EnemyManager.log("Special wave is over")
-            EnemyManager.currentMultiplier = EnemyManager.currentMultiplier + 0.25
+            EnemyManager.currentDamageMultiplier = EnemyManager.currentDamageMultiplier * increaseDamageMultiplier
+            EnemyManager.currenthealthMultiplier = EnemyManager.currenthealthMultiplier * increaseHealthMultiplier
+            EnemyManager.currentSpeedMultiplier = EnemyManager.currentSpeedMultiplier * increaseSpeedMultiplier
             EnemyManager.currentWaveModel = waveModels.mixed
             lastWaveChange = currentTime
             EnemyManager.waveNumber = EnemyManager.waveNumber + 1
@@ -128,7 +139,12 @@ function EnemyManager.update()
         if currentTime - lastWaveChange > sessionDuration then -- Normal wave is over
             -- Next one is a special wave
             EnemyManager.log("Normal wave is over, next one is a special wave")
-            EnemyManager.currentWaveModel = waveModels[love.math.random(1, 6)]
+            local waveModelKeys = {}
+            for key in pairs(waveModels) do
+                table.insert(waveModelKeys, key)
+            end
+            local randomKey = waveModelKeys[love.math.random(1, #waveModelKeys)]
+            EnemyManager.currentWaveModel = waveModels[randomKey]
             lastWaveChange = currentTime
             EnemyManager.waveNumber = EnemyManager.waveNumber + 1
         end
@@ -140,7 +156,8 @@ function EnemyManager.update()
         EnemyManager.lastSpawnTimeA = currentTime
 
         -- Random next spawn time
-        nextSpawnTimeTypeA = love.math.random(minSpawnTimeTypeA, maxSpawnTimeTypeA)
+        nextSpawnTimeTypeA =
+            love.math.random(minSpawnTimeTypeA, maxSpawnTimeTypeA) / EnemyManager.currentWaveModel.spawnMultiplier
     end
 
     -- Spawn des ennemis Type B (autour du joueur)
@@ -148,7 +165,8 @@ function EnemyManager.update()
         EnemyManager.spawnEnemy(minSpawnRangeTypeB, maxSpawnRangeTypeB, "B", "player")
         EnemyManager.lastSpawnTimeB = currentTime
         -- Random next spawn time
-        nextSpawnTimeTypeB = love.math.random(minSpawnTimeTypeB, maxSpawnTimeTypeB)
+        nextSpawnTimeTypeB =
+            love.math.random(minSpawnTimeTypeB, maxSpawnTimeTypeB) / EnemyManager.currentWaveModel.spawnMultiplier
     end
 
     -- Kill

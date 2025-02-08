@@ -26,6 +26,11 @@ function Enemy:init(params)
     self.enemiesType = params.enemiesType or "B"
     self.type = "enemy"
 
+    -- Wave multiplier
+    self.health = self.health * (params.healthMultiplier or 1)
+    self.speed = self.speed * (params.speedMultiplier or 1)
+    self.damage = self.damage * (params.damageMultiplier or 1)
+
     -- Gestion de la mort
     self.haveDeathAnimation = params.deathDuration or false
     self.deathDuration = params.deathDuration or 0
