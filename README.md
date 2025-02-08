@@ -10,7 +10,7 @@ For more information, please refer to the [Change Log](CHANGELOG.md).
 - Add condition in [BiomeGenerator](engine\map\biomeGenerator.lua)
 
 - [Build](build.bat).
-- [Version](version.text).
+- [Version](version.txt).
 
 
 # Chat GPT context
