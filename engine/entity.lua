@@ -60,8 +60,20 @@ function Entity:isAlive()
 end
 
 function Entity:addEffect(effect)
-    table.insert(self.effects, effect)
-    effect:apply(self)
+    local existingEffect = nil
+    for _, e in ipairs(self.effects) do
+        if e.name == effect.name then
+            existingEffect = e
+            break
+        end
+    end
+
+    if existingEffect then
+        existingEffect.duration = math.max(existingEffect.duration, effect.duration)
+    else
+        table.insert(self.effects, effect)
+        effect:apply(self)
+    end
 end
 
 function Entity:updateEffects(dt)

@@ -101,10 +101,21 @@ function State.gainExperience(amount)
         State.experience = 0
     end
 end
-
 function State.addEffect(effect)
-    table.insert(State.effects, effect)
-    effect:apply(State)
+    local existingEffect = nil
+    for _, e in ipairs(State.effects) do
+        if e.name == effect.name then
+            existingEffect = e
+            break
+        end
+    end
+
+    if existingEffect then
+        existingEffect.duration = math.max(existingEffect.duration, effect.duration)
+    else
+        table.insert(State.effects, effect)
+        effect:apply(State)
+    end
 end
 
 function State:updateEffects(dt)
