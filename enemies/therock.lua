@@ -77,7 +77,6 @@ function TheRock:init(params)
 
     self.stateMachine.states["dead"] = {
         enter = function()
-            print(self.name .. " est mort")
             self.body:setLinearVelocity(0, 0)
             self.particles:emit(20)
             if self.haveDeathAnimation then

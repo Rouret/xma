@@ -53,7 +53,6 @@ function Enemy:init(params)
             },
             dead = {
                 enter = function()
-                    print(self.name .. " est mort")
                     self.body:setLinearVelocity(0, 0)
                     if self.haveDeathAnimation then
                         self.deathTick = 0
@@ -85,7 +84,6 @@ end
 
 function Enemy:takeDamage(damage)
     self.health = self.health - damage
-    print(self.name .. " prend " .. damage .. " dégâts. Vie restante : " .. self.health)
 
     if self.health <= 0 then
         self:die()
@@ -101,7 +99,6 @@ function Enemy:draw()
 end
 
 function Enemy:die()
-    print(self.name .. " déclenche sa mort")
     self.stateMachine:change("dead")
 end
 

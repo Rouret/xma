@@ -67,8 +67,6 @@ function SandSlime:init(params)
 
     self.stateMachine.states["dead"] = {
         enter = function()
-            print(self.name .. " est mort")
-
             -- Arrêter tout mouvement
             self.body:setLinearVelocity(0, 0)
 

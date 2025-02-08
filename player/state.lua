@@ -66,7 +66,6 @@ function State.canSwitchWeapon()
 end
 
 function State.takeDamage(amount)
-    print("Taking damage: " .. amount)
     State.health = State.health - amount
 
     if State.health <= 0 then

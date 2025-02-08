@@ -103,7 +103,6 @@ function SandZone:onCollision(entity)
     end
 
     if entity:hasEffect("sand_slow") then
-        print("Already slowed")
         return
     end
 
