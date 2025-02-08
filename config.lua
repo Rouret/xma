@@ -8,7 +8,7 @@ Config.MODE_FREE_CAMERA = false
 Config.CAMERA_SPEED = 3000
 
 -- Debug State
-Config.DEBUG_GLOBAL_STATE = false
+Config.DEBUG_GLOBAL_STATE = true
 
 -- Debug Map
 Config.NO_GENERATION_ELEMENTS = false

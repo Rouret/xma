@@ -1,4 +1,4 @@
-local Enemy = require("engine.enemy")
+local Enemy = require("engine.enemy.enemy")
 local anim8 = require("engine.anim8")
 local IceBullet = require("enemies.iceSlime.icebullet")
 local State = require("player.state")

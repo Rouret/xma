@@ -1,5 +1,6 @@
 local State = require("player.state")
 local camera = {}
+
 camera.__index = camera
 
 -- Instance unique pour la caméra globale

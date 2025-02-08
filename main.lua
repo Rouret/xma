@@ -9,8 +9,7 @@ local Camera = require("engine.camera")
 local Map = require("engine.map.map")
 local Debug = require("engine.debug")
 local Config = require("config")
-
-local map
+local EnemyManager = require("engine.enemy.enemymanger")
 
 function generateRandomString(length)
     local chars = "0123456789"
@@ -40,7 +39,7 @@ function love.load()
 
     -- Init
     World.load()
-    map = Map.new(World.world)
+    local map = Map.load(World.world)
     Camera.init(State.x, State.y, 1, map)
     Player.load(World.world)
     UI.load()
@@ -67,6 +66,7 @@ function love.update(dt)
     Debug.update(dt)
 
     if not Config.MODE_FREE_CAMERA then
+        EnemyManager.update(dt)
         World.update(dt)
         Timer:update(dt)
         Player.update(dt)
@@ -79,7 +79,7 @@ end
 function love.draw()
     Camera.i:apply()
 
-    map:draw()
+    Map.draw()
     World:draw()
     GlobalState:draw()
     Player.draw()
