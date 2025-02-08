@@ -9,6 +9,7 @@ EnemyManager.lastSpawnTimeA = 0
 EnemyManager.lastSpawnTimeB = 0
 local maxTry = 10
 
+-- Spawn
 -- Type A
 local minSpawnRangeTypeA = 200 * 32 -- 200 tiles
 local maxSpawnRangeTypeA = 600 * 32 -- 400 tiles
@@ -24,7 +25,24 @@ local maxTypeB = 5
 local minSpawnTimeTypeB = 4 -- secondes
 local maxSpawnTimeTypeB = 10 -- secondes
 local nextSpawnTimeTypeB = (maxSpawnTimeTypeB - minSpawnTimeTypeB) / 2
-local maxRangeTypeB = 400 * 32 -- 700 tiles
+local maxRangeTypeB = 400 * 32 -- 700 tiles*
+
+-- Session
+local sessionDuration = 10 -- 12 minutes
+local specialWaveDuration = 3 -- 3 minutes
+local lastWaveChange = love.timer.getTime()
+
+local waveModels = {
+    speed = {spawnMultiplier = 1.5, healthMultiplier = 0.5, speedMultiplier = 2},
+    strong = {spawnMultiplier = 0.5, healthMultiplier = 3, speedMultiplier = 0.7},
+    swarm = {spawnMultiplier = 2, healthMultiplier = 0.7, speedMultiplier = 1.2},
+    sniper = {spawnMultiplier = 0.7, healthMultiplier = 1, speedMultiplier = 1.5},
+    mixed = {spawnMultiplier = 1, healthMultiplier = 1, speedMultiplier = 1},
+    berserk = {spawnMultiplier = 1, healthMultiplier = 1.5, speedMultiplier = 1.5}
+}
+EnemyManager.currentMultiplier = 1
+EnemyManager.currentWaveModel = waveModels.mixed
+EnemyManager.waveNumber = 1
 
 function EnemyManager.log(message)
     if Config.ENNEMIES_MANAGER_LOG then
@@ -32,6 +50,7 @@ function EnemyManager.log(message)
     end
 end
 
+-- ======================== SPAWN
 function EnemyManager.getEnemiesForBiome(biomeName)
     return BiomeEnemies[biomeName] or {} -- Retourne la liste des ennemis pour ce biome
 end
@@ -70,8 +89,6 @@ function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesTy
 
     local biomeName = biomeAtPosition.name
 
-    print("Biome name: " .. biomeName)
-
     local possibleEnemies = EnemyManager.getEnemiesForBiome(biomeName)
 
     if #possibleEnemies == 0 then
@@ -93,28 +110,45 @@ function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesTy
     GlobalState:addEntity(enemy)
 end
 
+-- ======================== WAVE
+
+-- ======================== UPDATE
 function EnemyManager.update()
     local currentTime = love.timer.getTime()
 
+    if EnemyManager.waveNumber % 2 == 0 then -- Current wave is a special wave
+        if currentTime - lastWaveChange > specialWaveDuration then -- Special wave is over
+            EnemyManager.log("Special wave is over")
+            EnemyManager.currentMultiplier = EnemyManager.currentMultiplier + 0.25
+            EnemyManager.currentWaveModel = waveModels.mixed
+            lastWaveChange = currentTime
+            EnemyManager.waveNumber = EnemyManager.waveNumber + 1
+        end
+    else
+        if currentTime - lastWaveChange > sessionDuration then -- Normal wave is over
+            -- Next one is a special wave
+            EnemyManager.log("Normal wave is over, next one is a special wave")
+            EnemyManager.currentWaveModel = waveModels[love.math.random(1, 6)]
+            lastWaveChange = currentTime
+            EnemyManager.waveNumber = EnemyManager.waveNumber + 1
+        end
+    end
+
     -- Spawn des ennemis Type A (attaque le beacon)
     if currentTime - EnemyManager.lastSpawnTimeA > nextSpawnTimeTypeA and GlobalState:getAEnemies() < maxTypeA then
-        EnemyManager.log("Spawn enemy A")
         EnemyManager.spawnEnemy(minSpawnRangeTypeA, maxSpawnRangeTypeA, "beacon")
         EnemyManager.lastSpawnTimeA = currentTime
 
         -- Random next spawn time
         nextSpawnTimeTypeA = love.math.random(minSpawnTimeTypeA, maxSpawnTimeTypeA)
-        EnemyManager.log("Next spawn time: " .. nextSpawnTimeTypeA)
     end
 
     -- Spawn des ennemis Type B (autour du joueur)
     if currentTime - EnemyManager.lastSpawnTimeB > nextSpawnTimeTypeB and GlobalState:getBEnemies() < maxTypeB then
-        EnemyManager.log("Spawn enemy B")
         EnemyManager.spawnEnemy(minSpawnRangeTypeB, maxSpawnRangeTypeB, "B", "player")
         EnemyManager.lastSpawnTimeB = currentTime
         -- Random next spawn time
         nextSpawnTimeTypeB = love.math.random(minSpawnTimeTypeB, maxSpawnTimeTypeB)
-        EnemyManager.log("Next spawn time: " .. nextSpawnTimeTypeB)
     end
 
     -- Kill
@@ -122,7 +156,6 @@ function EnemyManager.update()
 
     for _, enemy in ipairs(enemies) do
         if not enemy.enemiesType then
-            print("No enemiesType for this enemy")
             return
         end
 
@@ -131,7 +164,6 @@ function EnemyManager.update()
             local dx = Map.beacon.x - enemy.x
             local dy = Map.beacon.y - enemy.y
             if (dx * dx + dy * dy) > (maxRangeTypeA * maxRangeTypeA) then
-                EnemyManager.log("Remove enemy A")
                 GlobalState:removeEntity(enemy)
             end
         end
@@ -141,7 +173,6 @@ function EnemyManager.update()
             local dx = State.x - enemy.x
             local dy = State.y - enemy.y
             if (dx * dx + dy * dy) > (maxRangeTypeB * maxRangeTypeB) then
-                EnemyManager.log("Remove enemy B")
                 GlobalState:removeEntity(enemy)
             end
         end
