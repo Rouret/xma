@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.5 - 31/01/25
+## v0.0.5 - 08/02/25
 
 ### Added or Changed
 - Correctioen du bug quand on arrive en bas de la map
