@@ -1,6 +1,8 @@
 local State = require("player.state")
 local Enemy = require("engine.enemy")
 local anim8 = require("engine.anim8")
+local World = require("game.world")
+
 local TheRock = Enemy:extend()
 TheRock.__index = TheRock
 
@@ -17,8 +19,8 @@ function TheRock:init(params)
     params.height = params.radius * 2
     params.health = 1
     params.maxHealth = 1
-    params.deathDuration = self.deathTTL
-    print(params.deathDuration)
+    params.deathDuration = 1
+
     Enemy.init(self, params)
 
     self.image = love.graphics.newImage("sprites/enemies/therock/therock.png")
@@ -41,12 +43,14 @@ function TheRock:init(params)
     self.particles:setEmissionArea("uniform", 10, 10)
     self.particles:setSizes(2, 1, 0.25)
 
-    self.hasCollided = false
-
     return self
 end
 
 function TheRock:u(dt)
+    if self.body:isDestroyed() then
+        return
+    end
+
     self.animation:update(dt)
 
     -- Calculer la direction vers le joueur
@@ -64,13 +68,6 @@ function TheRock:u(dt)
 
     -- Synchroniser self.x et self.y pour les dessins
     self.x, self.y = self.body:getPosition()
-    self.particles:update(dt)
-    if self.hasCollided then
-        self.deathCurrent = self.deathCurrent + dt
-        if self.deathCurrent >= self.deathTTL then
-            self:die()
-        end
-    end
 end
 
 function TheRock:d()
@@ -84,14 +81,7 @@ function TheRock:d()
         scaleX = -1
     end
 
-    -- Draw particles
-    if not self.hasCollided then
-        self.animation:draw(self.image, self.x, self.y, angle, scaleX, 1, 32, 32)
-        return
-    end
-
-    self.particles:setPosition(self.x, self.y)
-    love.graphics.draw(self.particles, self.x, self.y)
+    self.animation:draw(self.image, self.x, self.y, angle, scaleX, 1, 32, 32)
 end
 
 function TheRock:updateDeathAnimation(dt)
@@ -107,16 +97,15 @@ function TheRock:beforeDie()
 end
 
 function TheRock:onCollision(entity)
-    if self.hasCollided then
-        return
-    end
-
     if entity.name ~= "player" then
         return
     end
 
-    self.hasCollided = true
-    self.particles:emit(20)
+    self:die()
+end
+
+function TheRock:isInDeathAnimation()
+    return (not self:isAlive() and self.haveDeathAnimation) or (self.body:isDestroyed() and self.haveDeathAnimation)
 end
 
 return TheRock

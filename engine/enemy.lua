@@ -26,6 +26,7 @@ function Enemy:init(params)
     self.speed = params.speed or 200
     self.damage = params.damage or 10
     self.exp = params.exp or 10
+    self.status = "moving" --by default all enemies are moving
 
     self.zindex = 10
 
@@ -35,6 +36,8 @@ function Enemy:init(params)
     self.haveDeathAnimation = params.deathDuration or false
     self.deathDuration = params.deathDuration or 0
     self.deathTick = 0
+
+    return self
 end
 
 function Enemy:takeDamage(damage)
