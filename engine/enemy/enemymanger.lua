@@ -128,8 +128,9 @@ function EnemyManager.update()
 
         if enemy.enemiesType == "A" then
             -- calculate the range beetween beacon and enemy
-            local distance = math.sqrt((Map.beacon.x - enemy.x) ^ 2 + (Map.beacon.y - enemy.y) ^ 2)
-            if distance > maxRangeTypeA then
+            local dx = Map.beacon.x - enemy.x
+            local dy = Map.beacon.y - enemy.y
+            if (dx * dx + dy * dy) > (maxRangeTypeA * maxRangeTypeA) then
                 EnemyManager.log("Remove enemy A")
                 GlobalState:removeEntity(enemy)
             end
@@ -137,9 +138,9 @@ function EnemyManager.update()
 
         if enemy.enemiesType == "B" then
             -- calculate the range beetween beacon and enemy
-            local distance = math.sqrt((State.x - enemy.x) ^ 2 + (State.y - enemy.y) ^ 2)
-            print("Distance: " .. distance / 32)
-            if distance > maxRangeTypeB then
+            local dx = State.x - enemy.x
+            local dy = State.y - enemy.y
+            if (dx * dx + dy * dy) > (maxRangeTypeB * maxRangeTypeB) then
                 EnemyManager.log("Remove enemy B")
                 GlobalState:removeEntity(enemy)
             end
