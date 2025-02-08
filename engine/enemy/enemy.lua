@@ -23,6 +23,7 @@ function Enemy:init(params)
     self.damage = params.damage or 10
     self.exp = params.exp or 10
     self.target = params.target or "player"
+    self.enemiesType = params.enemiesType or "B"
     self.type = "enemie"
 
     -- Gestion de la mort

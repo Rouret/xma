@@ -36,6 +36,25 @@ function GlobalState:update(dt, world)
     end
 end
 
+-- Function to gell the number of enemiesType A in the global state
+function GlobalState:getEnemiesByType(type) -- "A" or "B"
+    local count = 0
+    for _, entity in ipairs(self.entities) do
+        if entity.type == "enemy" and entity.enemiesType == type then
+            count = count + 1
+        end
+    end
+    return count
+end
+
+function GlobalState:getAEnemies()
+    return GlobalState:getEnemiesByType("A")
+end
+
+function GlobalState:getBEnemies()
+    return GlobalState:getEnemiesByType("B")
+end
+
 -- Function to draw all entities in the global state
 function GlobalState:draw()
     table.sort(
