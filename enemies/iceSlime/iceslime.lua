@@ -27,7 +27,7 @@ function IceSlime:init(params)
 
     local attackAnimationGrid =
         anim8.newGrid(45, 45, self.attackSpriteSheet:getWidth(), self.attackSpriteSheet:getHeight())
-    self.attackAnimation = anim8.newAnimation(attackAnimationGrid("1-4", 1), 0.5)
+    self.attackAnimation = anim8.newAnimation(attackAnimationGrid("1-4", 1), 0.5 / 4)
 
     -- Initialisation de l'ennemi avec les paramètres
     Enemy.init(self, params)
@@ -52,13 +52,13 @@ function IceSlime:init(params)
 end
 
 function IceSlime:u(dt)
-    self.movementAnimation:update(dt)
     -- Calculer la direction vers le joueur
     local dx = State.x - self.body:getX()
     local dy = State.y - self.body:getY()
     local distance = math.sqrt(dx ^ 2 + dy ^ 2)
 
     if self.status == "attacking" then
+        self.attackAnimation:update(dt)
         self.castTimer = self.castTimer + dt
         if self.castTimer >= self.castTime then
             self.castTimer = 0
@@ -82,6 +82,7 @@ function IceSlime:u(dt)
 
     if distance > self.range then
         self.status = "moving"
+        self.movementAnimation:update(dt)
         local velocityX = (dx / distance) * self.speed
         local velocityY = (dy / distance) * self.speed
         self.body:setLinearVelocity(velocityX, velocityY)
@@ -96,10 +97,12 @@ end
 
 function IceSlime:d()
     if self.status == "moving" then
+        print("moving draw")
         self.movementAnimation:draw(self.movementSpriteSheet, self.x, self.y, 0, 1, 1, 22.5, 22.5)
     end
 
     if self.status == "attacking" then
+        print("attacking draw")
         self.attackAnimation:draw(self.attackSpriteSheet, self.x, self.y, 0, 1, 1, 22.5, 22.5)
     end
 end
