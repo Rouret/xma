@@ -55,6 +55,17 @@ function GlobalState:getBEnemies()
     return GlobalState:getEnemiesByType("B")
 end
 
+-- Function to gell the number of enemiesType A in the global state
+function GlobalState:getEntitiesByType(type) -- "A" or "B"
+    local entities = {}
+    for _, entity in ipairs(self.entities) do
+        if entity.type == type then
+            table.insert(entities, entity)
+        end
+    end
+    return entities
+end
+
 -- Function to draw all entities in the global state
 function GlobalState:draw()
     table.sort(

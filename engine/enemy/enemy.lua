@@ -24,7 +24,7 @@ function Enemy:init(params)
     self.exp = params.exp or 10
     self.target = params.target or "player"
     self.enemiesType = params.enemiesType or "B"
-    self.type = "enemie"
+    self.type = "enemy"
 
     -- Gestion de la mort
     self.haveDeathAnimation = params.deathDuration or false

@@ -2,7 +2,7 @@ local BiomeEnemies = require("engine.enemy.biomeenemies")
 local GlobalState = require("game.state")
 local Map = require("engine.map.map")
 local Config = require("config")
-
+local State = require("player.state")
 local EnemyManager = {}
 
 EnemyManager.lastSpawnTimeA = 0
@@ -16,6 +16,7 @@ local maxTypeA = 5
 local minSpawnTimeTypeA = 10 -- secondes
 local maxSpawnTimeTypeA = 20 -- secondes
 local nextSpawnTimeTypeA = (maxSpawnTimeTypeA - minSpawnTimeTypeA) / 2
+local maxRangeTypeA = 700 * 32 -- 1200 tiles
 -- Type B
 local minSpawnRangeTypeB = 150 * 32 -- 150 tiles
 local maxSpawnRangeTypeB = 300 * 32 -- 300 tiles
@@ -23,6 +24,7 @@ local maxTypeB = 5
 local minSpawnTimeTypeB = 4 -- secondes
 local maxSpawnTimeTypeB = 10 -- secondes
 local nextSpawnTimeTypeB = (maxSpawnTimeTypeB - minSpawnTimeTypeB) / 2
+local maxRangeTypeB = 400 * 32 -- 700 tiles
 
 function EnemyManager.log(message)
     if Config.ENNEMIES_MANAGER_LOG then
@@ -113,6 +115,35 @@ function EnemyManager.update()
         -- Random next spawn time
         nextSpawnTimeTypeB = love.math.random(minSpawnTimeTypeB, maxSpawnTimeTypeB)
         EnemyManager.log("Next spawn time: " .. nextSpawnTimeTypeB)
+    end
+
+    -- Kill
+    local enemies = GlobalState:getEntitiesByType("enemy")
+
+    for _, enemy in ipairs(enemies) do
+        if not enemy.enemiesType then
+            print("No enemiesType for this enemy")
+            return
+        end
+
+        if enemy.enemiesType == "A" then
+            -- calculate the range beetween beacon and enemy
+            local distance = math.sqrt((Map.beacon.x - enemy.x) ^ 2 + (Map.beacon.y - enemy.y) ^ 2)
+            if distance > maxRangeTypeA then
+                EnemyManager.log("Remove enemy A")
+                GlobalState:removeEntity(enemy)
+            end
+        end
+
+        if enemy.enemiesType == "B" then
+            -- calculate the range beetween beacon and enemy
+            local distance = math.sqrt((State.x - enemy.x) ^ 2 + (State.y - enemy.y) ^ 2)
+            print("Distance: " .. distance / 32)
+            if distance > maxRangeTypeB then
+                EnemyManager.log("Remove enemy B")
+                GlobalState:removeEntity(enemy)
+            end
+        end
     end
 end
 
