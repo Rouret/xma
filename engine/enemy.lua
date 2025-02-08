@@ -1,13 +1,9 @@
 local Entity = require("engine.entity")
+local StateMachine = require("engine.stateMachine")
+local GlobalState = require("game.state")
 
 local Enemy = Entity:extend()
 Enemy.__index = Enemy
-
-function Enemy:new(params)
-    local instance = setmetatable({}, self)
-    instance:init(params)
-    return instance
-end
 
 function Enemy:init(params)
     params = params or {}
@@ -26,92 +22,94 @@ function Enemy:init(params)
     self.speed = params.speed or 200
     self.damage = params.damage or 10
     self.exp = params.exp or 10
-    self.status = "moving" --by default all enemies are moving
 
-    self.zindex = 10
-
-    -- Animation de mort
-
-    -- Bool pour simplifier les écritures conditionnelles
+    -- Gestion de la mort
     self.haveDeathAnimation = params.deathDuration or false
     self.deathDuration = params.deathDuration or 0
     self.deathTick = 0
 
-    return self
+    -- Ajout de la State Machine
+    self.stateMachine =
+        StateMachine:new(
+        {
+            idle = {
+                enter = function()
+                    self.body:setLinearVelocity(0, 0)
+                end,
+                update = function(_, dt)
+                end,
+                draw = function()
+                end
+            },
+            moving = {
+                enter = function()
+                end,
+                update = function(_, dt)
+                    self:u(dt)
+                end,
+                draw = function()
+                    self:d()
+                end
+            },
+            dead = {
+                enter = function()
+                    print(self.name .. " est mort")
+                    self.body:setLinearVelocity(0, 0)
+                    if self.haveDeathAnimation then
+                        self.deathTick = 0
+                    else
+                        self:destroy()
+                    end
+                end,
+                update = function(_, dt)
+                    if self.haveDeathAnimation then
+                        self.deathTick = self.deathTick + dt
+                        if self.deathTick >= self.deathDuration then
+                            self:destroy()
+                        else
+                            self:updateDeathAnimation(dt)
+                        end
+                    end
+                end,
+                draw = function()
+                    if self.haveDeathAnimation then
+                        self:drawDeathAnimation()
+                    end
+                end
+            }
+        }
+    )
+
+    self.stateMachine:change("moving")
 end
 
 function Enemy:takeDamage(damage)
     self.health = self.health - damage
+    print(self.name .. " prend " .. damage .. " dégâts. Vie restante : " .. self.health)
+
     if self.health <= 0 then
         self:die()
     end
 end
 
 function Enemy:update(dt)
-    if self:isInDeathAnimation() then
-        self.deathTick = self.deathTick + dt
-        if self.deathTick >= self.deathDuration then
-            self:realDie()
-        else
-            self:updateDeathAnimation(dt)
-        end
-    else
-        self:u(dt) -- Méthode à implémenter par les sous-classes
-    end
-end
-
-function Enemy:u(dt)
-    error("Enemy: u(update) method not implemented")
-end
-
-function Enemy:d()
-    error("Enemy: d(draw) method not implemented")
-end
-
-function Enemy:drawDeathAnimation()
-    error("Enemy: drawDeathAnimation method not implemented")
-end
-
-function Enemy:updateDeathAnimation(dt)
-    error("Enemy: updateDeathAnimation method not implemented")
+    self.stateMachine:update(dt)
 end
 
 function Enemy:draw()
-    if self:isInDeathAnimation() then
-        self:drawDeathAnimation()
-    else
-        self:d()
-    end
+    self.stateMachine:draw()
 end
 
 function Enemy:die()
-    self:beforeDie()
-    if self.haveDeathAnimation then
+    print(self.name .. " déclenche sa mort")
+    self.stateMachine:change("dead")
+end
+
+function Enemy:destroy()
+    if self.body and not self.body:isDestroyed() then
         self.body:destroy()
-    else
-        self:realDie()
     end
-end
-
-function Enemy:realDie()
-    self:beforeRealDie()
-    self:destroy()
-end
-
-function Enemy:beforeDie()
-    -- Override this method
-end
-
-function Enemy:beforeRealDie()
-    -- Override this method
-end
-
-function Enemy:isAlive()
-    return self.health > 0
-end
-
-function Enemy:isInDeathAnimation()
-    return not self:isAlive() and self.haveDeathAnimation
+    GlobalState:removeEntity(self)
 end
 
 return Enemy
