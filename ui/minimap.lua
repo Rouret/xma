@@ -21,14 +21,12 @@ end
 function Minimap.keypressed(key)
     if key == "tab" then
         Minimap.isOpen = true
-        print("Minimap is open")
     end
 end
 
 function Minimap.keyreleased(key)
     if key == "tab" then
         Minimap.isOpen = false
-        print("Minimap is closed")
     end
 end
 
