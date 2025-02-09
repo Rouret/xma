@@ -29,8 +29,9 @@ local nextSpawnTimeTypeB = (maxSpawnTimeTypeB - minSpawnTimeTypeB) / 2
 local maxRangeTypeB = 400 * 32 -- 700 tiles*
 
 -- Session
-local sessionDuration = 10 -- 12 minutes
-local specialWaveDuration = 3 -- 3 minutes
+local sessionDuration = 12 * 60 -- 12 minutes
+local specialWaveDuration = 3 * 60 -- 3 minutes
+
 local lastWaveChange = love.timer.getTime()
 -- Difficulté
 local kHealthMultiplier = math.log(2) / 30
