@@ -270,30 +270,24 @@ function Debug.draw()
     end
 
     if Config.WAVE_STATS then
-        -- draw at the bottom right
+        local debugStats = {
+            "Wave: " .. EnemyManager.waveNumber,
+            "Enemies: " .. #GlobalState:getEntitiesByType("enemy"),
+            "A: " .. GlobalState:getAEnemies(),
+            "B: " .. GlobalState:getBEnemies(),
+            "Health: " .. EnemyManager.currentWaveModel.healthMultiplier * EnemyManager.currentHealthMultiplier,
+            "Speed: " .. EnemyManager.currentWaveModel.speedMultiplier * EnemyManager.currentSpeedMultiplier
+        }
 
-        local startX = width - 300
-        local startY = height - 200
+        local windowHeigt = #debugStats * 20 + 10
+        local startX = width - 250
+        local startY = height - windowHeigt
         love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", startX, startY, 300, 200)
+        love.graphics.rectangle("fill", startX, startY, 250, windowHeigt)
         love.graphics.setColor(1, 1, 1)
-
-        love.graphics.print("Wave: " .. EnemyManager.waveNumber, startX + 10, startY + 10)
-        love.graphics.print(
-            "Health: " .. EnemyManager.currentWaveModel.healthMultiplier * EnemyManager.currenthealthMultiplier,
-            startX + 10,
-            startY + 30
-        )
-        love.graphics.print(
-            "Speed: " .. EnemyManager.currentWaveModel.speedMultiplier * EnemyManager.currentSpeedMultiplier,
-            startX + 10,
-            startY + 40
-        )
-        love.graphics.print(
-            "Damage: " .. EnemyManager.currentWaveModel.damageMultiplier * EnemyManager.currentDamageMultiplier,
-            startX + 10,
-            startY + 50
-        )
+        for i, stat in ipairs(debugStats) do
+            love.graphics.print(stat, startX + 10, startY + 10 + (i - 1) * 20)
+        end
     end
 end
 

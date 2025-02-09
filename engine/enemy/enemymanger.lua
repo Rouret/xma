@@ -8,6 +8,7 @@ local EnemyManager = {}
 EnemyManager.lastSpawnTimeA = 0
 EnemyManager.lastSpawnTimeB = 0
 local maxTry = 10
+local maxMultiplier = 5 -- Limite max pour éviter une explosion
 
 -- Spawn
 -- Type A
@@ -32,9 +33,9 @@ local sessionDuration = 10 -- 12 minutes
 local specialWaveDuration = 3 -- 3 minutes
 local lastWaveChange = love.timer.getTime()
 -- Difficulté
-local increaseHealthMultiplier = 1.10
-local increaseSpeedMultiplier = 1.05
-local increaseDamageMultiplier = 1.05
+local kHealthMultiplier = math.log(2) / 30
+local kSpeedMultiplier = math.log(1.15) / 30
+local kDamageMultiplier = math.log(2.2) / 30
 
 local waveModels = {
     speed = {spawnMultiplier = 1.5, healthMultiplier = 0.5, speedMultiplier = 2, damageMultiplier = 0.5},
@@ -44,7 +45,7 @@ local waveModels = {
     mixed = {spawnMultiplier = 1, healthMultiplier = 1, speedMultiplier = 1, damageMultiplier = 1},
     berserk = {spawnMultiplier = 1, healthMultiplier = 1.5, speedMultiplier = 1.5, damageMultiplier = 1.5}
 }
-EnemyManager.currenthealthMultiplier = 1
+EnemyManager.currentHealthMultiplier = 1
 EnemyManager.currentSpeedMultiplier = 1
 EnemyManager.currentDamageMultiplier = 1
 EnemyManager.currentWaveModel = waveModels.mixed
@@ -59,6 +60,10 @@ end
 -- ======================== SPAWN
 function EnemyManager.getEnemiesForBiome(biomeName)
     return BiomeEnemies[biomeName] or {} -- Retourne la liste des ennemis pour ce biome
+end
+
+function EnemyManager.exp(waveNumber, k)
+    return math.exp(waveNumber * k)
 end
 
 function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesType, target)
@@ -94,15 +99,14 @@ function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesTy
     end
 
     local biomeName = biomeAtPosition.name
-
     local possibleEnemies = EnemyManager.getEnemiesForBiome(biomeName)
 
     if #possibleEnemies == 0 then
         print("No enemies for this biome")
         return
     end
-    local enemyToInvoke = possibleEnemies[love.math.random(1, #possibleEnemies)]
 
+    local enemyToInvoke = possibleEnemies[love.math.random(1, #possibleEnemies)]
     local enemy =
         enemyToInvoke:new(
         {
@@ -110,7 +114,7 @@ function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesTy
             y = randomY,
             enemiesType = enemiesType,
             target = target,
-            healthMultiplier = EnemyManager.currentWaveModel.healthMultiplier * EnemyManager.currenthealthMultiplier,
+            healthMultiplier = EnemyManager.currentWaveModel.healthMultiplier * EnemyManager.currentHealthMultiplier,
             speedMultiplier = EnemyManager.currentWaveModel.speedMultiplier * EnemyManager.currentSpeedMultiplier,
             damageMultiplier = EnemyManager.currentWaveModel.damageMultiplier * EnemyManager.currentDamageMultiplier
         }
@@ -119,8 +123,6 @@ function EnemyManager.spawnEnemy(minSpawnRangeType, maxSpawnRangeType, enemiesTy
     GlobalState:addEntity(enemy)
 end
 
--- ======================== WAVE
-
 -- ======================== UPDATE
 function EnemyManager.update()
     local currentTime = love.timer.getTime()
@@ -128,10 +130,17 @@ function EnemyManager.update()
     if EnemyManager.waveNumber % 2 == 0 then -- Current wave is a special wave
         if currentTime - lastWaveChange > specialWaveDuration then -- Special wave is over
             EnemyManager.log("Special wave is over")
-            EnemyManager.currentDamageMultiplier = EnemyManager.currentDamageMultiplier * increaseDamageMultiplier
-            EnemyManager.currenthealthMultiplier = EnemyManager.currenthealthMultiplier * increaseHealthMultiplier
-            EnemyManager.currentSpeedMultiplier = EnemyManager.currentSpeedMultiplier * increaseSpeedMultiplier
+            -- Update the multipliers
+            EnemyManager.currentDamageMultiplier =
+                math.min(EnemyManager.exp(EnemyManager.waveNumber, kDamageMultiplier), maxMultiplier)
+            EnemyManager.currentHealthMultiplier =
+                math.min(EnemyManager.exp(EnemyManager.waveNumber, kHealthMultiplier), maxMultiplier)
+            EnemyManager.currentSpeedMultiplier =
+                math.min(EnemyManager.exp(EnemyManager.waveNumber, kSpeedMultiplier), maxMultiplier)
+
+            --Next wave is a normal wave
             EnemyManager.currentWaveModel = waveModels.mixed
+
             lastWaveChange = currentTime
             EnemyManager.waveNumber = EnemyManager.waveNumber + 1
         end

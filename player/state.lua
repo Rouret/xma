@@ -22,8 +22,8 @@ function State.load()
     State.staminaRegenCooldown = 2
 
     -- Health
-    State.health = 100
-    State.maxHealth = 100
+    State.health = 1000000
+    State.maxHealth = 1000000
     State.radius = 10
 
     -- Damage
