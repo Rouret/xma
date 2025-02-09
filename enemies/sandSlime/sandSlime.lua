@@ -1,6 +1,5 @@
 local Enemy = require("engine.enemy.enemy")
 local anim8 = require("engine.anim8")
-local State = require("player.state")
 local World = require("game.world")
 local SandZone = require("enemies.sandSlime.sandZone")
 local GlobalState = require("game.state")
@@ -43,22 +42,7 @@ function SandSlime:init(params)
         end,
         update = function(_, dt)
             self.movementAnimation:update(dt)
-
-            -- Déplacement vers le joueur
-            local dx = State.x - self.body:getX()
-            local dy = State.y - self.body:getY()
-            local distance = math.sqrt(dx ^ 2 + dy ^ 2)
-
-            if distance > 0 then
-                local velocityX = (dx / distance) * self.speed
-                local velocityY = (dy / distance) * self.speed
-                self.body:setLinearVelocity(velocityX, velocityY)
-            else
-                self.body:setLinearVelocity(0, 0)
-            end
-
-            -- Synchronisation position
-            self.x, self.y = self.body:getPosition()
+            self:moveToTarget()
         end,
         draw = function()
             self.movementAnimation:draw(self.image, self.x, self.y, 0, 1, 1, 22.5, 22.5)
@@ -112,6 +96,12 @@ end
 function SandSlime:onCollision(entity)
     if entity.name == "player" then
         entity.takeDamage(self.damage)
+        self:die()
+    end
+
+    if entity.name == "beacon" then
+        entity:takeDamage(self.damage)
+        self:die()
     end
 end
 

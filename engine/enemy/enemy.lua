@@ -1,6 +1,8 @@
 local Entity = require("engine.entity")
 local StateMachine = require("engine.stateMachine")
 local GlobalState = require("game.state")
+local State = require("player.state")
+local Map = require("engine.map.map")
 
 local Enemy = Entity:extend()
 Enemy.__index = Enemy
@@ -88,6 +90,35 @@ function Enemy:init(params)
     )
 
     self.stateMachine:change("moving")
+end
+
+function Enemy:getTargetPosition()
+    if self.target == "player" then
+        return State.x, State.y
+    end
+
+    if self.target == "beacon" then
+        return Map.beacon.x, Map.beacon.y
+    end
+end
+
+function Enemy:moveToTarget()
+    local targetX, targetY = self:getTargetPosition()
+
+    -- Déplacement vers le joueur
+    local dx = targetX - self.body:getX()
+    local dy = targetY - self.body:getY()
+    local distance = math.sqrt(dx ^ 2 + dy ^ 2)
+
+    if distance > 0 then
+        local velocityX = (dx / distance) * self.speed
+        local velocityY = (dy / distance) * self.speed
+        self.body:setLinearVelocity(velocityX, velocityY)
+    else
+        self.body:setLinearVelocity(0, 0)
+    end
+
+    self.x, self.y = self.body:getPosition()
 end
 
 function Enemy:takeDamage(damage)

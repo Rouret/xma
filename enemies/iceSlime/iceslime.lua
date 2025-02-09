@@ -1,7 +1,6 @@
 local Enemy = require("engine.enemy.enemy")
 local anim8 = require("engine.anim8")
 local IceBullet = require("enemies.iceSlime.icebullet")
-local State = require("player.state")
 local GlobalState = require("game.state")
 
 local IceSlime = Enemy:extend()
@@ -47,8 +46,9 @@ function IceSlime:init(params)
         enter = function()
         end,
         update = function(_, dt)
-            local dx = State.x - self.body:getX()
-            local dy = State.y - self.body:getY()
+            local targetX, targetY = self:getTargetPosition()
+            local dx = targetX - self.body:getX()
+            local dy = targetY - self.body:getY()
             local distance = math.sqrt(dx ^ 2 + dy ^ 2)
 
             if distance < self.range then
@@ -56,12 +56,8 @@ function IceSlime:init(params)
                 return
             end
 
-            local velocityX = (dx / distance) * self.speed
-            local velocityY = (dy / distance) * self.speed
-            self.body:setLinearVelocity(velocityX, velocityY)
             self.movementAnimation:update(dt)
-
-            self.x, self.y = self.body:getPosition()
+            self:moveToTarget()
         end,
         draw = function()
             self.movementAnimation:draw(self.movementSpriteSheet, self.x, self.y, 0, 1, 1, 22.5, 22.5)
@@ -74,11 +70,12 @@ function IceSlime:init(params)
             self.body:setLinearVelocity(0, 0)
         end,
         update = function(_, dt)
+            local targetX, targetY = self:getTargetPosition()
             self.castTimer = self.castTimer + dt
             if self.castTimer >= self.castTime then
                 self.castTimer = 0
-                local dx = State.x - self.body:getX()
-                local dy = State.y - self.body:getY()
+                local dx = targetX - self.body:getX()
+                local dy = targetY - self.body:getY()
                 GlobalState:addEntity(
                     IceBullet:new(
                         {
@@ -105,9 +102,7 @@ function IceSlime:init(params)
 end
 
 function IceSlime:onCollision(entity)
-    if entity.name == "player" then
-        entity:takeDamage(self.damage)
-    end
+    return
 end
 
 return IceSlime

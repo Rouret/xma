@@ -1,7 +1,5 @@
 local Enemy = require("engine.enemy.enemy")
 local anim8 = require("engine.anim8")
-local State = require("player.state")
-local World = require("game.world")
 
 local TheRock = Enemy:extend()
 TheRock.__index = TheRock
@@ -47,29 +45,16 @@ function TheRock:init(params)
         end,
         update = function(_, dt)
             self.animation:update(dt)
-
-            -- Déplacement vers le joueur
-            local dx = State.x - self.body:getX()
-            local dy = State.y - self.body:getY()
-            local distance = math.sqrt(dx ^ 2 + dy ^ 2)
-
-            if distance > 0 then
-                local velocityX = (dx / distance) * self.speed
-                local velocityY = (dy / distance) * self.speed
-                self.body:setLinearVelocity(velocityX, velocityY)
-            else
-                self.body:setLinearVelocity(0, 0)
-            end
-
-            self.x, self.y = self.body:getPosition()
+            self:moveToTarget()
         end,
         draw = function()
-            local dx = State.x - self.x
-            local dy = State.y - self.y
+            local targetX, targetY = self:getTargetPosition()
+            local dx = targetX - self.x
+            local dy = targetY - self.y
             local angle = math.atan2(dy, dx)
 
             -- Determine the direction to flip the animation
-            local scaleX = (self.x > State.x) and -1 or 1
+            local scaleX = (self.x > targetX) and -1 or 1
 
             self.animation:draw(self.image, self.x, self.y, angle, scaleX, 1, 32, 32)
         end
@@ -106,7 +91,11 @@ end
 function TheRock:onCollision(entity)
     if entity.name == "player" then
         entity.takeDamage(self.damage)
+        self:die()
+    end
 
+    if entity.name == "beacon" then
+        entity:takeDamage(self.damage)
         self:die()
     end
 end

@@ -22,7 +22,7 @@ local maxRangeTypeA = 700 * 32 -- 1200 tiles
 -- Type B
 local minSpawnRangeTypeB = 150 * 32 -- 150 tiles
 local maxSpawnRangeTypeB = 300 * 32 -- 300 tiles
-local maxTypeB = 5
+local maxTypeB = 0
 local minSpawnTimeTypeB = 4 -- secondes
 local maxSpawnTimeTypeB = 10 -- secondes
 local nextSpawnTimeTypeB = (maxSpawnTimeTypeB - minSpawnTimeTypeB) / 2
@@ -162,7 +162,7 @@ function EnemyManager.update()
 
     -- Spawn des ennemis Type A (attaque le beacon)
     if currentTime - EnemyManager.lastSpawnTimeA > nextSpawnTimeTypeA and GlobalState:getAEnemies() < maxTypeA then
-        EnemyManager.spawnEnemy(minSpawnRangeTypeA, maxSpawnRangeTypeA, "beacon")
+        EnemyManager.spawnEnemy(minSpawnRangeTypeA, maxSpawnRangeTypeA, "A", "beacon")
         EnemyManager.lastSpawnTimeA = currentTime
 
         -- Random next spawn time

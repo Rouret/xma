@@ -19,14 +19,19 @@ function IceBall:ajusteRotation()
 end
 
 function IceBall:onCollision(entity)
-    if entity.type and entity.type == "wall" then
-        self:destroy()
-        return
-    end
-
     if entity.name == "player" then
         entity.takeDamage(self.damage)
         self:destroy()
+    end
+
+    if entity.name == "beacon" then
+        entity:takeDamage(self.damage)
+        self:destroy()
+    end
+
+    if entity.type and entity.type == "wall" then
+        self:destroy()
+        return
     end
 end
 

@@ -10,6 +10,7 @@ local Map = require("engine.map.map")
 local Debug = require("engine.debug")
 local Config = require("config")
 local EnemyManager = require("engine.enemy.enemymanger")
+local Minimap = require("ui.minimap")
 
 function generateRandomString(length)
     local chars = "0123456789"
@@ -71,6 +72,7 @@ function love.update(dt)
         Timer:update(dt)
         Player.update(dt)
         Camera.i:setPosition(State.x, State.y)
+        Minimap.update(dt)
     end
 
     GlobalState:update(dt, World.World)
@@ -87,6 +89,7 @@ function love.draw()
     UI:draw()
 
     Debug.draw()
+    Minimap.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
 end
 
@@ -94,10 +97,11 @@ function love.keypressed(key)
     if key == "escape" then
         Game.isGamePaused = not Game.isGamePaused
     end
-
+    Minimap.keypressed(key)
     Debug.keypressed(key)
 end
 
 function love.keyreleased(key)
+    Minimap.keyreleased(key)
     Debug.keyreleased(key)
 end

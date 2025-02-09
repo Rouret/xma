@@ -21,7 +21,7 @@ function Beacon:init(params)
     -- Events
 
     -- General
-    self.name = "Beacon"
+    self.name = "beacon"
     self.type = "wall"
     self.maxHealth = 1000
     self.health = 1000
@@ -54,6 +54,13 @@ function Beacon:update(dt)
     self.body:setPosition(self.x, self.y)
 end
 
+function Beacon:takeDamage(damage)
+    self.health = self.health - damage
+    if self.health <= 0 then
+        self:destroy()
+    end
+end
+
 function Beacon:draw()
     love.graphics.draw(self.image, self.x - self.width / 2, self.y - self.height / 2)
     DrawUtils.lifeBar(
@@ -68,6 +75,8 @@ end
 
 function Beacon:destroy()
     self.body:destroy()
+    -- end of the game close
+    love.event.quit()
 end
 
 function Beacon:onCollision(entity)
@@ -75,11 +84,12 @@ function Beacon:onCollision(entity)
         return
     end
 
+    -- Do not destroy zones
     if entity.type and entity.type == "zone" then
         return
     end
-
-    if entity.type and entity.type == "bullet" then
+    -- Destroy player bullets
+    if entity.type and entity.type == "bullet" and entity.from == "player" then
         entity:destroy()
     end
 
