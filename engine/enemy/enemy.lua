@@ -39,7 +39,31 @@ function Enemy:init(params)
     self.deathTick = 0
 
     -- Ajout de la State Machine
-    self.stateMachine = StateMachine:new({})
+    self.stateMachine =
+        StateMachine:new(
+        {
+            dead = {
+                enter = function()
+                    self.body:setLinearVelocity(0, 0)
+                    if self.haveDeathAnimation then
+                        self.deathTick = 0
+                    else
+                        self:destroy()
+                    end
+                end,
+                update = function(_, dt)
+                    if self.haveDeathAnimation then
+                        self.deathTick = self.deathTick + dt
+                        if self.deathTick >= self.deathDuration then
+                            self:destroy()
+                        end
+                    end
+                end,
+                draw = function()
+                end
+            }
+        }
+    )
 end
 
 function Enemy:getTargetPosition()
