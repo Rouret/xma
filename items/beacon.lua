@@ -4,14 +4,8 @@ local DrawUtils = require("utils.draw")
 local Config = require("config")
 local love = require("love")
 
-Beacon = Entity:extend()
-Beacon.__index = Beacon
-
-function Beacon:new(params)
-    local instance = setmetatable({}, self)
-    instance:init(params)
-    return instance
-end
+---@class Beacon : Entity
+local Beacon = Entity:extend()
 
 function Beacon:init(params)
     params = params or {}
@@ -19,8 +13,6 @@ function Beacon:init(params)
     if not params.x or not params.y then
         error("Position parameters are required")
     end
-
-    -- Events
 
     -- General
     self.name = "beacon"

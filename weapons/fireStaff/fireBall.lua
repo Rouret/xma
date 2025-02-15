@@ -1,9 +1,12 @@
 local BulletObject = require("weapons.BulletObject")
 
+---@class FireBall : BulletObject
 local FireBall = BulletObject:extend()
-FireBall.__index = FireBall
 
-function FireBall:init(params)
+function FireBall:new(params)
+    ---@type FireBall
+    local self = setmetatable({}, FireBall)
+
     params = params or {}
     params.name = "fireBall"
     params.imageRatio = params.imageRatio or 1

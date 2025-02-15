@@ -4,12 +4,10 @@ local love = require("love")
 
 ---@class Weapon : Object
 Weapon = Object:extend()
-Weapon.__index = Weapon
 
 function Weapon:new(params)
-    local instance = setmetatable({}, self)
-    instance:init(params)
-    return instance
+    self:init(params)
+    return self
 end
 
 function Weapon:init(params)

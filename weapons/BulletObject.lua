@@ -158,6 +158,7 @@ function BulletObject:isAlive()
 end
 
 function BulletObject:destroy()
+    print("Destroying bullet")
     self:beforeDestroy()
     self.body:destroy()
     GlobalState:removeEntity(self)

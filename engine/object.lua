@@ -4,6 +4,7 @@ Object.__index = Object
 function Object:init()
 end
 
+---@return Object
 function Object:extend()
     local cls = {}
     for k, v in pairs(self) do
@@ -17,6 +18,8 @@ function Object:extend()
     return cls
 end
 
+---@param T Object
+---@return boolean
 function Object:is(T)
     local mt = getmetatable(self)
     while mt do

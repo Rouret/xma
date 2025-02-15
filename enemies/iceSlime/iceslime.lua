@@ -3,8 +3,9 @@ local anim8 = require("engine.anim8")
 local IceBullet = require("enemies.iceSlime.icebullet")
 local GlobalState = require("game.state")
 local love = require("love")
+
+---@class IceSlime : Enemy
 local IceSlime = Enemy:extend()
-IceSlime.__index = IceSlime
 
 function IceSlime:init(params)
     params = params or {}

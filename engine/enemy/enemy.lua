@@ -6,7 +6,6 @@ local Map = require("engine.map.map")
 
 ---@class Enemy : Entity
 local Enemy = Entity:extend()
-Enemy.__index = Enemy
 
 function Enemy:init(params)
     params = params or {}
@@ -41,8 +40,6 @@ function Enemy:init(params)
 
     -- Ajout de la State Machine
     self.stateMachine = StateMachine:new({})
-
-    self.stateMachine:change("moving")
 end
 
 function Enemy:getTargetPosition()

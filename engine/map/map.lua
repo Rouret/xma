@@ -27,8 +27,12 @@ function Map.load(world)
     Map.NOISE_SCALE = 5
     Map.tiles = {}
     Map.elements = {}
-    Map.beacon = nil
+
     Map.generate()
+
+    -- Générer le beacon
+    Map.beacon = Map.generateBeacon()
+    GlobalState:addEntity(Map.beacon)
 
     return Map
 end
@@ -58,9 +62,6 @@ function Map.generate()
 
     -- Générer le terrain
     Map.generateTerrain()
-
-    -- Générer le beacon
-    Map.generateBeacon()
 
     -- Générer les éléments si nécessaire
     if not Config.NO_GENERATION_ELEMENTS then
@@ -143,6 +144,7 @@ function Map.generateElements()
 end
 
 -- Générer le beacon dans une zone centrale
+---@return Beacon
 function Map.generateBeacon()
     local pourcentage = 0.8
     local sx = Map.MAP_WIDTH * (1 - pourcentage) / 2
@@ -153,9 +155,7 @@ function Map.generateBeacon()
     local randomX = love.math.random(sx, sx + dx)
     local randomY = love.math.random(sy, sy + dy)
     local beaconX, beaconY = Map.gridToWorld(randomX, randomY)
-    Map.beacon = Beacon:new({x = beaconX, y = beaconY})
-
-    GlobalState:addEntity(Map.beacon)
+    return Beacon:new({x = beaconX, y = beaconY})
 end
 
 -- Dessiner la carte
