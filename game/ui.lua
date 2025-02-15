@@ -1,4 +1,4 @@
-local State = require("player.state")
+local love = require("love")
 local UIEffect = require("ui.effect")
 local UIPlayer = require("ui.player")
 local UI = {}

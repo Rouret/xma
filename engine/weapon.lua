@@ -1,6 +1,8 @@
 local Object = require("engine.object")
 local State = require("player.state")
+local love = require("love")
 
+---@class Weapon : Object
 Weapon = Object:extend()
 Weapon.__index = Weapon
 

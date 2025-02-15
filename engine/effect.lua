@@ -1,5 +1,8 @@
 local Object = require("engine.object")
 local EffectUIImagesPath = require("effects.effectsConfig")
+local love = require("love")
+
+---@class Effect : Object
 local Effect = Object:extend()
 Effect.__index = Effect
 

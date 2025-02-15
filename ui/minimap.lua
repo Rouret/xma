@@ -1,5 +1,6 @@
 local State = require("player.state")
 local Map = require("engine.map.map")
+local love = require("love")
 
 local Minimap = {
     isOpen = false

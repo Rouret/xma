@@ -1,3 +1,5 @@
+local love = require("love")
+
 local NoiseUtils = {}
 
 function NoiseUtils.generateNoiseMap(width, height, scale)

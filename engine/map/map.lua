@@ -2,6 +2,7 @@ local NoiseUtils = require("engine.map.noiseUtils")
 local Camera = require("engine.camera")
 local Beacon = require("items.beacon")
 local Config = require("config")
+local love = require("love")
 
 local Forest = require("engine.map.biomes.forest")
 local Desert = require("engine.map.biomes.desert")
@@ -142,7 +143,7 @@ function Map.generateElements()
 end
 
 -- Générer le beacon dans une zone centrale
-function Map.generateBeacon(x, y)
+function Map.generateBeacon()
     local pourcentage = 0.8
     local sx = Map.MAP_WIDTH * (1 - pourcentage) / 2
     local dx = Map.MAP_WIDTH * pourcentage
@@ -159,7 +160,7 @@ end
 
 -- Dessiner la carte
 function Map.draw()
-    local camX, camY, camWidth, camHeight = Camera.i:getVisibleArea()
+    local camX, camY, camWidth, camHeight = Camera:getVisibleArea()
 
     local startX = math.max(1, math.floor(camX / Map.TILE_SIZE)) - 10
     local endX = math.min(Map.MAP_WIDTH, math.ceil((camX + camWidth) / Map.TILE_SIZE)) + 10

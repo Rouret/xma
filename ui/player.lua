@@ -1,4 +1,5 @@
 local State = require("player.state")
+local love = require("love")
 
 local UIPlayer = {}
 

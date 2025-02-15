@@ -5,7 +5,7 @@ local Animation = require("player.animation")
 local Interaction = require("player.interaction")
 local Draw = require("player.draw")
 local Gun = require("weapons.gun.gun")
-
+local love = require("love")
 local FireStaff = require("weapons.fireStaff.fireStaff")
 
 function Player.load(world)

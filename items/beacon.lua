@@ -1,6 +1,8 @@
 local World = require("game.world")
 local Entity = require("engine.entity")
 local DrawUtils = require("utils.draw")
+local Config = require("config")
+local love = require("love")
 
 Beacon = Entity:extend()
 Beacon.__index = Beacon
@@ -57,7 +59,9 @@ end
 function Beacon:takeDamage(damage)
     self.health = self.health - damage
     if self.health <= 0 then
-        self:destroy()
+        if not Config.DEV_MODE then
+            self:destroy()
+        end
     end
 end
 

@@ -1,3 +1,5 @@
+local love = require("love")
+
 local TileUtils = {}
 
 -- Fonction utilitaire pour découper un tileset en quads

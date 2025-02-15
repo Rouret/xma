@@ -1,7 +1,9 @@
 local GlobalState = require("game.state")
 local World = require("game.world")
 local Object = require("engine.object")
+local love = require("love")
 
+---@class Entity : Object
 Entity = Object:extend()
 Entity.__index = Entity
 

@@ -1,6 +1,8 @@
 local Enemy = require("engine.enemy.enemy")
 local anim8 = require("engine.anim8")
+local love = require("love")
 
+---@class TheRock : Enemy
 local TheRock = Enemy:extend()
 TheRock.__index = TheRock
 
@@ -20,8 +22,8 @@ function TheRock:init(params)
 
     -- Chargement du sprite et animation
     self.image = love.graphics.newImage("sprites/enemies/therock/therock.png")
-    local grid = anim8.newGrid(64, 64, self.image:getWidth(), self.image:getHeight())
-    self.animation = anim8.newAnimation(grid("1-9", 1), 0.07)
+    local grid = anim8.newGrid(64, 64, self.image:getWidth(), self.image:getHeight(), 0, 0, 0)
+    self.animation = anim8.newAnimation(grid("1-9", 1), 0.07, self.nop)
 
     -- Configuration physique
     self.fixture:setUserData(self)

@@ -1,4 +1,5 @@
 local State = require("player.state")
+local love = require("love")
 
 local UIEffect = {}
 local paddingY = 5 -- Espace entre chaque effet

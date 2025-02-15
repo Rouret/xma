@@ -1,3 +1,4 @@
+---@class Object
 Object = {}
 Object.__index = Object
 function Object:init()
@@ -34,6 +35,9 @@ function Object:__call(...)
 end
 
 function Object:emptyFunction()
+end
+
+function Object:nop()
 end
 
 return Object

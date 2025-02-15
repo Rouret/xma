@@ -3,14 +3,12 @@ local GlobalState = require("game.state")
 local World = require("game.world")
 local State = require("player.state")
 local Effect = require("engine.effect")
+local love = require("love")
 
+---@class SandZone : Object
 local SandZone = Object:extend()
 
-SandZone = Object:extend()
-SandZone.__index = SandZone
-
 function SandZone:new(params)
-    local self = setmetatable({}, SandZone)
     params = params or {}
 
     if not params.x and not params.y then

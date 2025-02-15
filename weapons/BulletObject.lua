@@ -2,14 +2,15 @@ local GlobalState = require("game.state")
 local World = require("game.world")
 local State = require("player.state")
 local Object = require("engine.object")
+local love = require("love")
 
+---@class BulletObject : Object
 BulletObject = Object:extend()
 BulletObject.__index = BulletObject
 
 function BulletObject:new(params)
-    local instance = setmetatable({}, self)
-    instance:init(params)
-    return instance
+    self:init(params)
+    return self
 end
 
 function BulletObject:init(params)
@@ -32,9 +33,9 @@ function BulletObject:init(params)
     end
 
     -- Events
-    self.beforeDestroyEvent = params.beforeDestroy or self.emptyFunction()
-    self.afterUpdateEvent = params.afterUpdate or self.emptyFunction()
-    self.afterDrawEvent = params.afterDraw or self.emptyFunction()
+    self.beforeDestroyEvent = params.beforeDestroy or self:nop()
+    self.afterUpdateEvent = params.afterUpdate or self:nop()
+    self.afterDrawEvent = params.afterDraw or self:nop()
 
     --General
     self.name = "BulletObject_" .. params.name

@@ -8,7 +8,7 @@ local Weapon = require("engine.weapon")
 local Gun = Weapon:extend()
 
 function Gun:init()
-    params = params or {}
+    local params = {}
     params.skills = {
         Skills.new(
             {

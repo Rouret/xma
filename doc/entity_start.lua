@@ -1,6 +1,7 @@
 local World = require("game.world")
 local Entity = require("engine.entity")
 local DrawUtils = require("utils.draw")
+local love = require("love")
 
 Beacon = Entity:extend()
 Beacon.__index = Beacon

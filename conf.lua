@@ -1,3 +1,5 @@
+local love = require("love")
+
 function love.conf(t)
     t.title = "Xma"
     t.author = "Rouret Lucas"

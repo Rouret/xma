@@ -1,5 +1,7 @@
 local State = require("player.state")
 local Draw = {}
+local love = require("love")
+local test = love.graphics.newImage("sprites/player/test.png")
 
 function Draw.draw()
     -- Dessiner le joueur black

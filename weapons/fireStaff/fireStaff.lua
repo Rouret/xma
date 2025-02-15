@@ -5,6 +5,7 @@ local State = require("player.state")
 local Weapon = require("engine.weapon")
 local FireZone = require("weapons.fireStaff.fireZone")
 local World = require("game.world")
+local love = require("love")
 local FireStaff = Weapon:extend()
 
 function FireStaff:init()

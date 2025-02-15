@@ -11,6 +11,7 @@ local Debug = require("engine.debug")
 local Config = require("config")
 local EnemyManager = require("engine.enemy.enemymanger")
 local Minimap = require("ui.minimap")
+local love = require("love")
 
 function generateRandomString(length)
     local chars = "0123456789"
@@ -71,7 +72,7 @@ function love.update(dt)
         World.update(dt)
         Timer:update(dt)
         Player.update(dt)
-        Camera.i:setPosition(State.x, State.y)
+        Camera.setPosition(State.x, State.y)
         Minimap.update(dt)
     end
 
@@ -79,13 +80,13 @@ function love.update(dt)
 end
 
 function love.draw()
-    Camera.i:apply()
+    Camera.apply()
 
     Map.draw()
     World:draw()
     GlobalState:draw()
     Player.draw()
-    Camera.i:reset()
+    Camera.reset()
     UI:draw()
 
     Debug.draw()

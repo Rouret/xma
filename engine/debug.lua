@@ -7,6 +7,7 @@ local TheRock = require("enemies.therock")
 local SandSlime = require("enemies.sandslime.sandslime")
 local IceSlime = require("enemies.iceslime.iceslime")
 local EnemyManager = require("engine.enemy.enemymanger")
+local love = require("love")
 local Debug = {}
 
 local Map
@@ -18,7 +19,7 @@ function Debug.load(map)
     end
     -- Initialisation de la caméra en mode libre si nécessaire
     if Config.MODE_FREE_CAMERA then
-        Camera.i:setPosition(0, 0) -- Position initiale de la caméra
+        Camera.setPosition(0, 0) -- Position initiale de la caméra
     end
 
     Map = map
@@ -33,16 +34,16 @@ function Debug.update(dt)
     if Config.MODE_FREE_CAMERA then
         -- Déplacements de la caméra avec les touches ZQSD (WASD en QWERTY)
         if love.keyboard.isDown("z") then
-            Camera.i.y = Camera.i.y - Config.CAMERA_SPEED * dt
+            Camera.y = Camera.y - Config.CAMERA_SPEED * dt
         end
         if love.keyboard.isDown("s") then
-            Camera.i.y = Camera.i.y + Config.CAMERA_SPEED * dt
+            Camera.y = Camera.y + Config.CAMERA_SPEED * dt
         end
         if love.keyboard.isDown("q") then
-            Camera.i.x = Camera.i.x - Config.CAMERA_SPEED * dt
+            Camera.x = Camera.x - Config.CAMERA_SPEED * dt
         end
         if love.keyboard.isDown("d") then
-            Camera.i.x = Camera.i.x + Config.CAMERA_SPEED * dt
+            Camera.x = Camera.x + Config.CAMERA_SPEED * dt
         end
     end
 end
@@ -53,7 +54,7 @@ function Debug.keypressed(key)
     end
     if key == "f1" then
         print("Start profiling")
-        ProFi:start()
+        ProFi:start("")
     end
     if key == "f2" then
         print("Stop profiling")

@@ -1,14 +1,14 @@
 local Object = require("engine.object")
 local TileUtils = require("engine.map.tileUtils")
 local World = require("game.world")
+local love = require("love")
 
 Biome = Object:extend()
 Biome.__index = Biome
 
 function Biome:new(params)
-    local instance = setmetatable({}, self)
-    instance:init(params)
-    return instance
+    self:init(params)
+    return self
 end
 
 function Biome:init(params)

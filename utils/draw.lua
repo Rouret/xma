@@ -1,4 +1,5 @@
 local DrawUtils = {}
+local love = require("love")
 
 function DrawUtils.lifeBar(x, y, width, height, life, maxLife)
     local lifeWidth = width * life / maxLife

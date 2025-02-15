@@ -2,7 +2,9 @@ local Object = require("engine.object")
 local GlobalState = require("game.state")
 local FireZone = Object:extend()
 local World = require("game.world")
+local love = require("love")
 
+---@class FireZone : Object
 FireZone = Object:extend()
 FireZone.__index = FireZone
 
@@ -22,7 +24,6 @@ local shader =
 )
 
 function FireZone:new(params)
-    local self = setmetatable({}, FireZone)
     params = params or {}
 
     if not params.x and not params.y then

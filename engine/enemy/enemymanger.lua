@@ -3,6 +3,7 @@ local GlobalState = require("game.state")
 local Map = require("engine.map.map")
 local Config = require("config")
 local State = require("player.state")
+local love = require("love")
 local EnemyManager = {}
 
 EnemyManager.lastSpawnTimeA = 0

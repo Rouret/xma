@@ -1,3 +1,4 @@
+local love = require("love")
 local World = {}
 
 function World.load()

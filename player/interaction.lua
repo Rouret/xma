@@ -1,4 +1,6 @@
 local State = require("player.state")
+local love = require("love")
+
 local Interaction = {}
 
 function Interaction.update(dt)

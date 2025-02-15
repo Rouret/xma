@@ -75,7 +75,7 @@ function GlobalState:draw()
         end
     )
     for _, entity in ipairs(self.entities) do
-        local isOnScreen = Camera.i:isVisible(entity.x, entity.y, entity.width, entity.height)
+        local isOnScreen = Camera.isVisible(entity.x, entity.y, entity.width, entity.height)
 
         if entity.draw and isOnScreen then
             entity:draw()

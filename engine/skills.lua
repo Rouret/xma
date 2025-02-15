@@ -1,4 +1,4 @@
-local UI = require("game.ui")
+local love = require("love")
 
 local Skills = {}
 Skills.__index = Skills

@@ -4,6 +4,7 @@ local GlobalState = require("game.state")
 local State = require("player.state")
 local Map = require("engine.map.map")
 
+---@class Enemy : Entity
 local Enemy = Entity:extend()
 Enemy.__index = Enemy
 
@@ -39,55 +40,7 @@ function Enemy:init(params)
     self.deathTick = 0
 
     -- Ajout de la State Machine
-    self.stateMachine =
-        StateMachine:new(
-        {
-            idle = {
-                enter = function()
-                    self.body:setLinearVelocity(0, 0)
-                end,
-                update = function(_, dt)
-                end,
-                draw = function()
-                end
-            },
-            moving = {
-                enter = function()
-                end,
-                update = function(_, dt)
-                    self:u(dt)
-                end,
-                draw = function()
-                    self:d()
-                end
-            },
-            dead = {
-                enter = function()
-                    self.body:setLinearVelocity(0, 0)
-                    if self.haveDeathAnimation then
-                        self.deathTick = 0
-                    else
-                        self:destroy()
-                    end
-                end,
-                update = function(_, dt)
-                    if self.haveDeathAnimation then
-                        self.deathTick = self.deathTick + dt
-                        if self.deathTick >= self.deathDuration then
-                            self:destroy()
-                        else
-                            self:updateDeathAnimation(dt)
-                        end
-                    end
-                end,
-                draw = function()
-                    if self.haveDeathAnimation then
-                        self:drawDeathAnimation()
-                    end
-                end
-            }
-        }
-    )
+    self.stateMachine = StateMachine:new({})
 
     self.stateMachine:change("moving")
 end

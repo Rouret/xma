@@ -3,7 +3,9 @@ local anim8 = require("engine.anim8")
 local World = require("game.world")
 local SandZone = require("enemies.sandSlime.sandZone")
 local GlobalState = require("game.state")
+local love = require("love")
 
+---@class SandSlime : Enemy
 local SandSlime = Enemy:extend()
 SandSlime.__index = SandSlime
 
@@ -21,11 +23,11 @@ function SandSlime:init(params)
     self.deathImage = love.graphics.newImage("sprites/enemies/sand_slime/sand_slime_death.png")
 
     -- Création des animations
-    local movementAnimationGrid = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight())
-    self.movementAnimation = anim8.newAnimation(movementAnimationGrid("1-5", 1), 0.15)
+    local movementAnimationGrid = anim8.newGrid(45, 45, self.image:getWidth(), self.image:getHeight(), 0, 0, 0)
+    self.movementAnimation = anim8.newAnimation(movementAnimationGrid("1-5", 1), 0.15, self.nop)
 
-    local deathAnimationGrid = anim8.newGrid(60, 45, self.deathImage:getWidth(), self.deathImage:getHeight())
-    self.deathAnimation = anim8.newAnimation(deathAnimationGrid("1-6", 1), 0.08)
+    local deathAnimationGrid = anim8.newGrid(60, 45, self.deathImage:getWidth(), self.deathImage:getHeight(), 0, 0, 0)
+    self.deathAnimation = anim8.newAnimation(deathAnimationGrid("1-6", 1), 0.08, self.nop)
 
     params.deathDuration = self.deathAnimation.totalDuration
 

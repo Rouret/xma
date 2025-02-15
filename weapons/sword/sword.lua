@@ -1,6 +1,7 @@
 local Skills = require("engine.skills")
 local State = require("player.state")
 local Weapon = require("engine.weapon")
+local love = require("love")
 
 local Sword = Weapon:extend()
 

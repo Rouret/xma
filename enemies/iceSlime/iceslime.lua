@@ -2,7 +2,7 @@ local Enemy = require("engine.enemy.enemy")
 local anim8 = require("engine.anim8")
 local IceBullet = require("enemies.iceSlime.icebullet")
 local GlobalState = require("game.state")
-
+local love = require("love")
 local IceSlime = Enemy:extend()
 IceSlime.__index = IceSlime
 
@@ -21,12 +21,12 @@ function IceSlime:init(params)
 
     -- Création des animations
     local movementgAnimationGrid =
-        anim8.newGrid(45, 45, self.movementSpriteSheet:getWidth(), self.movementSpriteSheet:getHeight())
-    self.movementAnimation = anim8.newAnimation(movementgAnimationGrid("1-4", 1), 0.15)
+        anim8.newGrid(45, 45, self.movementSpriteSheet:getWidth(), self.movementSpriteSheet:getHeight(), 0, 0, 0)
+    self.movementAnimation = anim8.newAnimation(movementgAnimationGrid("1-4", 1), 0.15, "pauseAtEnd")
 
     local attackAnimationGrid =
-        anim8.newGrid(45, 45, self.attackSpriteSheet:getWidth(), self.attackSpriteSheet:getHeight())
-    self.attackAnimation = anim8.newAnimation(attackAnimationGrid("1-4", 1), 0.5 / 4)
+        anim8.newGrid(45, 45, self.attackSpriteSheet:getWidth(), self.attackSpriteSheet:getHeight(), 0, 0, 0)
+    self.attackAnimation = anim8.newAnimation(attackAnimationGrid("1-4", 1), 0.5 / 4, self.nop)
 
     Enemy.init(self, params)
 
