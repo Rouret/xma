@@ -1,5 +1,12 @@
 # README
 
+[Devlog 6](https://x.com/RouretLucas/status/1888245328945545678)
+[Devlog 5](https://x.com/RouretLucas/status/1884920421935440013)
+[Devlog 4](https://x.com/RouretLucas/status/1881482573702181078)
+[Devlog 3](https://x.com/RouretLucas/status/1880910273344921634)
+[Devlog 2](https://x.com/RouretLucas/status/1879574680069423314)
+[Devlog 1](https://x.com/RouretLucas/status/1878382230906511366)
+
 For more information, please refer to the [Change Log](CHANGELOG.md).
 
 <>
